@@ -1,0 +1,37 @@
+{
+  "compilerOptions": {
+    "outDir": "./build/",
+
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    "module": "es2015",
+    "target": "es2017",
+    "jsx": "react",
+    "allowJs": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "lib": ["dom", "esnext"],
+    "experimentalDecorators": true,
+
+    "typeRoots": ["./node_modules/@types"],
+
+    "baseUrl": "./",
+
+    "paths": {
+      "@app/*": ["src/renderer/app/*"],
+      "@mixins": ["src/renderer/mixins"],
+      "~/*": ["src/*"]
+    }
+  },
+  "awesomeTypescriptLoaderOptions": {
+    "reportFiles": ["src/**/*.{ts,tsx}"],
+    "useCache": true
+  },
+  "exclude": ["node_modules", "dist", "build"],
+  "include": ["src/**/*"],
+  "files": ["src/renderer/views/app/index.tsx"]
+}

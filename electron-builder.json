@@ -1,6 +1,6 @@
 {
-  "appId": "org.wexond.wexond",
-  "productName": "Wexond",
+  "appId": "org.sential.multrin",
+  "productName": "Multrin",
   "asar": true,
   "directories": {
     "output": "dist",

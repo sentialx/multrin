@@ -4,11 +4,9 @@ import os from 'os';
 import { TabsStore } from './tabs';
 import { AddTabStore } from './add-tab';
 import { Platforms } from '~/enums';
-import { PagesStore } from './pages';
 
 export class Store {
   public tabsStore = new TabsStore();
-  public pagesStore = new PagesStore();
   public addTabStore = new AddTabStore();
 
   @observable

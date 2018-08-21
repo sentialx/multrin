@@ -6,6 +6,7 @@ import { injectGlobal } from 'styled-components';
 import { Style } from './styles';
 import App from './components/app';
 import store from '@app/store';
+import { ipcMain, ipcRenderer } from 'electron';
 
 injectGlobal`${Style}`;
 
@@ -19,7 +20,11 @@ const render = (AppComponent: any) => {
 };
 (async function setup() {
   render(App);
-  store.tabsStore.addTab();
+
+  ipcRenderer.on('add-tab', () => {
+    const tab = store.tabsStore.addTab();
+    ipcRenderer.send('add-tab', tab.id);
+  });
 })();
 
 // react-hot-loader

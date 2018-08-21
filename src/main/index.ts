@@ -1,4 +1,4 @@
-import { app } from 'electron';
+import { app, ipcMain } from 'electron';
 import { resolve } from 'path';
 import { platform, homedir } from 'os';
 import { WindowStyles, windowsManager } from 'window-manager';
@@ -31,11 +31,16 @@ const getNumber = (str: string) => {
   return parseInt(newStr, 10);
 };
 
-const windows: any = [];
+interface Tab {
+  id: number;
+  window: any;
+}
+
+const tabs: Tab[] = [];
 
 const containsWindow = (window: any) => {
-  for (const win of windows) {
-    if (win.handle === window.handle) return true;
+  for (const tab of tabs) {
+    if (tab.window.handle === window.handle) return true;
   }
   return false;
 };
@@ -47,8 +52,8 @@ const moveWindow = (
   width: number,
   height: number,
 ) => {
-  const windowExternalHeight = 8;
-  const windowExternalWidth = 14;
+  const windowExternalHeight = -2;
+  const windowExternalWidth = -4;
 
   window.move(
     x - windowExternalWidth / 2,
@@ -68,9 +73,9 @@ app.on('ready', () => {
   });
 
   const moveAndResize = () => {
-    for (const win of windows) {
+    for (const tab of tabs) {
       const { x, y, width, height } = mainWindow.getContentBounds();
-      moveWindow(win, x, y, width, height);
+      moveWindow(tab.window, x, y, width, height);
     }
   };
 
@@ -98,17 +103,31 @@ app.on('ready', () => {
           top >= y &&
           top <= y + TOOLBAR_HEIGHT
         ) {
-          setTimeout(() => {
-            console.log('attached');
+          mainWindow.webContents.send('add-tab');
+
+          ipcMain.once('add-tab', (e: Electron.IpcMessageEvent, id: number) => {
             moveWindow(window, x, y, width, height);
             window.setTopMost(true);
-          }, 20);
+            window.setStyle(
+              window.getStyle() &
+                ~(
+                  WindowStyles.THICKFRAME |
+                  WindowStyles.SIZEBOX |
+                  WindowStyles.CAPTION
+                ),
+            );
+
+            tabs.push({
+              window,
+              id,
+            });
+
+            console.log(tabs);
+          });
         } else {
           window.setTopMost(false);
           // window.setFrameless(false);
         }
-
-        windows.push(window);
       }
     }
   });

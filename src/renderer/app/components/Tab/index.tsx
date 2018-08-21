@@ -41,8 +41,6 @@ export default class extends React.Component<{ tab: Tab }, {}> {
 
     e.stopPropagation();
 
-    store.pagesStore.removePage(tab.id);
-
     store.tabsStore.resetRearrangeTabsTimer();
 
     const notClosingTabs = tabs.filter(x => !x.isClosing);

@@ -133,9 +133,6 @@ export class TabsStore {
     const tab = new Tab();
     this.tabs.push(tab);
 
-    const page = new Page(tab.id);
-    store.pagesStore.pages.push(page);
-
     if (active) {
       tab.select();
     }

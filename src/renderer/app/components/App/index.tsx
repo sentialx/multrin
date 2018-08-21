@@ -1,7 +1,6 @@
 import { observer } from 'mobx-react';
 import React from 'react';
 
-import Pages from '../Pages';
 import Toolbar from '../Toolbar';
 import { StyledApp } from './styles';
 import store from '../../store';
@@ -18,7 +17,6 @@ class App extends React.Component {
   };
 
   public componentWillUnmount() {
-    store.pagesStore.pages = [];
     store.tabsStore.tabs = [];
 
     window.removeEventListener('mousemove', this.onWindowMouseMove);
@@ -28,7 +26,6 @@ class App extends React.Component {
     return (
       <StyledApp>
         <Toolbar />
-        <Pages />
       </StyledApp>
     );
   }

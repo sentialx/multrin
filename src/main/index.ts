@@ -1,15 +1,13 @@
 import { app, ipcMain } from 'electron';
 import { resolve } from 'path';
 import { platform, homedir } from 'os';
-import { WindowStyles, windowsManager } from 'window-manager';
+import { WindowStyles, windowsManager, Window, SWP } from 'window-manager';
 import { fork } from 'child_process';
 
 import { createWindow } from './utils';
 import { TOOLBAR_HEIGHT } from '~/constants';
 
 app.setPath('userData', resolve(homedir(), '.multrin'));
-
-console.log(windowsManager);
 
 let mainWindow: Electron.BrowserWindow;
 
@@ -33,12 +31,13 @@ const getNumber = (str: string) => {
 
 interface Tab {
   id: number;
-  window: any;
+  window: Window;
 }
 
+let selectedTab: number;
 const tabs: Tab[] = [];
 
-const containsWindow = (window: any) => {
+const containsWindow = (window: Window) => {
   for (const tab of tabs) {
     if (tab.window.handle === window.handle) return true;
   }
@@ -46,14 +45,14 @@ const containsWindow = (window: any) => {
 };
 
 const moveWindow = (
-  window: any,
+  window: Window,
   x: number,
   y: number,
   width: number,
   height: number,
 ) => {
-  const windowExternalHeight = -2;
-  const windowExternalWidth = -4;
+  const windowExternalHeight = 6;
+  const windowExternalWidth = 10;
 
   window.move(
     x - windowExternalWidth / 2,
@@ -61,6 +60,19 @@ const moveWindow = (
     width + windowExternalWidth,
     height - TOOLBAR_HEIGHT + windowExternalHeight,
   );
+};
+
+const adaptWindow = (window: Window) => {
+  const { x, y, width, height } = mainWindow.getContentBounds();
+  moveWindow(window, x, y, width, height);
+};
+
+const getTabById = (id: number) => {
+  return tabs.find(x => x.id === id);
+};
+
+const getSelectedTab = () => {
+  return getTabById(selectedTab);
 };
 
 app.on('ready', () => {
@@ -73,14 +85,42 @@ app.on('ready', () => {
   });
 
   const moveAndResize = () => {
-    for (const tab of tabs) {
-      const { x, y, width, height } = mainWindow.getContentBounds();
-      moveWindow(tab.window, x, y, width, height);
-    }
+    adaptWindow(getSelectedTab().window);
   };
+
+  ipcMain.on('select-tab', (e: Electron.IpcMessageEvent, id: number) => {
+    if (selectedTab === id) return;
+
+    let tab = getSelectedTab();
+
+    if (tab) {
+      tab.window.hide();
+    }
+
+    selectedTab = id;
+    tab = getSelectedTab();
+
+    if (tab) {
+      const { window } = tab;
+      adaptWindow(window);
+
+      window.show();
+      window.setTopMost(true, SWP.NOACTIVATE);
+      window.setTopMost(false, SWP.NOACTIVATE);
+    }
+  });
 
   mainWindow.on('move', moveAndResize);
   mainWindow.on('resize', moveAndResize);
+
+  mainWindow.on('focus', () => {
+    const tab = getSelectedTab();
+
+    if (tab) {
+      tab.window.setTopMost(true, SWP.NOACTIVATE);
+      tab.window.setTopMost(false, SWP.NOACTIVATE);
+    }
+  });
 
   const hook = fork('./src/main/mouseup-hook.js');
 
@@ -93,7 +133,7 @@ app.on('ready', () => {
 
       buf.writeInt32LE(window.handle, 0);
 
-      if (!containsWindow(window) && buf.compare(handle)) {
+      if (!containsWindow(window) && !buf.equals(handle)) {
         const { left, top } = window.getBounds();
         const { x, y, width, height } = mainWindow.getContentBounds();
 
@@ -106,27 +146,12 @@ app.on('ready', () => {
           mainWindow.webContents.send('add-tab');
 
           ipcMain.once('add-tab', (e: Electron.IpcMessageEvent, id: number) => {
-            moveWindow(window, x, y, width, height);
-            window.setTopMost(true);
-            window.setStyle(
-              window.getStyle() &
-                ~(
-                  WindowStyles.THICKFRAME |
-                  WindowStyles.SIZEBOX |
-                  WindowStyles.CAPTION
-                ),
-            );
-
+            adaptWindow(window);
             tabs.push({
               window,
               id,
             });
-
-            console.log(tabs);
           });
-        } else {
-          window.setTopMost(false);
-          // window.setFrameless(false);
         }
       }
     }

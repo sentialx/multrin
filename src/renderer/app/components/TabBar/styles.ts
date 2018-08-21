@@ -12,7 +12,7 @@ export const StyledTabbar = styled.div`
 
 export const TabsContainer = styled.div`
   height: 100%;
-  width: calc(100% - ${TOOLBAR_BUTTON_WIDTH}px);
+  width: 100%;
   position: relative;
   overflow: hidden;
 `;

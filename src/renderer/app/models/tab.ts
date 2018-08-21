@@ -1,6 +1,7 @@
 import { observable } from 'mobx';
 import store from '../store';
 import { TABS_PADDING } from '~/constants';
+import { ipcRenderer } from 'electron';
 
 let id = 0;
 
@@ -36,6 +37,7 @@ export class Tab {
   public select() {
     if (!this.isClosing) {
       store.tabsStore.selectedTab = this.id;
+      ipcRenderer.send('select-tab', this.id);
     }
   }
 

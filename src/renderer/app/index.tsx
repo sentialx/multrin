@@ -22,8 +22,9 @@ const render = (AppComponent: any) => {
   render(App);
 
   ipcRenderer.on('add-tab', () => {
-    const tab = store.tabsStore.addTab();
+    const tab = store.tabsStore.addTab({ active: false });
     ipcRenderer.send('add-tab', tab.id);
+    tab.select();
   });
 })();
 

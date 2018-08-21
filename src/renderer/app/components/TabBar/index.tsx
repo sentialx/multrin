@@ -1,26 +1,26 @@
-import { observer } from "mobx-react";
-import React from "react";
-import { observe } from "mobx";
+import { observer } from 'mobx-react';
+import React from 'react';
+import { observe } from 'mobx';
 
-import { AddTab, StyledTabbar, TabsContainer } from "./styles";
-import HorizontalScrollbar from "../HorizontalScrollbar";
-import store from "@app/store";
-import { TAB_ANIMATION_DURATION, TOOLBAR_HEIGHT } from "~/constants";
-import { icons } from "~/defaults";
-import Tabs from "@app/components/Tabs";
+import { AddTab, StyledTabbar, TabsContainer } from './styles';
+import HorizontalScrollbar from '../HorizontalScrollbar';
+import store from '@app/store';
+import { TAB_ANIMATION_DURATION, TOOLBAR_HEIGHT } from '~/constants';
+import { icons } from '~/defaults';
+import Tabs from '@app/components/Tabs';
 
 @observer
 export default class Tabbar extends React.Component {
   public componentDidMount() {
-    window.addEventListener("resize", this.onResize);
-    window.addEventListener("mouseup", this.onMouseUp);
-    window.addEventListener("mousemove", this.onMouseMove);
+    window.addEventListener('resize', this.onResize);
+    window.addEventListener('mouseup', this.onMouseUp);
+    window.addEventListener('mousemove', this.onMouseMove);
 
     observe(store.tabsStore.tabs, (change: any) => {
       if (change.addedCount > 0 && change.removedCount === 0) {
         if (store.tabsStore.scrollbarRef) {
           store.tabsStore.scrollbarRef.scrollToEnd(
-            TAB_ANIMATION_DURATION * 1000
+            TAB_ANIMATION_DURATION * 1000,
           );
         }
       }
@@ -28,9 +28,9 @@ export default class Tabbar extends React.Component {
   }
 
   public componentWillUnmount() {
-    window.removeEventListener("resize", this.onResize);
-    window.removeEventListener("mouseup", this.onMouseUp);
-    window.removeEventListener("mousemove", this.onMouseMove);
+    window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('mouseup', this.onMouseUp);
+    window.removeEventListener('mousemove', this.onMouseMove);
   }
 
   public onMouseUp = () => {
@@ -53,7 +53,7 @@ export default class Tabbar extends React.Component {
         tabStartX,
         mouseStartX,
         lastMouseX,
-        lastScrollLeft
+        lastScrollLeft,
       } = store.tabsStore;
 
       const boundingRect = container.getBoundingClientRect();
@@ -92,7 +92,7 @@ export default class Tabbar extends React.Component {
 
       store.tabsStore.getTabsToReplace(
         selectedTab,
-        lastMouseX - e.pageX >= 1 ? "left" : "right"
+        lastMouseX - e.pageX >= 1 ? 'left' : 'right',
       );
 
       store.tabsStore.lastMouseX = e.pageX;
@@ -136,11 +136,11 @@ export default class Tabbar extends React.Component {
           visible={store.tabsStore.scrollbarVisible}
           getContainer={this.getContainer}
         />
-        <AddTab
+        {/* <AddTab
           icon={icons.add}
           onClick={this.onAddTabClick}
           divRef={r => (store.addTabStore.ref = r)}
-        />
+        /> */}
       </StyledTabbar>
     );
   }

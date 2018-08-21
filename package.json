@@ -42,7 +42,8 @@
     "compile-darwin": "npm run build && electron-builder -m -p always",
     "compile-linux": "npm run build && electron-builder -l -p always",
     "lint": "tslint \"src/**/*.ts*\"",
-    "lint-fix": "prettier --write \"src/**/*.ts*\" && tslint \"src/**/*.ts*\" --fix"
+    "lint-fix": "prettier --write \"src/**/*.ts*\" && tslint \"src/**/*.ts*\" --fix",
+    "postinstall": "electron-builder install-app-deps"
   },
   "pre-commit": [
     "lint-fix"
@@ -73,7 +74,9 @@
     "webpack": "4.16.4",
     "webpack-cli": "3.1.0",
     "webpack-dev-server": "3.1.5",
-    "webpack-merge": "4.1.4",
-    "wexond-package-manager": "1.4.5"
+    "webpack-merge": "4.1.4"
+  },
+  "dependencies": {
+    "window-manager": "Sential/node-window-manager"
   }
 }

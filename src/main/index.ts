@@ -52,11 +52,11 @@ const moveWindow = (
   height: number,
 ) => {
   const windowExternalHeight = 6;
-  const windowExternalWidth = 10;
+  const windowExternalWidth = 14;
 
   window.move(
     x - windowExternalWidth / 2,
-    y + TOOLBAR_HEIGHT,
+    y + TOOLBAR_HEIGHT - 1,
     width + windowExternalWidth,
     height - TOOLBAR_HEIGHT + windowExternalHeight,
   );
@@ -75,6 +75,22 @@ const getSelectedTab = () => {
   return getTabById(selectedTab);
 };
 
+const bringSelectedWindowToTop = () => {
+  const tab = getSelectedTab();
+
+  if (tab) {
+    tab.window.setTopMost(true, SWP.NOACTIVATE);
+    tab.window.setTopMost(false, SWP.NOACTIVATE);
+  }
+};
+
+const getHandleBuffer = (handle: number) => {
+  const buf = new Buffer(8);
+  buf.fill(0);
+  buf.writeInt32LE(handle, 0);
+  return buf;
+};
+
 app.on('ready', () => {
   mainWindow = createWindow();
 
@@ -85,6 +101,7 @@ app.on('ready', () => {
   });
 
   const moveAndResize = () => {
+    bringSelectedWindowToTop();
     adaptWindow(getSelectedTab().window);
   };
 
@@ -114,12 +131,11 @@ app.on('ready', () => {
   mainWindow.on('resize', moveAndResize);
 
   mainWindow.on('focus', () => {
-    const tab = getSelectedTab();
+    bringSelectedWindowToTop();
+  });
 
-    if (tab) {
-      tab.window.setTopMost(true, SWP.NOACTIVATE);
-      tab.window.setTopMost(false, SWP.NOACTIVATE);
-    }
+  mainWindow.on('maximize', () => {
+    bringSelectedWindowToTop();
   });
 
   const hook = fork('./src/main/mouseup-hook.js');
@@ -128,12 +144,10 @@ app.on('ready', () => {
     if (message === 'mouseup') {
       const window = windowsManager.getActive();
 
-      const buf = new Buffer(8);
-      buf.fill(0);
-
-      buf.writeInt32LE(window.handle, 0);
-
-      if (!containsWindow(window) && !buf.equals(handle)) {
+      if (
+        !containsWindow(window) &&
+        !getHandleBuffer(window.handle).equals(handle)
+      ) {
         const { left, top } = window.getBounds();
         const { x, y, width, height } = mainWindow.getContentBounds();
 

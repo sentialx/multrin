@@ -1,4 +1,4 @@
-import { Power2 } from "gsap";
+import { Power2 } from 'gsap';
 
 // Toolbar
 export const TOOLBAR_HEIGHT = 40;
@@ -14,4 +14,4 @@ export const TABS_PADDING = 2;
 // Widths
 export const WINDOWS_BUTTON_WIDTH = 45;
 
-export const EASE_FUNCTION = "cubic-bezier(0.19, 1, 0.22, 1)";
+export const EASE_FUNCTION = 'cubic-bezier(0.19, 1, 0.22, 1)';

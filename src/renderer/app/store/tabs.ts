@@ -1,7 +1,11 @@
 import { observable } from 'mobx';
 import { Tab, Page } from '../models';
 import { defaultCreateTabProperties } from '~/defaults/create-tab-properties';
-import { TAB_ANIMATION_EASING, TAB_ANIMATION_DURATION } from '~/constants';
+import {
+  TAB_ANIMATION_EASING,
+  TAB_ANIMATION_DURATION,
+  TABS_PADDING,
+} from '~/constants';
 import { TweenLite } from 'gsap';
 import HorizontalScrollbar from '@app/components/HorizontalScrollbar';
 import store from '@app/store';
@@ -86,7 +90,7 @@ export class TabsStore {
 
     for (const tab of tabs) {
       tab.setLeft(left, animation);
-      left += tab.width + 2;
+      left += tab.width + TABS_PADDING;
     }
 
     store.addTabStore.setLeft(Math.min(left, tabbarWidth), animation);

@@ -1,14 +1,14 @@
-import styled, { css } from "styled-components";
-import { icons, transparency, colors } from "~/defaults";
-import { centerImage, body2 } from "@mixins";
-import { hexToRgb } from "~/utils/colors";
+import styled, { css } from 'styled-components';
+import { icons, transparency, colors } from '~/defaults';
+import { centerImage, body2 } from '@mixins';
+import { hexToRgb } from '~/utils/colors';
 
 interface CloseProps {
   hovered: boolean;
   selected: boolean;
 }
 
-const color = colors.cyan["500"];
+const color = colors.cyan['500'];
 const rgb = hexToRgb(color);
 
 export const Close = styled.div`
@@ -20,7 +20,7 @@ export const Close = styled.div`
   transition: 0.2s opacity, 0.2s filter;
   z-index: 2;
 
-  ${centerImage("100%", "100%")};
+  ${centerImage('100%', '100%')};
   opacity: ${({ hovered, selected }: CloseProps) =>
     hovered || selected ? transparency.light.inactiveIcon : 0};
 `;
@@ -47,8 +47,8 @@ export const StyledTab = styled.div`
   ${({ selected }: TabProps) => css`
     z-index: ${selected ? 2 : 1};
     background-color: ${selected
-      ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.12)`
-      : "transparent"};
+      ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.2)`
+      : 'transparent'};
   `};
 
   &:before {
@@ -60,7 +60,7 @@ export const StyledTab = styled.div`
     right: 0px;
 
     ${({ borderVisible }: TabProps) => css`
-      visibility: ${borderVisible ? "visible" : "hidden"};
+      visibility: ${borderVisible ? 'visible' : 'hidden'};
     `};
   }
 
@@ -103,21 +103,21 @@ export const Title = styled.div`
     color: ${selected
       ? color
       : `rgba(0, 0, 0, ${transparency.light.secondaryText})`};
-    margin-left: ${favicon === "" && !loading ? 0 : 12}px;
+    margin-left: ${favicon === '' && !loading ? 0 : 12}px;
   `};
 `;
 
 export const Icon = styled.div.attrs({
   style: ({ favicon }: any) => ({
     backgroundImage: `url(${favicon})`,
-    opacity: favicon === "" ? 0 : 1,
-    minWidth: favicon === "" ? 0 : 16
-  })
+    opacity: favicon === '' ? 0 : 1,
+    minWidth: favicon === '' ? 0 : 16,
+  }),
 })`
   height: 16px;
   min-width: 16px;
   transition: 0.2s opacity, 0.2s width;
-  ${centerImage("16px", "16px")};
+  ${centerImage('16px', '16px')};
   ${({ favicon }: { favicon: string }) => favicon};
 `;
 

@@ -5,7 +5,8 @@ import ToolbarButton from '../ToolbarButton';
 
 export const StyledTabbar = styled.div`
   height: 100%;
-  width: 100%;
+  width: calc(100% - 4px);
+  margin-left: 2px;
   position: relative;
   overflow: hidden;
 `;

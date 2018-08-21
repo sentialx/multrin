@@ -6,7 +6,7 @@ export const StyledToolbar = styled.div`
   position: relative;
   z-index: 100;
   display: flex;
-  background-color: #fff;
+  background-color: white;
   color: rgba(0, 0, 0, 0.8);
   -webkit-app-region: drag;
   border-bottom: 1px solid rgba(0, 0, 0, ${transparency.light.dividers});

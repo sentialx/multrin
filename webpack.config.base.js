@@ -26,4 +26,8 @@ module.exports = {
       '~': join(__dirname, './src'),
     },
   },
+
+  externals: {
+    'window-manager': 'require("window-manager")'
+  }
 };

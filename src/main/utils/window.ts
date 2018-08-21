@@ -3,7 +3,7 @@ import { join } from 'path';
 
 export const createWindow = () => {
   const windowData: Electron.BrowserWindowConstructorOptions = {
-    frame: process.env.ENV === 'dev',
+    frame: process.env.ENV !== 'dev',
     minWidth: 400,
     minHeight: 450,
     width: 900,

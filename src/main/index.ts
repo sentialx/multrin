@@ -91,6 +91,18 @@ const getHandleBuffer = (handle: number) => {
   return buf;
 };
 
+const attachWindow = (window: Window) => {
+  mainWindow.webContents.send('add-tab');
+
+  ipcMain.once('add-tab', (e: Electron.IpcMessageEvent, id: number) => {
+    adaptWindow(window);
+    tabs.push({
+      window,
+      id,
+    });
+  });
+};
+
 app.on('ready', () => {
   mainWindow = createWindow();
 
@@ -157,15 +169,7 @@ app.on('ready', () => {
           top >= y &&
           top <= y + TOOLBAR_HEIGHT
         ) {
-          mainWindow.webContents.send('add-tab');
-
-          ipcMain.once('add-tab', (e: Electron.IpcMessageEvent, id: number) => {
-            adaptWindow(window);
-            tabs.push({
-              window,
-              id,
-            });
-          });
+          attachWindow(window);
         }
       }
     }

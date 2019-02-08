@@ -11,10 +11,10 @@
     "mobx",
     "styled-components"
   ],
-  "homepage": "https://github.com/Sential/multrin#readme",
+  "homepage": "https://github.com/sentialx/multrin#readme",
   "main": "main.js",
   "author": {
-    "name": "Sential",
+    "name": "Eryk Rakowski",
     "email": "sentialx@gmail.com"
   },
   "contributors": [
@@ -25,10 +25,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Sential/multrin.git"
+    "url": "git+https://github.com/sentialx/multrin.git"
   },
   "bugs": {
-    "url": "https://github.com/Sential/multrin/issues"
+    "url": "https://github.com/sentialx/multrin/issues"
   },
   "scripts": {
     "start": "cross-env ENV=dev electron .",
@@ -49,32 +49,33 @@
     "lint-fix"
   ],
   "devDependencies": {
-    "@types/gsap": "1.19.2",
-    "@types/node": "10.5.6",
-    "@types/react": "16.4.7",
-    "@types/react-dom": "16.0.6",
-    "awesome-typescript-loader": "5.2.0",
-    "concurrently": "3.6.1",
+    "@types/gsap": "1.20.1",
+    "@types/node": "10.12.24",
+    "@types/react": "16.8.2",
+    "@types/react-dom": "16.8.0",
+    "@types/styled-components": "4.1.8",
+    "awesome-typescript-loader": "5.2.1",
+    "concurrently": "4.1.0",
     "cross-env": "5.2.0",
-    "electron": "4.0.0",
-    "electron-builder": "20.26.1",
-    "gsap": "2.0.1",
-    "mobx": "5.0.3",
-    "mobx-react": "5.2.3",
-    "prettier": "1.14.0",
-    "react": "16.4.2",
-    "react-dom": "16.4.2",
-    "react-hot-loader": "4.3.4",
-    "styled-components": "3.4.0",
-    "tslint": "5.11.0",
-    "tslint-config-airbnb": "5.9.2",
-    "tslint-config-prettier": "1.14.0",
-    "typescript": "3.0.1",
-    "url-loader": "1.0.1",
-    "webpack": "4.16.4",
-    "webpack-cli": "3.1.0",
-    "webpack-dev-server": "3.1.5",
-    "webpack-merge": "4.1.4",
-    "window-manager": "https://github.com/sential/node-window-manager"
+    "electron": "4.0.4",
+    "electron-builder": "20.38.5",
+    "gsap": "2.0.2",
+    "mobx": "5.9.0",
+    "mobx-react": "5.4.3",
+    "prettier": "1.16.4",
+    "react": "16.8.1",
+    "react-dom": "16.8.1",
+    "react-hot-loader": "4.6.5",
+    "styled-components": "4.1.3",
+    "tslint": "5.12.1",
+    "tslint-config-airbnb": "5.11.1",
+    "tslint-config-prettier": "1.18.0",
+    "typescript": "3.3.3",
+    "url-loader": "1.1.2",
+    "webpack": "4.29.3",
+    "webpack-cli": "3.2.3",
+    "webpack-dev-server": "3.1.14",
+    "webpack-merge": "4.2.1",
+    "window-manager": "https://github.com/sentialx/node-window-manager"
   }
 }

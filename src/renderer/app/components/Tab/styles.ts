@@ -77,7 +77,7 @@ export const StyledTab = styled.div`
     ${({ hovered, selected }: TabProps) => css`
       background-color: ${selected
         ? `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.08)`
-        : `rgba(0, 0, 0, 0.04)`};
+        : 'rgba(0, 0, 0, 0.04)'};
       opacity: ${hovered ? 1 : 0};
     `};
   }

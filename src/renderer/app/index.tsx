@@ -1,14 +1,39 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import { injectGlobal } from 'styled-components';
 
 import { Style } from './styles';
 import App from './components/app';
 import store from '@app/store';
 import { ipcMain, ipcRenderer } from 'electron';
+import { fonts } from '~/defaults';
 
-injectGlobal`${Style}`;
+const styleElement = document.createElement('style');
+
+styleElement.textContent = `
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 400;
+  src: url(${fonts.robotoRegular}) format("truetype");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 500;
+  src: url(${fonts.robotoMedium}) format("truetype");
+}
+
+@font-face {
+  font-family: "Roboto";
+  font-style: normal;
+  font-weight: 300;
+  src: url(${fonts.robotoLight}) format("truetype");
+}
+`;
+
+document.head.appendChild(styleElement);
 
 const render = (AppComponent: any) => {
   ReactDOM.render(

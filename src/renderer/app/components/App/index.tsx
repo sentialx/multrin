@@ -4,6 +4,10 @@ import React from 'react';
 import Toolbar from '../Toolbar';
 import { StyledApp } from './styles';
 import store from '../../store';
+import { createGlobalStyle } from 'styled-components';
+import { Style } from '@app/styles';
+
+const GlobalStyle = createGlobalStyle`${Style}`;
 
 @observer
 class App extends React.Component {
@@ -23,6 +27,7 @@ class App extends React.Component {
   public render() {
     return (
       <StyledApp>
+        <GlobalStyle />
         <Toolbar />
       </StyledApp>
     );

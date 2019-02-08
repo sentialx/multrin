@@ -2,6 +2,7 @@ import { observable } from 'mobx';
 import store from '../store';
 import { TABS_PADDING } from '~/constants';
 import { ipcRenderer } from 'electron';
+import React from 'react';
 
 let id = 0;
 
@@ -32,7 +33,7 @@ export class Tab {
   public left: number = 0;
   public isClosing: boolean = false;
 
-  public ref: HTMLDivElement;
+  public ref = React.createRef<HTMLDivElement>();
 
   public select() {
     if (!this.isClosing) {
@@ -80,12 +81,17 @@ export class Tab {
   }
 
   public setLeft(left: number, animation: boolean) {
-    store.tabsStore.animateProperty('x', this.ref, left, animation);
+    store.tabsStore.animateProperty('x', this.ref.current, left, animation);
     this.left = left;
   }
 
   public setWidth(width: number, animation: boolean) {
-    store.tabsStore.animateProperty('width', this.ref, width, animation);
+    store.tabsStore.animateProperty(
+      'width',
+      this.ref.current,
+      width,
+      animation,
+    );
     this.width = width;
   }
 }

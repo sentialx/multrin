@@ -27,7 +27,8 @@ export default class extends React.Component<{ tab: Tab }, {}> {
     store.tabsStore.mouseStartX = pageX;
     store.tabsStore.tabStartX = tab.left;
 
-    store.tabsStore.lastScrollLeft = store.tabsStore.containerRef.scrollLeft;
+    store.tabsStore.lastScrollLeft =
+      store.tabsStore.containerRef.current.scrollLeft;
   };
 
   public onCloseMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -111,7 +112,7 @@ export default class extends React.Component<{ tab: Tab }, {}> {
         onMouseLeave={this.onMouseLeave}
         borderVisible={rightBorderVisible}
         isClosing={isClosing}
-        innerRef={(r: HTMLDivElement) => (tab.ref = r)}
+        ref={tab.ref}
       >
         <Content hovered={hovered} selected={selected}>
           {!loading && <Icon favicon={favicon.trim()} />}

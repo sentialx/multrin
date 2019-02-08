@@ -2,6 +2,7 @@ import { observer } from 'mobx-react';
 import React from 'react';
 
 import { Button, Icon, Circle } from './styles';
+import { transparency } from '~/defaults';
 
 interface Props {
   onClick?: (e?: React.SyntheticEvent<HTMLDivElement>) => void;
@@ -13,12 +14,14 @@ interface Props {
   disabled?: boolean;
   className?: string;
   children?: any;
+  opacity?: number;
 }
 
 @observer
 export default class ToolbarButton extends React.Component<Props, {}> {
   public static defaultProps = {
     size: 20,
+    opacity: transparency.light.inactiveIcon,
   };
 
   private ref: HTMLDivElement;
@@ -57,6 +60,7 @@ export default class ToolbarButton extends React.Component<Props, {}> {
       className,
       divRef,
       children,
+      opacity,
     } = this.props;
 
     let { style } = this.props;
@@ -69,7 +73,7 @@ export default class ToolbarButton extends React.Component<Props, {}> {
         onClick={onClick}
         className={className}
         style={style}
-        innerRef={r => {
+        ref={(r: HTMLDivElement) => {
           this.ref = r;
           if (typeof divRef === 'function') {
             divRef(r);
@@ -77,8 +81,9 @@ export default class ToolbarButton extends React.Component<Props, {}> {
         }}
         disabled={disabled}
       >
-        <Icon icon={icon} size={size} disabled={disabled} />
-        <Circle />
+        <Icon icon={icon} size={size} disabled={disabled} opacity={opacity} />
+        <Circle>
+        </Circle>
         {children}
       </Button>
     );

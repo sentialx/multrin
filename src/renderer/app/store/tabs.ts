@@ -9,6 +9,7 @@ import {
 import { TweenLite } from 'gsap';
 import HorizontalScrollbar from '@app/components/HorizontalScrollbar';
 import store from '@app/store';
+import React from 'react';
 
 export class TabsStore {
   @observable
@@ -29,7 +30,7 @@ export class TabsStore {
   public tabStartX: number = 0;
 
   public scrollbarRef: HorizontalScrollbar;
-  public containerRef: HTMLDivElement;
+  public containerRef = React.createRef<HTMLDivElement>();
 
   private rearrangeTabsTimer = {
     canReset: false,
@@ -57,7 +58,7 @@ export class TabsStore {
   }
 
   public getContainerWidth() {
-    if (this.containerRef) return this.containerRef.offsetWidth;
+    if (this.containerRef) return this.containerRef.current.offsetWidth;
     return 0;
   }
 

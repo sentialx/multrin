@@ -56,7 +56,7 @@ export default class Tabbar extends React.Component {
         lastScrollLeft,
       } = store.tabsStore;
 
-      const boundingRect = container.getBoundingClientRect();
+      const boundingRect = container.current.getBoundingClientRect();
 
       if (Math.abs(e.pageX - mouseStartX) < 5) {
         return;
@@ -68,13 +68,13 @@ export default class Tabbar extends React.Component {
         tabStartX +
         e.pageX -
         mouseStartX -
-        (lastScrollLeft - container.scrollLeft);
+        (lastScrollLeft - container.current.scrollLeft);
 
       let left = Math.max(0, newLeft);
 
       if (
         newLeft + selectedTab.width >
-        store.addTabStore.left + container.scrollLeft
+        store.addTabStore.left + container.current.scrollLeft
       ) {
         left = store.addTabStore.left - selectedTab.width + lastScrollLeft;
       }
@@ -110,7 +110,7 @@ export default class Tabbar extends React.Component {
   };
 
   public getContainer = () => {
-    return store.tabsStore.containerRef;
+    return store.tabsStore.containerRef.current;
   };
 
   public onMouseEnter = () => {
@@ -127,7 +127,7 @@ export default class Tabbar extends React.Component {
         <TabsContainer
           onMouseEnter={this.onMouseEnter}
           onMouseLeave={this.onMouseLeave}
-          innerRef={r => (store.tabsStore.containerRef = r)}
+          ref={store.tabsStore.containerRef}
         >
           <Tabs />
         </TabsContainer>

@@ -238,14 +238,14 @@ export class TabsStore {
         boundingRect.width +
           boundingRect.left +
           container.current.scrollLeft -
-          TABS_PADDING
+          2 * TABS_PADDING
       ) {
         left =
           boundingRect.width +
           boundingRect.left +
           container.current.scrollLeft -
           selectedTab.width -
-          TABS_PADDING;
+          2 * TABS_PADDING;
       }
 
       selectedTab.setLeft(left, false);

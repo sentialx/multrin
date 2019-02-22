@@ -1,6 +1,7 @@
 import { BrowserWindow, app } from 'electron';
 import { resolve, join } from 'path';
 import { platform } from 'os';
+import mouseEvents from 'mouse-hooks';
 
 export class AppWindow extends BrowserWindow {
   constructor() {
@@ -29,5 +30,9 @@ export class AppWindow extends BrowserWindow {
     } else {
       this.loadURL(join('file://', app.getAppPath(), 'build/app.html'));
     }
+
+    mouseEvents.on('mouse-up', () => {
+      
+    });
   }
 }

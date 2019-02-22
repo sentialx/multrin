@@ -52,19 +52,23 @@
     "@types/styled-components": "4.1.10",
     "concurrently": "4.1.0",
     "cross-env": "5.2.0",
-    "electron": "4.0.5",
     "electron-builder": "20.38.5",
-    "gsap": "2.1.0",
-    "mobx": "5.9.0",
-    "mobx-react": "5.4.3",
+    "fuse-box": "3.7.1",
     "prettier": "1.16.4",
-    "react": "16.8.2",
-    "react-dom": "16.8.2",
-    "styled-components": "4.1.3",
     "tslint": "5.12.1",
     "tslint-config-airbnb": "5.11.1",
     "tslint-config-prettier": "1.18.0",
-    "typescript": "3.3.3",
-    "window-manager": "https://github.com/sentialx/node-window-manager"
+    "typescript": "3.3.3"
+  },
+  "dependencies": {
+    "electron": "4.0.5",
+    "electron-updater": "4.0.6",
+    "gsap": "2.1.0",
+    "mobx": "5.9.0",
+    "mobx-react": "5.4.3",
+    "node-window-manager": "0.1.1",
+    "react": "16.8.2",
+    "react-dom": "16.8.2",
+    "styled-components": "4.1.3"
   }
 }

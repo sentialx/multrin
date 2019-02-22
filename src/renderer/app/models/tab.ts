@@ -4,7 +4,7 @@ import { ipcRenderer } from 'electron';
 
 import store from '~/renderer/app/store';
 import { TABS_PADDING, TAB_ANIMATION_DURATION } from '~/renderer/app/constants';
-import { closeWindow, getColorBrightness } from '../utils';
+import { closeWindow } from '../utils';
 import { colors } from '~/renderer/constants';
 
 let id = 0;
@@ -29,7 +29,7 @@ export class Tab {
   public position = id;
 
   @observable
-  public background: string = colors.blue['500'];
+  public background: string = colors.teal['500'];
 
   public left = 0;
   public tempPosition = id;

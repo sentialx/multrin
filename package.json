@@ -12,7 +12,7 @@
     "styled-components"
   ],
   "homepage": "https://github.com/sentialx/multrin#readme",
-  "main": "main.js",
+  "main": "build/main.js",
   "author": {
     "name": "Eryk Rakowski",
     "email": "sentialx@gmail.com"
@@ -58,7 +58,8 @@
     "tslint": "5.12.1",
     "tslint-config-airbnb": "5.11.1",
     "tslint-config-prettier": "1.18.0",
-    "typescript": "3.3.3"
+    "typescript": "3.3.3",
+    "typescript-plugin-styled-components": "1.2.0"
   },
   "dependencies": {
     "electron": "4.0.5",

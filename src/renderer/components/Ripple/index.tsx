@@ -71,6 +71,10 @@ export default class Ripple extends React.Component<IProps, IState> {
     window.removeEventListener('mouseup', this.onMouseUp);
   };
 
+  public onMouseLeave = () => {
+    this.onMouseUp();
+  };
+
   public fadeOut = () => {
     this.setState({
       rippleOpacity: 0,
@@ -128,7 +132,12 @@ export default class Ripple extends React.Component<IProps, IState> {
     } = this.state;
 
     return (
-      <Root onMouseDown={this.onMouseDown} ref={this.root} style={style}>
+      <Root
+        onMouseDown={this.onMouseDown}
+        ref={this.root}
+        style={style}
+        onMouseLeave={this.onMouseLeave}
+      >
         <StyledRipple
           style={{
             transform: `translate3d(calc(-50.1% + ${rippleX}px), calc(-50.1% + ${rippleY}px), 0)`,

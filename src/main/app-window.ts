@@ -32,8 +32,6 @@ export class AppWindow extends BrowserWindow {
   public windows: ProcessWindow[] = [];
   public selectedWindow: ProcessWindow;
 
-  public ignoreDetaching = false;
-
   constructor() {
     super({
       frame: process.env.ENV === 'dev' || platform() === 'darwin',
@@ -80,11 +78,7 @@ export class AppWindow extends BrowserWindow {
       const bounds = this.getContentArea();
       const newBounds = this.selectedWindow.getBounds();
 
-      if (
-        (bounds.x !== newBounds.x || bounds.y !== newBounds.y) &&
-        !this.ignoreDetaching
-      ) {
-        console.log('aha');
+      if (bounds.x !== newBounds.x || bounds.y !== newBounds.y) {
         const { handle } = this.selectedWindow;
         this.detachWindow(this.selectedWindow);
         this.webContents.send('remove-tab', handle);
@@ -113,29 +107,25 @@ export class AppWindow extends BrowserWindow {
         bounds.x >= contentArea.x &&
         bounds.x <= contentArea.x + contentArea.width &&
         bounds.y >= contentArea.y - 42 &&
-        bounds.y <= contentArea.y &&
-        !this.ignoreDetaching
+        bounds.y <= contentArea.y
       ) {
         window.setParent(currentWindow);
         window.setMaximizable(false);
         window.setMinimizable(false);
         window.setResizable(false);
 
-        this.ignoreDetaching = true;
         this.windows.push(window);
-        this.selectWindow(window);
 
         const icon = getFileIcon(window.process.path);
 
-        this.webContents.send('add-tab', {
-          title: window.getTitle(),
-          id: window.handle,
-          icon,
-        });
-
         setTimeout(() => {
-          this.resizeWindow(window);
-          this.ignoreDetaching = false;
+          this.webContents.send('add-tab', {
+            title: window.getTitle(),
+            id: window.handle,
+            icon,
+          });
+
+          this.selectWindow(window);
         }, 50);
       }
     });

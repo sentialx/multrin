@@ -100,6 +100,7 @@ export class AppWindow extends BrowserWindow {
         const { handle } = this.selectedWindow;
         this.detachWindow(this.selectedWindow);
         this.webContents.send('remove-tab', handle);
+        return;
       }
     }, 100);
 
@@ -181,7 +182,15 @@ export class AppWindow extends BrowserWindow {
     if (!window) return;
 
     const newBounds = this.getContentArea();
+
     window.setBounds(newBounds);
+
+    const bounds = window.getBounds();
+
+    if (bounds.width > newBounds.width || bounds.height > newBounds.height) {
+      this.setContentSize(bounds.width, bounds.height + 42);
+      this.setMinimumSize(bounds.width, bounds.height + 42);
+    }
   }
 
   detachWindow(window: ProcessWindow) {

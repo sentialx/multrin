@@ -55,15 +55,16 @@
     "electron-builder": "20.38.5",
     "fuse-box": "3.7.1",
     "prettier": "1.16.4",
+    "terser": "3.16.1",
     "tslint": "5.12.1",
     "tslint-config-airbnb": "5.11.1",
     "tslint-config-prettier": "1.18.0",
     "typescript": "3.3.3333",
-    "typescript-plugin-styled-components": "1.2.0"
+    "typescript-plugin-styled-components": "1.2.0",
+    "electron": "4.0.5"
   },
   "dependencies": {
     "bindings": "1.4.0",
-    "electron": "4.0.5",
     "electron-updater": "4.0.6",
     "extract-file-icon": "0.1.1",
     "gsap": "2.1.1",

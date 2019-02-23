@@ -64,8 +64,8 @@ export class TabsStore {
       this.rearrangeTabsTimer.time++;
     }, 1000);
 
-    ipcRenderer.on('tabs-create', (e: any, options: any) => {
-      this.addTab(options);
+    ipcRenderer.on('add-tab', (e: any, options: any) => {
+      this.addTab(options.id, options.title);
     });
   }
 
@@ -99,8 +99,8 @@ export class TabsStore {
     return this.tabs.find(x => x.id === id);
   }
 
-  public addTab(options = { active: true }) {
-    const tab = new Tab(options);
+  public addTab(id: number, title: string) {
+    const tab = new Tab(id, title);
     this.tabs.push(tab);
 
     requestAnimationFrame(() => {

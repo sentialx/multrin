@@ -1,9 +1,8 @@
-import { BrowserWindow, app } from 'electron';
+import { BrowserWindow, app, ipcMain } from 'electron';
 import { resolve, join } from 'path';
 import { platform } from 'os';
 import mouseEvents from 'mouse-hooks';
 import { windowManager, Window } from 'node-window-manager';
-import console = require('console');
 
 export class AppWindow extends BrowserWindow {
   public windows: Window[] = [];
@@ -43,6 +42,10 @@ export class AppWindow extends BrowserWindow {
       }
     });
 
+    ipcMain.on('select-window', (e: any, id: number) => {
+      this.selectWindow(this.windows.find(x => x.handle === id));
+    });
+
     const handle = this.getNativeWindowHandle().readInt32LE(0);
     const currentWindow = new Window(handle);
 
@@ -61,8 +64,13 @@ export class AppWindow extends BrowserWindow {
       ) {
         window.setParent(currentWindow);
 
-        this.selectedWindow = window;
+        this.selectWindow(window);
         this.windows.push(window);
+
+        this.webContents.send('add-tab', {
+          title: window.getTitle(),
+          id: window.handle,
+        });
 
         setTimeout(() => {
           window.setBounds(contentArea);
@@ -78,5 +86,19 @@ export class AppWindow extends BrowserWindow {
     bounds.height -= 42;
 
     return bounds;
+  }
+
+  selectWindow(window: Window) {
+    if (!window) return;
+
+    if (this.selectedWindow) {
+      if (window.handle === this.selectedWindow.handle) return;
+
+      this.selectedWindow.hide();
+    }
+
+    window.show();
+    window.setBounds(this.getContentArea());
+    this.selectedWindow = window;
   }
 }

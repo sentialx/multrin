@@ -82,7 +82,7 @@ export class AppWindow extends BrowserWindow {
 
       if (
         bounds.x !== newBounds.x ||
-        (bounds.y !== newBounds.y && this.ignoreDetaching)
+        (bounds.y !== newBounds.y && !this.ignoreDetaching)
       ) {
         const { handle } = this.selectedWindow;
         this.detachWindow(this.selectedWindow);

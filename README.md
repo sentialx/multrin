@@ -7,6 +7,7 @@ Multrin is an app built on top of `Electron`, `React`, `styled-components` and `
 Multrin has two very important components:
 - Tabs from [Wexond](https://github.com/wexond/wexond)
 - [`node-window-manager`](https://github.com/sentialx/node-window-manager) for managing the docked windows
+- [`mouse-hooks`](https://github.com/sentialx/mouse-hooks) for listening to global mouse events, for example when dropping a window into Multrin.
 
 # Authors
 [@sentialx](https://github.com/sentialx)

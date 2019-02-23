@@ -23,6 +23,7 @@ export class ProcessWindow extends Window {
     this.setResizable(this.resizable);
     this.setMaximizable(this.maximizable);
     this.setMinimizable(this.minimizable);
+    this.setParent(null);
     this.show();
   }
 }

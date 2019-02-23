@@ -65,7 +65,11 @@ export class TabsStore {
     }, 1000);
 
     ipcRenderer.on('add-tab', (e: any, options: any) => {
-      this.addTab(options.id, options.title);
+      this.addTab(
+        options.id,
+        options.title,
+        URL.createObjectURL(new Blob([options.icon])),
+      );
     });
   }
 
@@ -99,8 +103,8 @@ export class TabsStore {
     return this.tabs.find(x => x.id === id);
   }
 
-  public addTab(id: number, title: string) {
-    const tab = new Tab(id, title);
+  public addTab(id: number, title: string, icon: string) {
+    const tab = new Tab(id, title, icon);
     this.tabs.push(tab);
 
     requestAnimationFrame(() => {

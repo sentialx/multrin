@@ -3,6 +3,7 @@ import { resolve, join } from 'path';
 import { platform } from 'os';
 import mouseEvents from 'mouse-hooks';
 import { windowManager, Window } from 'node-window-manager';
+import { getFileIcon } from 'extract-file-icon';
 
 export class AppWindow extends BrowserWindow {
   public windows: Window[] = [];
@@ -46,7 +47,7 @@ export class AppWindow extends BrowserWindow {
       for (const window of this.windows) {
         window.show();
       }
-    })
+    });
 
     ipcMain.on('select-window', (e: any, id: number) => {
       this.selectWindow(this.windows.find(x => x.handle === id));
@@ -55,7 +56,7 @@ export class AppWindow extends BrowserWindow {
     const handle = this.getNativeWindowHandle().readInt32LE(0);
     const currentWindow = new Window(handle);
 
-    mouseEvents.on('mouse-up', () => {
+    mouseEvents.on('mouse-up', async () => {
       const window = windowManager.getActiveWindow();
       const contentArea = this.getContentArea();
       const bounds = window.getBounds();
@@ -73,9 +74,12 @@ export class AppWindow extends BrowserWindow {
         this.selectWindow(window);
         this.windows.push(window);
 
+        const icon = getFileIcon(window.process.path);
+
         this.webContents.send('add-tab', {
           title: window.getTitle(),
           id: window.handle,
+          icon,
         });
 
         setTimeout(() => {

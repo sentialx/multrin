@@ -76,9 +76,10 @@ export class Tab {
     return this.favicon !== '';
   }
 
-  constructor(id: number, title: string) {
+  constructor(id: number, title: string, icon: string) {
     this.id = id;
     this.title = title;
+    this.favicon = icon;
 
     this.select();
   }

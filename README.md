@@ -21,9 +21,14 @@ Multrin has two very important components:
 - [`node-window-manager`](https://github.com/sentialx/node-window-manager) for managing the docked windows
 - [`mouse-hooks`](https://github.com/sentialx/mouse-hooks) for listening to global mouse events, for example when dropping a window into Multrin.
 
-## Running
+# Running
 
 Before running Multrin, please ensure you have [`Node.js`](https://nodejs.org/en/) installed on your machine. You can use `npm`, although I highly recommend to use `yarn`. In this guide I will use `yarn`.
+
+Also you will need build tools. To install them, please run:
+```bash
+$ npm install --global windows-build-tools
+```
 
 Firstly, run this command to install all needed dependencies. If you have encountered any problems, please report it. I will try to help as much as I can.
 ```bash

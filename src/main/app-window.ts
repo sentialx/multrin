@@ -80,7 +80,10 @@ export class AppWindow extends BrowserWindow {
       const bounds = this.getContentArea();
       const newBounds = this.selectedWindow.getBounds();
 
-      if (bounds.x !== newBounds.x || bounds.y !== newBounds.y) {
+      if (
+        bounds.x !== newBounds.x ||
+        (bounds.y !== newBounds.y && this.ignoreDetaching)
+      ) {
         const { handle } = this.selectedWindow;
         this.detachWindow(this.selectedWindow);
         this.webContents.send('remove-tab', handle);

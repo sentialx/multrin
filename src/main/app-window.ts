@@ -84,6 +84,11 @@ export class AppWindow extends BrowserWindow {
           });
           window.lastTitle = title;
         }
+
+        if (!window.isWindow()) {
+          this.detachWindow(window);
+          this.webContents.send('remove-tab', window.handle);
+        }
       }
 
       if (!this.selectedWindow) return;

@@ -172,7 +172,9 @@ export class AppWindow extends BrowserWindow {
   detachWindow(window: ProcessWindow) {
     if (!window) return;
 
-    this.selectedWindow = null;
+    if (this.selectedWindow === window) {
+      this.selectedWindow = null;
+    }
 
     window.detach();
 

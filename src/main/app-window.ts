@@ -11,6 +11,8 @@ export class ProcessWindow extends Window {
   public maximizable = false;
   public minimizable = false;
 
+  public lastTitle: string;
+
   constructor(handle: number) {
     super(handle);
 
@@ -73,6 +75,17 @@ export class AppWindow extends BrowserWindow {
     });
 
     setInterval(() => {
+      for (const window of this.windows) {
+        const title = window.getTitle();
+        if (window.lastTitle !== title) {
+          this.webContents.send('update-tab-title', {
+            id: window.handle,
+            title,
+          });
+          window.lastTitle = title;
+        }
+      }
+
       if (!this.selectedWindow) return;
 
       const bounds = this.getContentArea();
@@ -119,9 +132,12 @@ export class AppWindow extends BrowserWindow {
         const icon = getFileIcon(window.process.path);
 
         setTimeout(() => {
+          const title = window.getTitle();
+          window.lastTitle = title;
+
           this.webContents.send('add-tab', {
-            title: window.getTitle(),
             id: window.handle,
+            title,
             icon,
           });
 

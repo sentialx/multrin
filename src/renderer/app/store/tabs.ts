@@ -71,6 +71,11 @@ export class TabsStore {
         URL.createObjectURL(new Blob([options.icon])),
       );
     });
+
+    ipcRenderer.on('remove-tab', (e: any, id: number) => {
+      const tab = this.getTabById(id);
+      tab.close();
+    });
   }
 
   public resetRearrangeTabsTimer() {

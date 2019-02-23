@@ -152,6 +152,8 @@ export class Tab {
       .slice()
       .sort((a, b) => a.position - b.position);
 
+    ipcRenderer.send('detach-window', this.id);
+
     const selected = store.tabsStore.selectedTabId === this.id;
 
     const notClosingTabs = tabs.filter(x => !x.isClosing);

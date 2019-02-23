@@ -42,6 +42,12 @@ export class AppWindow extends BrowserWindow {
       }
     });
 
+    this.on('close', () => {
+      for (const window of this.windows) {
+        window.show();
+      }
+    })
+
     ipcMain.on('select-window', (e: any, id: number) => {
       this.selectWindow(this.windows.find(x => x.handle === id));
     });

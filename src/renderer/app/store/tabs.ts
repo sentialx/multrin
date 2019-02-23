@@ -70,7 +70,16 @@ export class TabsStore {
 
     ipcRenderer.on('remove-tab', (e: any, id: number) => {
       const tab = this.getTabById(id);
-      tab.close();
+      if (tab) {
+        tab.close();
+      }
+    });
+
+    ipcRenderer.on('update-tab-title', (e: any, data: any) => {
+      const tab = this.getTabById(data.id);
+      if (tab) {
+        tab.title = data.title;
+      }
     });
   }
 

@@ -1,10 +1,10 @@
-import { BrowserWindow, app, ipcMain } from "electron";
-import { resolve, join } from "path";
-import { platform } from "os";
-import mouseEvents from "mouse-hooks";
-import { windowManager, Window } from "node-window-manager";
-import { getFileIcon } from "extract-file-icon";
-import console = require("console");
+import { BrowserWindow, app, ipcMain } from 'electron';
+import { resolve, join } from 'path';
+import { platform } from 'os';
+import mouseEvents from 'mouse-hooks';
+import { windowManager, Window } from 'node-window-manager';
+import { getFileIcon } from 'extract-file-icon';
+import console = require('console');
 
 export class ProcessWindow extends Window {
   public resizable = false;
@@ -35,39 +35,39 @@ export class AppWindow extends BrowserWindow {
 
   constructor() {
     super({
-      frame: process.env.ENV === "dev" || platform() === "darwin",
+      frame: process.env.ENV === 'dev' || platform() === 'darwin',
       minWidth: 400,
       minHeight: 450,
       width: 900,
       height: 700,
       show: true,
-      titleBarStyle: "hiddenInset",
+      titleBarStyle: 'hiddenInset',
       webPreferences: {
         plugins: true,
-        nodeIntegration: true
+        nodeIntegration: true,
       },
-      icon: resolve(app.getAppPath(), "static/app-icons/icon.png")
+      icon: resolve(app.getAppPath(), 'static/app-icons/icon.png'),
     });
 
-    process.on("uncaughtException", error => {
+    process.on('uncaughtException', error => {
       console.error(error);
     });
 
-    if (process.env.ENV === "dev") {
-      this.webContents.openDevTools({ mode: "detach" });
-      this.loadURL("http://localhost:4444/app.html");
+    if (process.env.ENV === 'dev') {
+      this.webContents.openDevTools({ mode: 'detach' });
+      this.loadURL('http://localhost:4444/app.html');
     } else {
-      this.loadURL(join("file://", app.getAppPath(), "build/app.html"));
+      this.loadURL(join('file://', app.getAppPath(), 'build/app.html'));
     }
 
     const updateBounds = () => {
       this.resizeWindow(this.selectedWindow);
     };
 
-    this.on("move", updateBounds);
-    this.on("resize", updateBounds);
+    this.on('move', updateBounds);
+    this.on('resize', updateBounds);
 
-    this.on("close", () => {
+    this.on('close', () => {
       for (const window of this.windows) {
         this.detachWindow(window);
       }
@@ -82,22 +82,22 @@ export class AppWindow extends BrowserWindow {
       if (bounds.x !== newBounds.x || bounds.y !== newBounds.y) {
         const { handle } = this.selectedWindow;
         this.detachWindow(this.selectedWindow);
-        this.webContents.send("remove-tab", handle);
+        this.webContents.send('remove-tab', handle);
       }
     }, 100);
 
-    ipcMain.on("select-window", (e: any, id: number) => {
+    ipcMain.on('select-window', (e: any, id: number) => {
       this.selectWindow(this.windows.find(x => x.handle === id));
     });
 
-    ipcMain.on("detach-window", (e: any, id: number) => {
+    ipcMain.on('detach-window', (e: any, id: number) => {
       this.detachWindow(this.windows.find(x => x.handle === id));
     });
 
     const handle = this.getNativeWindowHandle().readInt32LE(0);
     const currentWindow = new Window(handle);
 
-    mouseEvents.on("mouse-up", async () => {
+    mouseEvents.on('mouse-up', async () => {
       const window = new ProcessWindow(windowManager.getActiveWindow().handle);
       const contentArea = this.getContentArea();
       const bounds = window.getBounds();
@@ -122,10 +122,10 @@ export class AppWindow extends BrowserWindow {
 
         const icon = getFileIcon(window.process.path);
 
-        this.webContents.send("add-tab", {
+        this.webContents.send('add-tab', {
           title: window.getTitle(),
           id: window.handle,
-          icon
+          icon,
         });
 
         setTimeout(() => {

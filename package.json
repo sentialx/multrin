@@ -46,7 +46,7 @@
   ],
   "devDependencies": {
     "@types/gsap": "1.20.1",
-    "@types/node": "11.9.4",
+    "@types/node": "11.9.5",
     "@types/react": "16.8.4",
     "@types/react-dom": "16.8.2",
     "@types/styled-components": "4.1.10",
@@ -69,7 +69,7 @@
     "mobx": "5.9.0",
     "mobx-react": "5.4.3",
     "mouse-hooks": "0.1.2",
-    "node-window-manager": "0.1.1",
+    "node-window-manager": "0.1.3",
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "styled-components": "4.1.3"

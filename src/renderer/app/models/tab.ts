@@ -1,10 +1,11 @@
 import { observable, computed } from 'mobx';
 import * as React from 'react';
 import { ipcRenderer } from 'electron';
+import * as Vibrant from 'node-vibrant';
 
 import store from '~/renderer/app/store';
 import { TABS_PADDING, TAB_ANIMATION_DURATION } from '~/renderer/app/constants';
-import { closeWindow } from '../utils';
+import { closeWindow, getColorBrightness } from '../utils';
 import { colors } from '~/renderer/constants';
 
 let pos = 0;
@@ -76,10 +77,18 @@ export class Tab {
     return this.favicon !== '';
   }
 
-  constructor(id: number, title: string, icon: string) {
+  constructor(id: number, title: string, icon: Buffer) {
     this.id = id;
     this.title = title;
-    this.favicon = icon;
+    this.favicon = URL.createObjectURL(new Blob([icon]));
+
+    Vibrant.from(icon)
+      .getPalette()
+      .then(palette => {
+        if (getColorBrightness(palette.Vibrant.hex) < 170) {
+          this.background = palette.Vibrant.hex;
+        }
+      });
 
     this.select();
   }

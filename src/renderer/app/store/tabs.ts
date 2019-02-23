@@ -65,11 +65,7 @@ export class TabsStore {
     }, 1000);
 
     ipcRenderer.on('add-tab', (e: any, options: any) => {
-      this.addTab(
-        options.id,
-        options.title,
-        URL.createObjectURL(new Blob([options.icon])),
-      );
+      this.addTab(options.id, options.title, options.icon);
     });
 
     ipcRenderer.on('remove-tab', (e: any, id: number) => {
@@ -108,7 +104,7 @@ export class TabsStore {
     return this.tabs.find(x => x.id === id);
   }
 
-  public addTab(id: number, title: string, icon: string) {
+  public addTab(id: number, title: string, icon: Buffer) {
     const tab = new Tab(id, title, icon);
     this.tabs.push(tab);
 

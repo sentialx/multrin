@@ -52,6 +52,7 @@
     "@types/styled-components": "4.1.10",
     "concurrently": "4.1.0",
     "cross-env": "5.2.0",
+    "electron": "4.0.5",
     "electron-builder": "20.38.5",
     "fuse-box": "3.7.1",
     "prettier": "1.16.4",
@@ -60,8 +61,7 @@
     "tslint-config-airbnb": "5.11.1",
     "tslint-config-prettier": "1.18.0",
     "typescript": "3.3.3333",
-    "typescript-plugin-styled-components": "1.2.0",
-    "electron": "4.0.5"
+    "typescript-plugin-styled-components": "1.2.0"
   },
   "dependencies": {
     "bindings": "1.4.0",
@@ -71,6 +71,7 @@
     "mobx": "5.9.0",
     "mobx-react": "5.4.3",
     "mouse-hooks": "0.1.3",
+    "node-vibrant": "3.2.0-alpha",
     "node-window-manager": "0.3.1",
     "react": "16.8.3",
     "react-dom": "16.8.3",

@@ -7,11 +7,11 @@ import { TABS_PADDING, TAB_ANIMATION_DURATION } from '~/renderer/app/constants';
 import { closeWindow } from '../utils';
 import { colors } from '~/renderer/constants';
 
-let id = 0;
+let pos = 0;
 
 export class Tab {
   @observable
-  public id: number = id++;
+  public id: number;
 
   @observable
   public isDragging: boolean = false;
@@ -26,13 +26,13 @@ export class Tab {
   public width: number = 0;
 
   @observable
-  public position = id;
+  public position = pos++;
 
   @observable
   public background: string = colors.teal['500'];
 
   public left = 0;
-  public tempPosition = id;
+  public tempPosition = pos++;
   public isClosing = false;
   public ref = React.createRef<HTMLDivElement>();
 
@@ -76,15 +76,18 @@ export class Tab {
     return this.favicon !== '';
   }
 
-  constructor({ active } = { active: true }) {
-    if (active) {
-      this.select();
-    }
+  constructor(id: number, title: string) {
+    this.id = id;
+    this.title = title;
+
+    this.select();
   }
 
   public select() {
     if (!this.isClosing) {
       store.tabsStore.selectedTabId = this.id;
+
+      ipcRenderer.send('select-window', this.id);
     }
   }
 
@@ -180,8 +183,6 @@ export class Tab {
       } else if (index - 1 >= 0 && !tabs[index - 1].isClosing) {
         const prevTab = tabs[index - 1];
         prevTab.select();
-      } else {
-        closeWindow();
       }
     }
 

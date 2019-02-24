@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="static/app-icons/icon.png" width="256">
+</p>
+
 <div align="center">
   <h1>Multrin</h1>
 
@@ -32,16 +36,19 @@ Multrin has two very important components:
 Before running Multrin, please ensure you have [`Node.js`](https://nodejs.org/en/) installed on your machine. You can use `npm`, although I highly recommend to use `yarn`. In this guide I will use `yarn`.
 
 Also you will need build tools. To install them, please run:
+
 ```bash
 $ npm install --global windows-build-tools
 ```
 
 Firstly, run this command to install all needed dependencies. If you have encountered any problems, please report it. I will try to help as much as I can.
+
 ```bash
 $ yarn
 ```
 
 The given command below will run Multrin in the development mode.
+
 ```bash
 $ yarn dev
 ```
@@ -53,26 +60,28 @@ You can also run other commands, for other tasks like building the app or lintin
 ### Usage:
 
 Using `yarn`:
+
 ```bash
 $ yarn <command>
 ```
 
 Using `npm`:
+
 ```bash
 $ npm run <command>
 ```
 
 #### List of available commands:
 
-| Command            | Description                                 |
-| ------------------ | ------------------------------------------- |
-| `build-production` | Bundles Multrin's source in production mode.|
-| `compile-win32`    | Compiles Multrin binaries for Windows.      |
-| `electron-rebuild` | Rebuilds all dependencies for `Electron`.   |
-| `lint`             | Lints code.                                 |
-| `lint-fix`         | Fixes eslint errors if any                  |
-| `start`            | Starts Multrin.                             |
-| `dev`              | Starts Multrin in the development mode      |
+| Command            | Description                                  |
+| ------------------ | -------------------------------------------- |
+| `build-production` | Bundles Multrin's source in production mode. |
+| `compile-win32`    | Compiles Multrin binaries for Windows.       |
+| `electron-rebuild` | Rebuilds all dependencies for `Electron`.    |
+| `lint`             | Lints code.                                  |
+| `lint-fix`         | Fixes eslint errors if any                   |
+| `start`            | Starts Multrin.                              |
+| `dev`              | Starts Multrin in the development mode       |
 
 # Authors
 

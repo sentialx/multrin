@@ -115,7 +115,14 @@ export class AppWindow extends BrowserWindow {
     const handle = this.getNativeWindowHandle().readInt32LE(0);
     const currentWindow = new Window(handle);
 
-    mouseEvents.on('mouse-up', async () => {
+    let lastBounds: any;
+
+    mouseEvents.on('mouse-down', () => {
+      const window = new ProcessWindow(windowManager.getActiveWindow().handle);
+      lastBounds = window.getBounds();
+    });
+
+    mouseEvents.on('mouse-up', async data => {
       const window = new ProcessWindow(windowManager.getActiveWindow().handle);
       const contentArea = this.getContentArea();
       const bounds = window.getBounds();
@@ -123,10 +130,11 @@ export class AppWindow extends BrowserWindow {
       if (
         !this.windows.find(x => x.handle === window.handle) &&
         window.handle !== handle &&
-        bounds.x >= contentArea.x &&
-        bounds.x <= contentArea.x + contentArea.width &&
-        bounds.y >= contentArea.y - 42 &&
-        bounds.y <= contentArea.y
+        data.x >= contentArea.x &&
+        data.x <= contentArea.x + contentArea.width &&
+        data.y >= contentArea.y - 42 &&
+        data.y <= contentArea.y &&
+        (bounds.x !== lastBounds.x || bounds.y !== lastBounds.y)
       ) {
         window.setParent(currentWindow);
         window.setMaximizable(false);
@@ -150,6 +158,8 @@ export class AppWindow extends BrowserWindow {
           this.selectWindow(window);
         }, 50);
       }
+
+      lastBounds = null;
     });
   }
 

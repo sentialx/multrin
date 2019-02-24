@@ -34,6 +34,8 @@ export class AppWindow extends BrowserWindow {
   public windows: ProcessWindow[] = [];
   public selectedWindow: ProcessWindow;
 
+  public lastBounds: any;
+
   constructor() {
     super({
       frame: process.env.ENV === 'dev' || platform() === 'darwin',
@@ -100,7 +102,6 @@ export class AppWindow extends BrowserWindow {
         const { handle } = this.selectedWindow;
         this.detachWindow(this.selectedWindow);
         this.webContents.send('remove-tab', handle);
-        return;
       }
     }, 100);
 
@@ -115,11 +116,9 @@ export class AppWindow extends BrowserWindow {
     const handle = this.getNativeWindowHandle().readInt32LE(0);
     const currentWindow = new Window(handle);
 
-    let lastBounds: any;
-
     mouseEvents.on('mouse-down', () => {
       const window = new ProcessWindow(windowManager.getActiveWindow().handle);
-      lastBounds = window.getBounds();
+      this.lastBounds = window.getBounds();
     });
 
     mouseEvents.on('mouse-up', async data => {
@@ -133,8 +132,9 @@ export class AppWindow extends BrowserWindow {
         data.x >= contentArea.x &&
         data.x <= contentArea.x + contentArea.width &&
         data.y >= contentArea.y - 42 &&
-        data.y <= contentArea.y &&
-        (bounds.x !== lastBounds.x || bounds.y !== lastBounds.y)
+        data.y <= contentArea.y + contentArea.height &&
+        this.lastBounds &&
+        (bounds.x !== this.lastBounds.x || bounds.y !== this.lastBounds.y)
       ) {
         window.setParent(currentWindow);
         window.setMaximizable(false);
@@ -159,7 +159,7 @@ export class AppWindow extends BrowserWindow {
         }, 50);
       }
 
-      lastBounds = null;
+      this.lastBounds = null;
     });
   }
 
@@ -182,6 +182,8 @@ export class AppWindow extends BrowserWindow {
     }
 
     window.show();
+
+    this.lastBounds = null;
 
     this.resizeWindow(window);
 

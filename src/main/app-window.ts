@@ -35,6 +35,7 @@ export class AppWindow extends BrowserWindow {
   public selectedWindow: ProcessWindow;
 
   public lastBounds: any;
+  public detachedWindow: Window;
 
   constructor() {
     super({
@@ -104,6 +105,8 @@ export class AppWindow extends BrowserWindow {
         const window = this.selectedWindow;
         this.detachWindow(window);
 
+        this.detachedWindow = window;
+
         setTimeout(() => {
           window.bringToTop();
         }, 50);
@@ -114,6 +117,14 @@ export class AppWindow extends BrowserWindow {
 
     ipcMain.on('select-window', (e: any, id: number) => {
       this.selectWindow(this.windows.find(x => x.handle === id));
+
+      if (this.detachedWindow) {
+        const win = this.detachedWindow;
+        setTimeout(() => {
+          win.bringToTop();
+        }, 50);
+        this.detachedWindow = null;
+      }
     });
 
     ipcMain.on('detach-window', (e: any, id: number) => {
@@ -193,7 +204,6 @@ export class AppWindow extends BrowserWindow {
     }
 
     window.show();
-    window.bringToTop();
 
     this.lastBounds = null;
     this.selectedWindow = window;

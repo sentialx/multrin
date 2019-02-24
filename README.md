@@ -17,6 +17,8 @@ Multrin is an app built on top of `Electron`, `React`, `styled-components` and `
 
 ![](screenshots/screen1.gif)
 
+# [Downloads](https://github.com/sentialx/multrin/releases)
+
 # Components
 
 Multrin has two very important components:

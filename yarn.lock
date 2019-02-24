@@ -2897,9 +2897,9 @@ node-vibrant@3.2.0-alpha:
     "@vibrant/quantizer-mmcq" "^3.2.0-alpha"
     url "^0.11.0"
 
-node-window-manager@0.3.1:
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/node-window-manager/-/node-window-manager-0.3.1.tgz#2c8521b29ec08f7fe0d423ccf4844fdc1bc995f9"
+node-window-manager@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/node-window-manager/-/node-window-manager-0.4.0.tgz#6b98ae569699f110cba2ddd541f179cefddcab01"
   dependencies:
     ffi "2.3.0"
     ref "1.3.5"

@@ -2,9 +2,10 @@ import { observer } from 'mobx-react';
 import * as React from 'react';
 import { createGlobalStyle } from 'styled-components';
 
-import { Style } from '~/renderer/app/style';
 import { Toolbar } from '../Toolbar';
 import { ipcRenderer } from 'electron';
+import { Info, Icon } from './style';
+import { Style } from '~/renderer/app/style';
 
 const GlobalStyle = createGlobalStyle`${Style}`;
 
@@ -17,6 +18,9 @@ export const App = observer(() => {
     <React.Fragment>
       <GlobalStyle />
       <Toolbar />
+      <Info>
+        <Icon /> Drop windows here
+      </Info>
     </React.Fragment>
   );
 });

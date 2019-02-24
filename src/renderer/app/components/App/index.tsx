@@ -6,6 +6,7 @@ import { Toolbar } from '../Toolbar';
 import { ipcRenderer } from 'electron';
 import { Info, Icon } from './style';
 import { Style } from '~/renderer/app/style';
+import store from '../../store';
 
 const GlobalStyle = createGlobalStyle`${Style}`;
 
@@ -18,7 +19,7 @@ export const App = observer(() => {
     <React.Fragment>
       <GlobalStyle />
       <Toolbar />
-      <Info>
+      <Info visible={store.tabsStore.tabs.length === 0}>
         <Icon /> Drop windows here
       </Info>
     </React.Fragment>

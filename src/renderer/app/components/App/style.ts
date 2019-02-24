@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { centerImage } from '~/shared/mixins';
 import { icons } from '../../constants';
 
@@ -8,9 +8,14 @@ export const Info = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   font-weight: 500;
-  opacity: 0.54;
   font-size: 16px;
-  animation-name: info-pulse;
+  transition: 0.3s opacity;
+
+  ${({ visible }: { visible: boolean }) => css`
+    animation-name: ${visible ? 'info-pulse' : 'none'};
+    opacity: ${visible ? 0.54 : 0};
+  `};
+
   animation-duration: 3s;
   animation-iteration-count: infinite;
   will-change: transform;

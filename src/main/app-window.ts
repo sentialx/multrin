@@ -77,6 +77,8 @@ export class AppWindow extends BrowserWindow {
     });
 
     setInterval(() => {
+      if (this.isMinimized()) return;
+
       for (const window of this.windows) {
         const title = window.getTitle();
         if (window.lastTitle !== title) {
@@ -117,11 +119,15 @@ export class AppWindow extends BrowserWindow {
     const currentWindow = new Window(handle);
 
     mouseEvents.on('mouse-down', () => {
+      if (this.isMinimized()) return;
+
       const window = new ProcessWindow(windowManager.getActiveWindow().handle);
       this.lastBounds = window.getBounds();
     });
 
     mouseEvents.on('mouse-up', async data => {
+      if (this.isMinimized()) return;
+
       const window = new ProcessWindow(windowManager.getActiveWindow().handle);
       const contentArea = this.getContentArea();
       const bounds = window.getBounds();
@@ -191,7 +197,7 @@ export class AppWindow extends BrowserWindow {
   }
 
   resizeWindow(window: ProcessWindow) {
-    if (!window) return;
+    if (!window || this.isMinimized()) return;
 
     const newBounds = this.getContentArea();
 

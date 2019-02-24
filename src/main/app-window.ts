@@ -101,9 +101,14 @@ export class AppWindow extends BrowserWindow {
       const newBounds = this.selectedWindow.getBounds();
 
       if (bounds.x !== newBounds.x || bounds.y !== newBounds.y) {
-        const { handle } = this.selectedWindow;
-        this.detachWindow(this.selectedWindow);
-        this.webContents.send('remove-tab', handle);
+        const window = this.selectedWindow;
+        this.detachWindow(window);
+
+        setTimeout(() => {
+          window.bringToTop();
+        }, 50);
+
+        this.webContents.send('remove-tab', window.handle);
       }
     }, 100);
 
@@ -188,12 +193,12 @@ export class AppWindow extends BrowserWindow {
     }
 
     window.show();
+    window.bringToTop();
 
     this.lastBounds = null;
+    this.selectedWindow = window;
 
     this.resizeWindow(window);
-
-    this.selectedWindow = window;
   }
 
   resizeWindow(window: ProcessWindow) {

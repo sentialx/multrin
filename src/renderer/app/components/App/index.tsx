@@ -5,7 +5,6 @@ import { createGlobalStyle } from 'styled-components';
 import { Style } from '~/renderer/app/style';
 import { Toolbar } from '../Toolbar';
 import { ipcRenderer } from 'electron';
-import { Line } from './style';
 
 const GlobalStyle = createGlobalStyle`${Style}`;
 
@@ -18,7 +17,6 @@ export const App = observer(() => {
     <React.Fragment>
       <GlobalStyle />
       <Toolbar />
-      <Line />
     </React.Fragment>
   );
 });

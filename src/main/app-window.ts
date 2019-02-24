@@ -35,6 +35,7 @@ export class AppWindow extends BrowserWindow {
   public selectedWindow: ProcessWindow;
 
   public lastBounds: any;
+
   public detachedWindow: Window;
 
   constructor() {
@@ -137,8 +138,12 @@ export class AppWindow extends BrowserWindow {
     mouseEvents.on('mouse-down', () => {
       if (this.isMinimized()) return;
 
-      const window = new ProcessWindow(windowManager.getActiveWindow().handle);
-      this.lastBounds = window.getBounds();
+      setTimeout(() => {
+        const window = new ProcessWindow(
+          windowManager.getActiveWindow().handle,
+        );
+        this.lastBounds = window.getBounds();
+      }, 50);
     });
 
     mouseEvents.on('mouse-up', async data => {
@@ -205,7 +210,6 @@ export class AppWindow extends BrowserWindow {
 
     window.show();
 
-    this.lastBounds = null;
     this.selectedWindow = window;
 
     this.resizeWindow(window);

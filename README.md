@@ -13,7 +13,7 @@ Multrin is a cross-platform app built on top of  `Electron`, `React`, `styled-co
 
 </div>
 
-> NOTE: Multrin works currently only on Windows since it's dependent on `node-window-manager` which also only supports Windows. This may change in the future.
+> NOTE: Multrin works currently only on Windows since it's dependent on `node-window-manager` which also only supports Windows. I'm working on macOS and Linux support.
 
 # Screenshots
 

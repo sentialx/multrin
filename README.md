@@ -19,8 +19,6 @@ Multrin is a cross-platform app built on top of  `Electron`, `React`, `styled-co
 
 ![](screenshots/screen1.gif)
 
-# [Downloads](https://github.com/sentialx/multrin/releases)
-
 # [Roadmap](https://github.com/sentialx/multrin/projects)
 
 # Components

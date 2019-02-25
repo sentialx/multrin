@@ -6,6 +6,7 @@
   <h1>Multrin</h1>
 
 [![AppVeyor](https://img.shields.io/appveyor/ci/sentialx/multrin.svg?style=flat-square)](https://ci.appveyor.com/project/sentialx/multrin)
+[![Twitter](https://img.shields.io/twitter/follow/sentialx.svg?label=Follow)](https://twitter.com/sentialx)
 
 Multrin is an app built on top of `Electron`, `React`, `styled-components` and `TypeScript` that lets you to organize windows in tabs, by just dragging them onto the app.
 

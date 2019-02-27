@@ -123,6 +123,10 @@ export class AppWindow extends BrowserWindow {
       this.detachWindow(this.windows.find(x => x.handle === id));
     });
 
+    windowManager.on('window-activated', (window: Window) => {
+      this.webContents.send('select-tab', window.handle);
+    });
+
     const handle = this.getNativeWindowHandle().readInt32LE(0);
     const currentWindow = new Window(handle);
 

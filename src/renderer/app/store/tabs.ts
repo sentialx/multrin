@@ -81,6 +81,13 @@ export class TabsStore {
         tab.title = data.title;
       }
     });
+
+    ipcRenderer.on('select-tab', (e: any, id: number) => {
+      const tab = this.getTabById(id);
+      if (tab) {
+        tab.select();
+      }
+    });
   }
 
   public resetRearrangeTabsTimer() {

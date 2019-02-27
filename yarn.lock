@@ -318,16 +318,23 @@
     "@types/prop-types" "*"
     "@types/react" "*"
 
-"@types/react@*", "@types/react@16.8.4":
+"@types/react@*":
   version "16.8.4"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.4.tgz#134307f5266e866d5e7c25e47f31f9abd5b2ea34"
   dependencies:
     "@types/prop-types" "*"
     csstype "^2.2.0"
 
-"@types/styled-components@4.1.10":
-  version "4.1.10"
-  resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-4.1.10.tgz#7d23d0f1f5b32a78a9207d0300480d47251a3e98"
+"@types/react@16.8.5":
+  version "16.8.5"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.8.5.tgz#03b9a6597bc20f6eaaed43f377a160f7e41c2b90"
+  dependencies:
+    "@types/prop-types" "*"
+    csstype "^2.2.0"
+
+"@types/styled-components@4.1.11":
+  version "4.1.11"
+  resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-4.1.11.tgz#1bd97988a69be550ef8a967b87827ff943f21c4e"
   dependencies:
     "@types/react" "*"
     "@types/react-native" "*"
@@ -1371,9 +1378,9 @@ electron-updater@4.0.6:
     semver "^5.6.0"
     source-map-support "^0.5.9"
 
-electron@4.0.5:
-  version "4.0.5"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-4.0.5.tgz#d8e7d8a581a3e31071b2226129b26b6110c1d877"
+electron@4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-4.0.6.tgz#f936772ddb5eaa026591ea14ef806e1385fbbda9"
   dependencies:
     "@types/node" "^10.12.18"
     electron-download "^4.1.0"
@@ -2897,9 +2904,9 @@ node-vibrant@3.2.0-alpha:
     "@vibrant/quantizer-mmcq" "^3.2.0-alpha"
     url "^0.11.0"
 
-node-window-manager@0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/node-window-manager/-/node-window-manager-0.4.0.tgz#6b98ae569699f110cba2ddd541f179cefddcab01"
+node-window-manager@0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/node-window-manager/-/node-window-manager-0.5.0.tgz#b79824cf7a799ea5f3ebe6a006a37f5b4be77b97"
   dependencies:
     ffi "2.3.0"
     ref "1.3.5"

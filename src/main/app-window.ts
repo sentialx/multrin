@@ -28,14 +28,17 @@ export class ProcessWindow extends Window {
     this.setMinimizable(this.minimizable);
     this.setParent(null);
 
-    this.hide();
-    this.show();
+    setTimeout(() => {
+      this.hide();
+      this.show();
+    }, 10);
   }
 }
 
 export class AppWindow extends BrowserWindow {
   public windows: ProcessWindow[] = [];
   public selectedWindow: ProcessWindow;
+  public window: Window;
 
   public lastBounds: any;
 
@@ -128,7 +131,7 @@ export class AppWindow extends BrowserWindow {
     });
 
     const handle = this.getNativeWindowHandle().readInt32LE(0);
-    const currentWindow = new Window(handle);
+    this.window = new Window(handle);
 
     mouseEvents.on('mouse-down', () => {
       if (this.isMinimized()) return;
@@ -158,7 +161,7 @@ export class AppWindow extends BrowserWindow {
         this.lastBounds &&
         (bounds.x !== this.lastBounds.x || bounds.y !== this.lastBounds.y)
       ) {
-        window.setParent(currentWindow);
+        window.setParent(this.window);
         window.setMaximizable(false);
         window.setMinimizable(false);
         window.setResizable(false);
@@ -190,6 +193,20 @@ export class AppWindow extends BrowserWindow {
 
     bounds.y += 42;
     bounds.height -= 42;
+
+    const sf = windowManager.getScaleFactor(
+      windowManager.getMonitorFromWindow(this.window),
+    );
+
+    bounds.x *= sf;
+    bounds.y *= sf;
+    bounds.width *= sf;
+    bounds.height *= sf;
+
+    bounds.x = Math.round(bounds.x);
+    bounds.y = Math.round(bounds.y);
+    bounds.width = Math.round(bounds.width);
+    bounds.height = Math.round(bounds.height);
 
     return bounds;
   }

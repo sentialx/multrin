@@ -5,23 +5,19 @@
 <div align="center">
   <h1>Multrin</h1>
 
-[![AppVeyor](https://img.shields.io/appveyor/ci/sentialx/multrin.svg?style=flat-square)](https://ci.appveyor.com/project/sentialx/multrin)
+[![AppVeyor](https://img.shields.io/appveyor/ci/sentialx/multrin.svg?style=for-the-badge)](https://ci.appveyor.com/project/sentialx/multrin)
+[![Twitter](https://img.shields.io/twitter/follow/sentialx.svg?label=Follow&style=for-the-badge)](https://twitter.com/sentialx)
+[![Downloads](https://img.shields.io/github/downloads/sentialx/multrin/total.svg?style=for-the-badge)](https://github.com/sentialx/multrin/releases)
 
-Multrin is an app built on top of `Electron`, `React`, `styled-components` and `TypeScript` that lets you to organize windows in tabs, by just dragging them onto the app.
+Multrin is a cross-platform app built on top of  `Electron`, `React`, `styled-components` and `TypeScript`, that lets you to organize apps in tabs, by just dropping them onto Multrin. It aims to greatly improve your productivity and organization.
 
 </div>
 
-> NOTE: Multrin works currently only on Windows since it's dependent on `node-window-manager` which also only supports Windows. This may change in the future.
-
-<a href="https://www.patreon.com/bePatron?u=12270966">
-    <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
-</a>
+> NOTE: Multrin works currently only on Windows since it's dependent on `node-window-manager` which also only supports Windows. I'm working on macOS and Linux support.
 
 # Screenshots
 
 ![](screenshots/screen1.gif)
-
-# [Downloads](https://github.com/sentialx/multrin/releases)
 
 # [Roadmap](https://github.com/sentialx/multrin/projects)
 
@@ -88,3 +84,7 @@ $ npm run <command>
 # Authors
 
 [@sentialx](https://github.com/sentialx)
+
+<a href="https://www.patreon.com/bePatron?u=12270966">
+    <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
+</a>

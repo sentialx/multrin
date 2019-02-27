@@ -5,6 +5,7 @@ import mouseEvents from 'mouse-hooks';
 import { windowManager, Window } from 'node-window-manager';
 import { getFileIcon } from 'extract-file-icon';
 import console = require('console');
+import { appWindow } from '.';
 
 export class ProcessWindow extends Window {
   public resizable = false;
@@ -26,6 +27,8 @@ export class ProcessWindow extends Window {
     this.setMaximizable(this.maximizable);
     this.setMinimizable(this.minimizable);
     this.setParent(null);
+
+    this.hide();
     this.show();
   }
 }
@@ -108,24 +111,12 @@ export class AppWindow extends BrowserWindow {
 
         this.detachedWindow = window;
 
-        setTimeout(() => {
-          window.bringToTop();
-        }, 50);
-
         this.webContents.send('remove-tab', window.handle);
       }
     }, 100);
 
     ipcMain.on('select-window', (e: any, id: number) => {
       this.selectWindow(this.windows.find(x => x.handle === id));
-
-      if (this.detachedWindow) {
-        const win = this.detachedWindow;
-        setTimeout(() => {
-          win.bringToTop();
-        }, 50);
-        this.detachedWindow = null;
-      }
     });
 
     ipcMain.on('detach-window', (e: any, id: number) => {

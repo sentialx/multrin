@@ -23,6 +23,7 @@ export class ProcessWindow extends Window {
     this.maximizable = this.isMaximizable();
     this.minimizable = this.isMinimizable();
     this.opacity = this.getOpacity();
+    this.opacity = this.opacity === 0 ? 1 : this.opacity;
   }
 
   public detach() {
@@ -145,7 +146,7 @@ export class AppWindow extends BrowserWindow {
             winBounds.y !== this.lastBounds.y)
         ) {
           if (!draggedIn) {
-            draggedWindow.setOpacity(0.5);
+            draggedWindow.setOpacity(draggedWindow.opacity / 1.5);
 
             const title = draggedWindow.getTitle();
             const icon = getFileIcon(draggedWindow.process.path);
@@ -161,7 +162,7 @@ export class AppWindow extends BrowserWindow {
             draggedIn = true;
           }
         } else {
-          draggedWindow.setOpacity(1);
+          draggedWindow.setOpacity(draggedWindow.opacity);
 
           this.webContents.send('remove-tab', draggedWindow.handle);
 

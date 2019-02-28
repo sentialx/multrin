@@ -14,12 +14,15 @@ export class ProcessWindow extends Window {
 
   public lastTitle: string;
 
+  public opacity: number;
+
   constructor(handle: number) {
     super(handle);
 
     this.resizable = this.isResizable();
     this.maximizable = this.isMaximizable();
     this.minimizable = this.isMinimizable();
+    this.opacity = this.getOpacity();
   }
 
   public detach() {
@@ -38,11 +41,12 @@ export class ProcessWindow extends Window {
 export class AppWindow extends BrowserWindow {
   public windows: ProcessWindow[] = [];
   public selectedWindow: ProcessWindow;
+
   public window: Window;
 
   public lastBounds: any;
 
-  public detachedWindow: Window;
+  public detached = false;
 
   constructor() {
     super({
@@ -59,6 +63,9 @@ export class AppWindow extends BrowserWindow {
       },
       icon: resolve(app.getAppPath(), 'static/app-icons/icon.png'),
     });
+
+    const handle = this.getNativeWindowHandle().readInt32LE(0);
+    this.window = new Window(handle);
 
     process.on('uncaughtException', error => {
       console.error(error);
@@ -84,37 +91,82 @@ export class AppWindow extends BrowserWindow {
       }
     });
 
-    setInterval(() => {
-      if (this.isMinimized()) return;
+    let draggedWindow: ProcessWindow;
+    let draggedIn = false;
 
-      for (const window of this.windows) {
-        const title = window.getTitle();
-        if (window.lastTitle !== title) {
-          this.webContents.send('update-tab-title', {
-            id: window.handle,
-            title,
-          });
-          window.lastTitle = title;
+    setInterval(() => {
+      const bounds = this.getContentArea();
+      const cursor = windowManager.getMousePoint();
+
+      if (!this.isMinimized()) {
+        for (const window of this.windows) {
+          const title = window.getTitle();
+          if (window.lastTitle !== title) {
+            this.webContents.send('update-tab-title', {
+              id: window.handle,
+              title,
+            });
+            window.lastTitle = title;
+          }
+
+          if (!window.isWindow()) {
+            this.detachWindow(window);
+            this.webContents.send('remove-tab', window.handle);
+          }
         }
 
-        if (!window.isWindow()) {
-          this.detachWindow(window);
-          this.webContents.send('remove-tab', window.handle);
+        if (this.selectedWindow) {
+          const newBounds = this.selectedWindow.getBounds();
+
+          if (bounds.x !== newBounds.x || bounds.y !== newBounds.y) {
+            const window = this.selectedWindow;
+            this.detachWindow(window);
+            this.detached = true;
+
+            this.webContents.send('remove-tab', window.handle);
+          }
         }
       }
 
-      if (!this.selectedWindow) return;
+      if (
+        draggedWindow &&
+        !this.windows.find(x => x.handle === draggedWindow.handle)
+      ) {
+        const winBounds = draggedWindow.getBounds();
+        if (
+          !this.detached &&
+          cursor.x >= bounds.x &&
+          cursor.x <= bounds.x + bounds.width &&
+          cursor.y >= bounds.y - 42 &&
+          cursor.y <=
+            bounds.y + (this.windows.length > 0 ? 0 : bounds.height) &&
+          this.lastBounds &&
+          (winBounds.x !== this.lastBounds.x ||
+            winBounds.y !== this.lastBounds.y)
+        ) {
+          if (!draggedIn) {
+            draggedWindow.setOpacity(0.5);
 
-      const bounds = this.getContentArea();
-      const newBounds = this.selectedWindow.getBounds();
+            const title = draggedWindow.getTitle();
+            const icon = getFileIcon(draggedWindow.process.path);
 
-      if (bounds.x !== newBounds.x || bounds.y !== newBounds.y) {
-        const window = this.selectedWindow;
-        this.detachWindow(window);
+            draggedWindow.lastTitle = title;
 
-        this.detachedWindow = window;
+            this.webContents.send('add-tab', {
+              id: draggedWindow.handle,
+              title,
+              icon,
+            });
 
-        this.webContents.send('remove-tab', window.handle);
+            draggedIn = true;
+          }
+        } else {
+          draggedWindow.setOpacity(1);
+
+          this.webContents.send('remove-tab', draggedWindow.handle);
+
+          draggedIn = false;
+        }
       }
     }, 100);
 
@@ -130,61 +182,60 @@ export class AppWindow extends BrowserWindow {
       this.webContents.send('select-tab', window.handle);
     });
 
-    const handle = this.getNativeWindowHandle().readInt32LE(0);
-    this.window = new Window(handle);
-
     mouseEvents.on('mouse-down', () => {
       if (this.isMinimized()) return;
 
       setTimeout(() => {
-        const window = new ProcessWindow(
+        draggedWindow = new ProcessWindow(
           windowManager.getActiveWindow().handle,
         );
-        this.lastBounds = window.getBounds();
+
+        if (draggedWindow.handle === handle) {
+          draggedWindow = null;
+          return;
+        }
+
+        this.lastBounds = draggedWindow.getBounds();
       }, 50);
     });
 
     mouseEvents.on('mouse-up', async data => {
-      if (this.isMinimized()) return;
+      if (draggedWindow && !this.isMinimized()) {
+        const contentArea = this.getContentArea();
+        const bounds = draggedWindow.getBounds();
 
-      const window = new ProcessWindow(windowManager.getActiveWindow().handle);
-      const contentArea = this.getContentArea();
-      const bounds = window.getBounds();
+        if (
+          draggedWindow &&
+          !this.detached &&
+          !this.windows.find(x => x.handle === draggedWindow.handle) &&
+          data.x >= contentArea.x &&
+          data.x <= contentArea.x + contentArea.width &&
+          data.y >= contentArea.y - 42 &&
+          data.y <=
+            contentArea.y +
+              (this.windows.length > 0 ? 0 : contentArea.height) &&
+          this.lastBounds &&
+          (bounds.x !== this.lastBounds.x || bounds.y !== this.lastBounds.y)
+        ) {
+          const win = draggedWindow;
 
-      if (
-        !this.windows.find(x => x.handle === window.handle) &&
-        window.handle !== handle &&
-        data.x >= contentArea.x &&
-        data.x <= contentArea.x + contentArea.width &&
-        data.y >= contentArea.y - 42 &&
-        data.y <= contentArea.y + contentArea.height &&
-        this.lastBounds &&
-        (bounds.x !== this.lastBounds.x || bounds.y !== this.lastBounds.y)
-      ) {
-        window.setParent(this.window);
-        window.setMaximizable(false);
-        window.setMinimizable(false);
-        window.setResizable(false);
+          win.setParent(this.window);
+          win.setMaximizable(false);
+          win.setMinimizable(false);
+          win.setResizable(false);
+          win.setOpacity(win.opacity);
 
-        this.windows.push(window);
+          this.windows.push(win);
 
-        const icon = getFileIcon(window.process.path);
-
-        setTimeout(() => {
-          const title = window.getTitle();
-          window.lastTitle = title;
-
-          this.webContents.send('add-tab', {
-            id: window.handle,
-            title,
-            icon,
-          });
-
-          this.selectWindow(window);
-        }, 50);
+          setTimeout(() => {
+            this.selectWindow(win);
+          }, 50);
+        }
       }
 
+      draggedWindow = null;
       this.lastBounds = null;
+      this.detached = false;
     });
   }
 

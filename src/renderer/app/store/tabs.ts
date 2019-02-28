@@ -65,7 +65,19 @@ export class TabsStore {
     }, 1000);
 
     ipcRenderer.on('add-tab', (e: any, options: any) => {
-      this.addTab(options.id, options.title, options.icon);
+      const tab = this.tabs.find(x => x.id === options.id);
+
+      if (tab) {
+        tab.isClosing = false;
+        store.tabsStore.updateTabsBounds(true);
+        clearTimeout(tab.removeTimeout);
+
+        if (options.active) {
+          tab.select();
+        }
+      } else {
+        this.addTab(options.id, options.title, options.icon);
+      }
     });
 
     ipcRenderer.on('remove-tab', (e: any, id: number) => {
@@ -117,7 +129,7 @@ export class TabsStore {
   }
 
   public getTabById(id: number) {
-    return this.tabs.find(x => x.id === id);
+    return this.tabs.find(x => x.id === id && !x.isClosing);
   }
 
   public addTab(id: number, title: string, icon: Buffer) {
@@ -134,8 +146,8 @@ export class TabsStore {
     return tab;
   }
 
-  public removeTab(id: number) {
-    (this.tabs as any).remove(this.getTabById(id));
+  public removeTab(tab: Tab) {
+    (this.tabs as any).remove(tab);
   }
 
   public updateTabsBounds(animation: boolean) {

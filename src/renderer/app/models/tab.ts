@@ -10,6 +10,8 @@ import { colors } from '~/renderer/constants';
 
 let pos = 0;
 
+const id = 0;
+
 export class Tab {
   @observable
   public id: number;
@@ -36,6 +38,7 @@ export class Tab {
   public tempPosition = pos++;
   public isClosing = false;
   public ref = React.createRef<HTMLDivElement>();
+  public removeTimeout: any;
 
   @computed
   public get isSelected() {
@@ -198,8 +201,8 @@ export class Tab {
       }
     }
 
-    setTimeout(() => {
-      store.tabsStore.removeTab(this.id);
+    this.removeTimeout = setTimeout(() => {
+      store.tabsStore.removeTab(this);
     }, TAB_ANIMATION_DURATION * 1000);
   }
 }

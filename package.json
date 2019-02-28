@@ -1,6 +1,6 @@
 {
   "name": "multrin",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Tabbed window organizer",
   "keywords": [
     "organizer",
@@ -46,8 +46,8 @@
   ],
   "devDependencies": {
     "@types/gsap": "1.20.1",
-    "@types/node": "11.9.5",
-    "@types/react": "16.8.5",
+    "@types/node": "11.9.6",
+    "@types/react": "16.8.6",
     "@types/react-dom": "16.8.2",
     "@types/styled-components": "4.1.11",
     "concurrently": "4.1.0",
@@ -64,7 +64,7 @@
     "typescript-plugin-styled-components": "1.2.0"
   },
   "dependencies": {
-    "bindings": "1.4.0",
+    "bindings": "1.5.0",
     "electron-updater": "4.0.6",
     "extract-file-icon": "0.1.1",
     "gsap": "2.1.1",
@@ -72,7 +72,7 @@
     "mobx-react": "5.4.3",
     "mouse-hooks": "0.2.0",
     "node-vibrant": "3.2.0-alpha",
-    "node-window-manager": "0.5.0",
+    "node-window-manager": "0.6.0",
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "styled-components": "4.1.3"

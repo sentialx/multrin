@@ -6,6 +6,7 @@ import { windowManager, Window } from 'node-window-manager';
 import { getFileIcon } from 'extract-file-icon';
 import console = require('console');
 import { appWindow } from '.';
+import { TOOLBAR_HEIGHT } from '~/renderer/app/constants';
 
 export class ProcessWindow extends Window {
   public resizable = false;
@@ -19,17 +20,11 @@ export class ProcessWindow extends Window {
   constructor(handle: number) {
     super(handle);
 
-    this.resizable = this.isResizable();
-    this.maximizable = this.isMaximizable();
-    this.minimizable = this.isMinimizable();
     this.opacity = this.getOpacity();
     this.opacity = this.opacity === 0 ? 1 : this.opacity;
   }
 
   public detach() {
-    this.setResizable(this.resizable);
-    this.setMaximizable(this.maximizable);
-    this.setMinimizable(this.minimizable);
     this.setParent(null);
 
     setTimeout(() => {
@@ -48,6 +43,8 @@ export class AppWindow extends BrowserWindow {
   public lastBounds: any;
 
   public detached = false;
+
+  public isMoving = false;
 
   constructor() {
     super({
@@ -80,6 +77,7 @@ export class AppWindow extends BrowserWindow {
     }
 
     const updateBounds = () => {
+      this.isMoving = true;
       this.resizeWindow(this.selectedWindow);
     };
 
@@ -96,7 +94,7 @@ export class AppWindow extends BrowserWindow {
     let draggedIn = false;
 
     setInterval(() => {
-      const bounds = this.getContentArea();
+      const contentBounds = this.getContentArea();
       const cursor = windowManager.getMousePoint();
 
       if (!this.isMinimized()) {
@@ -119,7 +117,12 @@ export class AppWindow extends BrowserWindow {
         if (this.selectedWindow) {
           const newBounds = this.selectedWindow.getBounds();
 
-          if (bounds.x !== newBounds.x || bounds.y !== newBounds.y) {
+          if (
+            contentBounds.x !== newBounds.x ||
+            (contentBounds.y !== newBounds.y &&
+              (newBounds.width === this.lastBounds.width &&
+                newBounds.height === this.lastBounds.height))
+          ) {
             const window = this.selectedWindow;
             this.detachWindow(window);
             this.detached = true;
@@ -136,11 +139,12 @@ export class AppWindow extends BrowserWindow {
         const winBounds = draggedWindow.getBounds();
         if (
           !this.detached &&
-          cursor.x >= bounds.x &&
-          cursor.x <= bounds.x + bounds.width &&
-          cursor.y >= bounds.y - 42 &&
+          cursor.x >= contentBounds.x &&
+          cursor.x <= contentBounds.x + contentBounds.width &&
+          cursor.y >= contentBounds.y - TOOLBAR_HEIGHT &&
           cursor.y <=
-            bounds.y + (this.windows.length > 0 ? 0 : bounds.height) &&
+            contentBounds.y +
+              (this.windows.length > 0 ? 0 : contentBounds.height) &&
           this.lastBounds &&
           (winBounds.x !== this.lastBounds.x ||
             winBounds.y !== this.lastBounds.y)
@@ -201,6 +205,25 @@ export class AppWindow extends BrowserWindow {
     });
 
     mouseEvents.on('mouse-up', async data => {
+      if (this.selectedWindow && !this.isMoving) {
+        const bounds = this.selectedWindow.getBounds();
+
+        if (!this.isMaximized()) {
+          this.setContentBounds({
+            width: bounds.width,
+            height: bounds.height + TOOLBAR_HEIGHT,
+            x: bounds.x,
+            y: bounds.y - TOOLBAR_HEIGHT,
+          });
+        } else {
+          setTimeout(() => {
+            this.resizeWindow(this.selectedWindow);
+          }, 50);
+        }
+      }
+
+      this.isMoving = false;
+
       if (draggedWindow && !this.isMinimized()) {
         const contentArea = this.getContentArea();
         const bounds = draggedWindow.getBounds();
@@ -211,7 +234,7 @@ export class AppWindow extends BrowserWindow {
           !this.windows.find(x => x.handle === draggedWindow.handle) &&
           data.x >= contentArea.x &&
           data.x <= contentArea.x + contentArea.width &&
-          data.y >= contentArea.y - 42 &&
+          data.y >= contentArea.y - TOOLBAR_HEIGHT &&
           data.y <=
             contentArea.y +
               (this.windows.length > 0 ? 0 : contentArea.height) &&
@@ -221,9 +244,6 @@ export class AppWindow extends BrowserWindow {
           const win = draggedWindow;
 
           win.setParent(this.window);
-          win.setMaximizable(false);
-          win.setMinimizable(false);
-          win.setResizable(false);
           win.setOpacity(win.opacity);
 
           this.windows.push(win);
@@ -243,8 +263,8 @@ export class AppWindow extends BrowserWindow {
   getContentArea() {
     const bounds = this.getContentBounds();
 
-    bounds.y += 42;
-    bounds.height -= 42;
+    bounds.y += TOOLBAR_HEIGHT;
+    bounds.height -= TOOLBAR_HEIGHT;
 
     const sf = windowManager.getScaleFactor(
       windowManager.getMonitorFromWindow(this.window),
@@ -289,8 +309,8 @@ export class AppWindow extends BrowserWindow {
     const bounds = window.getBounds();
 
     if (bounds.width > newBounds.width || bounds.height > newBounds.height) {
-      this.setContentSize(bounds.width, bounds.height + 42);
-      this.setMinimumSize(bounds.width, bounds.height + 42);
+      this.setContentSize(bounds.width, bounds.height + TOOLBAR_HEIGHT);
+      this.setMinimumSize(bounds.width, bounds.height + TOOLBAR_HEIGHT);
     }
   }
 

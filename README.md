@@ -23,7 +23,7 @@ Multrin is a cross-platform app built on top of  `Electron`, `React`, `styled-co
 
 # Components
 
-Multrin has two very important components:
+Multrin has some very important components:
 
 - Tabs from [Wexond](https://github.com/wexond/wexond)
 - [`node-window-manager`](https://github.com/sentialx/node-window-manager) for managing the docked windows

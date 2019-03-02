@@ -161,7 +161,7 @@ export class AppWindow extends BrowserWindow {
 
             draggedIn = true;
           }
-        } else {
+        } else if (draggedIn) {
           draggedWindow.setOpacity(draggedWindow.opacity);
 
           this.webContents.send('remove-tab', draggedWindow.handle);

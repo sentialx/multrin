@@ -4,7 +4,7 @@ import { createGlobalStyle } from 'styled-components';
 
 import { Toolbar } from '../Toolbar';
 import { ipcRenderer } from 'electron';
-import { Info, Icon } from './style';
+import { Info, Icon, Handle } from './style';
 import { Style } from '~/renderer/app/style';
 import store from '../../store';
 
@@ -18,6 +18,7 @@ export const App = observer(() => {
   return (
     <React.Fragment>
       <GlobalStyle />
+      <Handle />
       <Toolbar />
       <Info visible={store.tabsStore.tabs.length === 0}>
         <Icon /> Drop windows here

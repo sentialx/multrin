@@ -39,3 +39,12 @@ export const Icon = styled.div`
   height: 96px;
   background-image: url(${icons.dropWindow});
 `;
+
+export const Handle = styled.div`
+  -webkit-app-region: drag;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  bottom: 3px;
+  right: 3px;
+`;

@@ -81,6 +81,8 @@ $ npm run <command>
 | `start`            | Starts Multrin.                              |
 | `dev`              | Starts Multrin in the development mode       |
 
+> NOTE: `compile-win32` command will produce publishing errors at the end. Just ignore them.
+
 # Authors
 
 [@sentialx](https://github.com/sentialx)

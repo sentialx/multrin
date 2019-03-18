@@ -9,7 +9,7 @@
 [![Twitter](https://img.shields.io/twitter/follow/sentialx.svg?label=Follow&style=for-the-badge)](https://twitter.com/sentialx)
 [![Downloads](https://img.shields.io/github/downloads/sentialx/multrin/total.svg?style=for-the-badge)](https://github.com/sentialx/multrin/releases)
 
-Multrin is a cross-platform app built on top of  `Electron`, `React`, `styled-components` and `TypeScript`, that lets you to organize apps in tabs, by just dropping them onto Multrin. It aims to greatly improve your productivity and organization.
+Multrin is a ~~cross-platform~~ app built on top of  `Electron`, `React`, `styled-components` and `TypeScript`, that lets you to organize apps in tabs, by just dropping them onto Multrin. It aims to greatly improve your productivity and organization.
 
 </div>
 

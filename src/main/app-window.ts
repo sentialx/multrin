@@ -1,4 +1,11 @@
-import { BrowserWindow, app, ipcMain, screen } from 'electron';
+import {
+  BrowserWindow,
+  app,
+  ipcMain,
+  screen,
+  globalShortcut,
+  ipcRenderer,
+} from 'electron';
 import { resolve, join } from 'path';
 import { platform } from 'os';
 import mouseEvents from 'mouse-hooks';
@@ -126,6 +133,19 @@ export class AppWindow extends BrowserWindow {
 
     windowManager.on('window-activated', (window: Window) => {
       this.webContents.send('select-tab', window.handle);
+
+      if (
+        window.handle === handle ||
+        (this.selectedWindow && window.handle === this.selectedWindow.handle)
+      ) {
+        if (!globalShortcut.isRegistered('CmdOrCtrl+Tab')) {
+          globalShortcut.register('CmdOrCtrl+Tab', () => {
+            this.webContents.send('next-tab');
+          });
+        }
+      } else if (globalShortcut.isRegistered('CmdOrCtrl+Tab')) {
+        globalShortcut.unregister('CmdOrCtrl+Tab');
+      }
     });
 
     mouseEvents.on('mouse-down', () => {

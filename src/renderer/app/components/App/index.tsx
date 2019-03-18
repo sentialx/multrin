@@ -7,6 +7,7 @@ import { ipcRenderer } from 'electron';
 import { Info, Icon, Handle } from './style';
 import { Style } from '~/renderer/app/style';
 import store from '../../store';
+import console = require('console');
 
 const GlobalStyle = createGlobalStyle`${Style}`;
 

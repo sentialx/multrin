@@ -100,6 +100,20 @@ export class TabsStore {
         tab.select();
       }
     });
+
+    ipcRenderer.on('next-tab', () => {
+      this.selectNextTab();
+    });
+  }
+
+  public get firstTab() {
+    const tabs = store.tabsStore.tabs
+      .slice()
+      .sort((a, b) => a.position - b.position);
+
+    const tab = tabs[0];
+
+    return tab;
   }
 
   public resetRearrangeTabsTimer() {
@@ -304,6 +318,19 @@ export class TabsStore {
       };
       props[property] = value;
       TweenLite.to(obj, animation ? TAB_ANIMATION_DURATION : 0, props);
+    }
+  }
+
+  public selectNextTab() {
+    const { selectedTab } = this;
+    if (selectedTab) {
+      const { nextTab } = selectedTab;
+
+      if (nextTab) {
+        nextTab.select();
+      } else {
+        this.firstTab.select();
+      }
     }
   }
 }

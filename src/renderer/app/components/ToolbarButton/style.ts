@@ -49,6 +49,7 @@ export const Circle = styled.div`
   overflow: hidden;
   transition: 0.2s background-color;
   &:hover {
-    background-color: rgba(0, 0, 0, 0.06);
+    background-color: ${(props: any) =>
+      props.theme.dark ? 'rgba(255, 255, 255, 0.15)' : 'rgba(0, 0, 0, 0.06)'};
   }
 `;

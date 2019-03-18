@@ -61,7 +61,7 @@ const Content = observer(({ tab }: { tab: Tab }) => {
       <StyledTitle
         isIcon={tab.isIconSet}
         style={{
-          color: tab.isSelected ? tab.background : store.foreground,
+          color: store.foreground,
         }}
       >
         {tab.title}
@@ -91,7 +91,7 @@ const Overlay = observer(({ tab }: { tab: Tab }) => {
       style={{
         backgroundColor: tab.isSelected
           ? shadeBlendConvert(
-              store.isDark ? 0.5 : 0.85,
+              store.isDark ? 0.3 : 0.5,
               tab.background,
               store.background,
             )
@@ -116,7 +116,7 @@ export default observer(({ tab }: { tab: Tab }) => {
       style={{
         backgroundColor: tab.isSelected
           ? shadeBlendConvert(
-              store.isDark ? 0.6 : 0.85,
+              store.isDark ? 0.4 : 0.6,
               tab.background,
               store.background,
             )

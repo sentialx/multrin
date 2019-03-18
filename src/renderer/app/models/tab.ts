@@ -52,12 +52,7 @@ export class Tab {
 
   @computed
   public get borderVisible() {
-    const tabs = store.tabsStore.tabs
-      .slice()
-      .sort((a, b) => a.position - b.position);
-
-    const i = tabs.indexOf(this);
-    const nextTab = tabs[i + 1];
+    const { nextTab } = this;
 
     if (
       (nextTab && (nextTab.isHovered || nextTab.isSelected)) ||
@@ -94,6 +89,26 @@ export class Tab {
       });
 
     this.select();
+  }
+
+  public get nextTab() {
+    const tabs = store.tabsStore.tabs
+      .slice()
+      .sort((a, b) => a.position - b.position);
+
+    const i = tabs.indexOf(this);
+    const nextTab = tabs[i + 1];
+    return nextTab;
+  }
+
+  public get previousTab() {
+    const tabs = store.tabsStore.tabs
+      .slice()
+      .sort((a, b) => a.position - b.position);
+
+    const i = tabs.indexOf(this);
+    const previousTab = tabs[i - 1];
+    return previousTab;
   }
 
   public select() {

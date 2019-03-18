@@ -1,4 +1,4 @@
-import { BrowserWindow, app, ipcMain } from 'electron';
+import { BrowserWindow, app, ipcMain, screen } from 'electron';
 import { resolve, join } from 'path';
 import { platform } from 'os';
 import mouseEvents from 'mouse-hooks';
@@ -80,6 +80,11 @@ export class AppWindow extends BrowserWindow {
       },
       icon: resolve(app.getAppPath(), 'static/app-icons/icon.png'),
     });
+
+    const { x, y } = screen.getCursorScreenPoint();
+    const currentDisplay = screen.getDisplayNearestPoint({ x, y });
+    this.setPosition(currentDisplay.workArea.x, currentDisplay.workArea.y);
+    this.center();
 
     const handle = this.getNativeWindowHandle().readInt32LE(0);
     this.window = new Window(handle);

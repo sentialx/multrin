@@ -6,7 +6,7 @@ import { autoUpdater } from 'electron-updater';
 
 ipcMain.setMaxListeners(0);
 
-app.setPath('userData', resolve(homedir(), '.wexond'));
+app.setPath('userData', resolve(homedir(), '.multrin'));
 
 export let appWindow: AppWindow;
 

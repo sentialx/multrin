@@ -2,6 +2,10 @@ import { observable, computed } from 'mobx';
 import { TabsStore } from './tabs';
 
 import { ipcRenderer } from 'electron';
+import { readFileSync, existsSync, writeFileSync } from 'fs';
+import { getPath } from '~/shared/utils/paths';
+
+const settingsPath = getPath('settings.json');
 
 export class Store {
   public tabsStore = new TabsStore();
@@ -28,6 +32,8 @@ export class Store {
     return this.isDark ? '#fff' : '#000';
   }
 
+  public settings: any = {};
+
   public mouse = {
     x: 0,
     y: 0,
@@ -47,6 +53,17 @@ export class Store {
     );
 
     ipcRenderer.send('update-check');
+
+    if (!existsSync(settingsPath)) {
+      this.saveSettings();
+    } else {
+      this.settings = JSON.parse(readFileSync(settingsPath, 'utf8'));
+      this.isDark = this.settings.dark;
+    }
+  }
+
+  public saveSettings() {
+    writeFileSync(settingsPath, JSON.stringify(this.settings), 'utf8');
   }
 }
 

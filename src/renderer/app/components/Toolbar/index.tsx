@@ -16,6 +16,8 @@ const onUpdateClick = () => {
 
 const onThemeClick = () => {
   store.isDark = !store.isDark;
+  store.settings.dark = store.isDark;
+  store.saveSettings();
 };
 
 export const Toolbar = observer(() => {

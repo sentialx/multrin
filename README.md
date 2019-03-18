@@ -33,10 +33,15 @@ Multrin has some very important components:
 
 Before running Multrin, please ensure you have [`Node.js`](https://nodejs.org/en/) installed on your machine. You can use `npm`, although I highly recommend to use `yarn`. In this guide I will use `yarn`.
 
+To install `yarn`, please run:
+```bash
+$ npm i -g yarn
+```
+
 Also you will need build tools. To install them, please run as administrator:
 
 ```bash
-$ npm install --global windows-build-tools
+$ npm i -g windows-build-tools
 ```
 
 Firstly, run this command to install all needed dependencies. If you have encountered any problems, please report it. I will try to help as much as I can.

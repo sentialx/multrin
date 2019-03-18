@@ -15,6 +15,11 @@ Multrin is a ~~cross-platform~~ app built on top of  `Electron`, `React`, `style
 
 > NOTE: Multrin works currently only on Windows since it's dependent on `node-window-manager` which also only supports Windows. I'm working on macOS and Linux support.
 
+# Features
+
+- Dark theme
+- `Ctrl + Tab` keyboard shortcut to change selected tab
+
 # Screenshots
 
 ![](screenshots/screen1.gif)

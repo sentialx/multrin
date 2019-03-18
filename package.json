@@ -72,7 +72,7 @@
     "mobx-react": "5.4.3",
     "mouse-hooks": "0.2.0",
     "node-vibrant": "3.2.0-alpha",
-    "node-window-manager": "0.6.0",
+    "node-window-manager": "0.6.1",
     "react": "16.8.3",
     "react-dom": "16.8.3",
     "styled-components": "4.1.3"

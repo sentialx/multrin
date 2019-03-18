@@ -20,7 +20,7 @@ export class Store {
 
   @computed
   public get background() {
-    return this.isDark ? '#000' : '#fff';
+    return this.isDark ? '#212121' : '#fff';
   }
 
   @computed

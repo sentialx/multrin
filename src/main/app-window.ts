@@ -17,20 +17,14 @@ export class ProcessWindow extends Window {
 
   public opacity: number;
 
-<<<<<<< HEAD
   public lastBounds: any;
 
-=======
->>>>>>> 9d1d05af01a89b3f884f68d628f8da69f2ed906e
   constructor(handle: number) {
     super(handle);
 
     this.opacity = this.getOpacity();
     this.opacity = this.opacity === 0 ? 1 : this.opacity;
-<<<<<<< HEAD
     this.lastBounds = this.getBounds();
-=======
->>>>>>> 9d1d05af01a89b3f884f68d628f8da69f2ed906e
   }
 
   public detach() {
@@ -48,12 +42,9 @@ export class AppWindow extends BrowserWindow {
   public selectedWindow: ProcessWindow;
 
   public window: Window;
-<<<<<<< HEAD
   public draggedWindow: ProcessWindow;
 
   public draggedIn = false;
-=======
->>>>>>> 9d1d05af01a89b3f884f68d628f8da69f2ed906e
 
   public lastBounds: any;
 
@@ -61,11 +52,8 @@ export class AppWindow extends BrowserWindow {
 
   public isMoving = false;
 
-<<<<<<< HEAD
   public interval: any;
 
-=======
->>>>>>> 9d1d05af01a89b3f884f68d628f8da69f2ed906e
   constructor() {
     super({
       frame: process.env.ENV === 'dev' || platform() === 'darwin',

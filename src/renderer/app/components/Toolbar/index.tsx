@@ -14,6 +14,10 @@ const onUpdateClick = () => {
   ipcRenderer.send('update-install');
 };
 
+const onThemeClick = () => {
+  store.isDark = !store.isDark;
+};
+
 export const Toolbar = observer(() => {
   return (
     <StyledToolbar>
@@ -21,10 +25,15 @@ export const Toolbar = observer(() => {
       {store.updateInfo.available && (
         <ToolbarButton
           icon={icons.download}
-          style={{ marginRight: 16 }}
+          style={{ marginRight: 8 }}
           onClick={onUpdateClick}
         />
       )}
+      <ToolbarButton
+        icon={icons.theme}
+        style={{ marginRight: 16 }}
+        onClick={onThemeClick}
+      />
       {platform() !== 'darwin' && <WindowsButtons />}
     </StyledToolbar>
   );

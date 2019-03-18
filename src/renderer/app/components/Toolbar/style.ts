@@ -7,7 +7,6 @@ export const StyledToolbar = styled.div`
   z-index: 100;
   display: flex;
   flex-flow: row;
-  background-color: #fff;
   color: rgba(0, 0, 0, 0.8);
   width: 100%;
   height: ${TOOLBAR_HEIGHT}px;

@@ -32,7 +32,9 @@ interface IconProps {
 export const Icon = styled.div`
   width: 100%;
   height: 100%;
-  transition: 0.2ss filter;
+  transition: 0.2s filter;
+  filter: ${(props: any) => (props.theme.dark ? 'invert(100%)' : 'none')};
+
   ${centerImage('11px', '11px')};
   ${({ icon, isClose }: IconProps) => css`
     background-image: url(${icon});

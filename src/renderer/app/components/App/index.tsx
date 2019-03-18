@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 import { Toolbar } from '../Toolbar';
 import { ipcRenderer } from 'electron';
@@ -16,13 +16,21 @@ window.onbeforeunload = () => {
 
 export const App = observer(() => {
   return (
-    <React.Fragment>
-      <GlobalStyle />
-      <Handle />
-      <Toolbar />
-      <Info visible={store.tabsStore.tabs.length === 0}>
-        <Icon /> Drop windows here
-      </Info>
-    </React.Fragment>
+    <ThemeProvider
+      theme={{
+        dark: store.isDark,
+        background: store.background,
+        foreground: store.foreground,
+      }}
+    >
+      <React.Fragment>
+        <GlobalStyle />
+        <Handle />
+        <Toolbar />
+        <Info visible={store.tabsStore.tabs.length === 0}>
+          <Icon /> Drop windows here
+        </Info>
+      </React.Fragment>
+    </ThemeProvider>
   );
 });

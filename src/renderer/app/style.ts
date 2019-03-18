@@ -7,7 +7,8 @@ export const Style = css`
     user-select: none;
     cursor: default;
     margin: 0;
-    background-color: white;
+    transition: 0.2s background-color;
+    background-color: ${(props: any) => props.theme.background};
     padding: 0;
     width: 100vw;
     height: 100vh;

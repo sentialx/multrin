@@ -4,6 +4,7 @@ import windowsMinimize from '~/shared/resources/icons/windows/minimize.svg';
 import close from '~/shared/resources/icons/close.svg';
 import dropWindow from '~/shared/resources/icons/drop-window.svg';
 import download from '~/shared/resources/icons/download.svg';
+import theme from '~/shared/resources/icons/theme.svg';
 
 export const icons = {
   windowsClose,
@@ -12,4 +13,5 @@ export const icons = {
   close,
   dropWindow,
   download,
+  theme,
 };

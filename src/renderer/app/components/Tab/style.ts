@@ -14,7 +14,8 @@ export const StyledClose = styled.div`
   height: 24px;
   width: 24px;
   background-image: url('${icons.close}');
-  transition: 0.1s opacity;
+  transition: 0.1s opacity, 0.2s filter;
+  filter: ${(props: any) => (props.theme.dark ? 'invert(100%)' : 'none')};
   z-index: 10;
   ${centerImage('16px', '16px')};
   opacity: ${({ visible }: CloseProps) =>
@@ -56,6 +57,8 @@ export const StyledTab = styled.div`
   will-change: width;
   display: inline-flex;
   align-items: center;
+  transition: 0.2s background-color;
+
   -webkit-app-region: no-drag;
   ${({ selected }: TabProps) => css`
     z-index: ${selected ? 2 : 1};

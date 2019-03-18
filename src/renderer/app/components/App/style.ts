@@ -9,7 +9,8 @@ export const Info = styled.div`
   transform: translate(-50%, -50%);
   font-weight: 500;
   font-size: 16px;
-  transition: 0.3s opacity;
+  transition: 0.3s opacity, 0.2s color;
+  color: ${(props: any) => props.theme.foreground};
 
   ${({ visible }: { visible: boolean }) => css`
     animation-name: ${visible ? 'info-pulse' : 'none'};
@@ -38,6 +39,8 @@ export const Icon = styled.div`
   width: 100%;
   height: 96px;
   background-image: url(${icons.dropWindow});
+  transition: 0.2s filter;
+  filter: ${(props: any) => (props.theme.dark ? 'invert(100%)' : 'none')};
 `;
 
 export const Handle = styled.div`

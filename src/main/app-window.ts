@@ -18,6 +18,7 @@ export class ProcessWindow extends Window {
   public opacity: number;
 
   public lastBounds: any;
+  public initialBounds: any;
 
   constructor(handle: number) {
     super(handle);
@@ -25,6 +26,7 @@ export class ProcessWindow extends Window {
     this.opacity = this.getOpacity();
     this.opacity = this.opacity === 0 ? 1 : this.opacity;
     this.lastBounds = this.getBounds();
+    this.initialBounds = this.getBounds();
   }
 
   public detach() {
@@ -34,6 +36,15 @@ export class ProcessWindow extends Window {
       this.hide();
       this.show();
     }, 10);
+
+    mouseEvents.once('mouse-up', () => {
+      setTimeout(() => {
+        this.setBounds({
+          width: this.initialBounds.width,
+          height: this.initialBounds.height,
+        });
+      }, 50);
+    });
   }
 }
 

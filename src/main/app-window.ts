@@ -171,7 +171,7 @@ export class AppWindow extends BrowserWindow {
             width: bounds.width,
             height: bounds.height + TOOLBAR_HEIGHT,
             x: bounds.x,
-            y: bounds.y - TOOLBAR_HEIGHT,
+            y: bounds.y - TOOLBAR_HEIGHT - 1,
           });
 
           this.interval = setInterval(this.intervalCallback, 100);
@@ -300,7 +300,7 @@ export class AppWindow extends BrowserWindow {
     bounds.x = Math.round(bounds.x * sf);
     bounds.y = Math.round(bounds.y * sf) + 1;
     bounds.width = Math.round(bounds.width * sf);
-    bounds.height = Math.round(bounds.height * sf);
+    bounds.height = Math.round(bounds.height * sf) - 1;
 
     return bounds;
   }

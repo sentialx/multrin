@@ -14,6 +14,7 @@ import { getFileIcon } from 'extract-file-icon';
 import console = require('console');
 import { appWindow } from '.';
 import { TOOLBAR_HEIGHT } from '~/renderer/app/constants';
+import { ProcessWindow } from './process-window';
 
 const containsPoint = (bounds: any, point: any) => {
   return (
@@ -23,42 +24,6 @@ const containsPoint = (bounds: any, point: any) => {
     point.y <= bounds.y + bounds.height
   );
 };
-
-export class ProcessWindow extends Window {
-  public resizable = false;
-  public maximizable = false;
-  public minimizable = false;
-
-  public lastTitle: string;
-
-  public opacity: number;
-
-  public lastBounds: any;
-  public initialBounds: any;
-
-  constructor(handle: number) {
-    super(handle);
-
-    this.lastBounds = this.getBounds();
-    this.initialBounds = this.getBounds();
-  }
-
-  public detach() {
-    mouseEvents.once('mouse-up', () => {
-      setTimeout(() => {
-        this.setBounds({
-          width: this.initialBounds.width,
-          height: this.initialBounds.height,
-        });
-
-        this.hide();
-        this.show();
-
-        this.setParent(null);
-      }, 50);
-    });
-  }
-}
 
 export class AppWindow extends BrowserWindow {
   public windows: ProcessWindow[] = [];

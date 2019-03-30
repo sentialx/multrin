@@ -33,18 +33,12 @@ export class AppWindow extends BrowserWindow {
   public draggedWindow: ProcessWindow;
 
   public draggedIn = false;
-
-  public lastBounds: any;
-
   public detached = false;
-
   public isMoving = false;
-
   public isUpdatingContentBounds = false;
+  public willAttachWindow = false;
 
   public interval: any;
-
-  public willAttachWindow = false;
 
   constructor() {
     super({
@@ -137,8 +131,6 @@ export class AppWindow extends BrowserWindow {
           this.draggedWindow = null;
           return;
         }
-
-        this.lastBounds = this.draggedWindow.getBounds();
       }, 50);
     });
 
@@ -197,7 +189,6 @@ export class AppWindow extends BrowserWindow {
       }
 
       this.draggedWindow = null;
-      this.lastBounds = null;
       this.detached = false;
     });
   }
@@ -246,6 +237,7 @@ export class AppWindow extends BrowserWindow {
       !this.windows.find(x => x.handle === this.draggedWindow.handle)
     ) {
       const winBounds = this.draggedWindow.getBounds();
+      const { lastBounds } = this.draggedWindow;
       const contentBounds = this.getContentArea();
       const cursor = windowManager.getMousePoint();
 
@@ -260,8 +252,7 @@ export class AppWindow extends BrowserWindow {
       if (
         !this.detached &&
         containsPoint(contentBounds, cursor) &&
-        this.lastBounds &&
-        (winBounds.x !== this.lastBounds.x || winBounds.y !== this.lastBounds.y)
+        (winBounds.x !== lastBounds.x || winBounds.y !== lastBounds.y)
       ) {
         if (!this.draggedIn) {
           const title = this.draggedWindow.getTitle();

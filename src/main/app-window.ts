@@ -223,7 +223,7 @@ export class AppWindow extends BrowserWindow {
       }
 
       if (this.selectedWindow) {
-        const contentBounds = this.getContentArea(this.selectedWindow);
+        const contentBounds = this.getContentArea();
         const bounds = this.selectedWindow.getBounds();
         const { lastBounds } = this.selectedWindow;
 
@@ -287,7 +287,7 @@ export class AppWindow extends BrowserWindow {
     }
   };
 
-  getContentArea(window: ProcessWindow = null) {
+  getContentArea() {
     const bounds = this.getContentBounds();
 
     bounds.y += TOOLBAR_HEIGHT;
@@ -324,7 +324,7 @@ export class AppWindow extends BrowserWindow {
   resizeWindow(window: ProcessWindow) {
     if (!window || this.isMinimized()) return;
 
-    const newBounds = this.getContentArea(window);
+    const newBounds = this.getContentArea();
 
     window.setBounds(newBounds);
     window.lastBounds = newBounds;

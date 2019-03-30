@@ -1,5 +1,6 @@
 import { windowManager, Window } from 'node-window-manager';
 import mouseEvents from 'mouse-hooks';
+import { appWindow } from '.';
 
 export class ProcessWindow extends Window {
   public resizable = false;
@@ -21,6 +22,8 @@ export class ProcessWindow extends Window {
   }
 
   public detach() {
+    this.setParent(null);
+
     mouseEvents.once('mouse-up', () => {
       setTimeout(() => {
         this.setBounds({
@@ -28,10 +31,7 @@ export class ProcessWindow extends Window {
           height: this.initialBounds.height,
         });
 
-        this.hide();
-        this.show();
-
-        this.setParent(null);
+        appWindow.webContents.send('remove-tab', this.handle);
       }, 50);
     });
   }

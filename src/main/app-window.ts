@@ -235,8 +235,6 @@ export class AppWindow extends BrowserWindow {
           const window = this.selectedWindow;
           this.detachWindow(window);
           this.detached = true;
-
-          this.webContents.send('remove-tab', window.handle);
         }
       }
     }
@@ -280,7 +278,7 @@ export class AppWindow extends BrowserWindow {
           this.draggedIn = true;
           this.willAttachWindow = true;
         }
-      } else if (this.draggedIn) {
+      } else if (this.draggedIn && !this.detached) {
         this.webContents.send('remove-tab', this.draggedWindow.handle);
 
         this.draggedIn = false;

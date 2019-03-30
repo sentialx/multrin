@@ -298,7 +298,7 @@ export class AppWindow extends BrowserWindow {
     );
 
     bounds.x = Math.round(bounds.x * sf);
-    bounds.y = Math.round(bounds.y * sf);
+    bounds.y = Math.round(bounds.y * sf) + 1;
     bounds.width = Math.round(bounds.width * sf);
     bounds.height = Math.round(bounds.height * sf);
 

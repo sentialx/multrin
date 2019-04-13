@@ -22,6 +22,14 @@ Although Multrin long-term plan focuses mainly on integrating it with [Wexond](h
 - Dark theme
 - `Ctrl + Tab` keyboard shortcut to change selected tab
 
+### Sponsors
+
+[![Sponsors](https://opencollective.com/multrin/tiers/sponsor.svg?avatarHeight=48)](https://opencollective.com/multrin)
+
+### Backers
+
+[![Backers](https://opencollective.com/multrin/tiers/backer.svg?avatarHeight=48)](https://opencollective.com/multrin)
+
 # Screenshots
 
 ![](screenshots/screen1.gif)

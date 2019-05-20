@@ -87,7 +87,10 @@ export class AppWindow extends BrowserWindow {
     this.on('resize', updateBounds);
 
     this.on('close', () => {
+      clearInterval(this.interval);
+
       for (const window of this.windows) {
+        window.show();
         this.detachWindow(window);
       }
     });

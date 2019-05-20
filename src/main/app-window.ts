@@ -1,19 +1,10 @@
-import {
-  BrowserWindow,
-  app,
-  ipcMain,
-  screen,
-  globalShortcut,
-  ipcRenderer,
-} from 'electron';
+import { BrowserWindow, app, screen, globalShortcut } from 'electron';
 import { resolve, join } from 'path';
-import { platform, release } from 'os';
+import { platform } from 'os';
 import mouseEvents from 'mouse-hooks';
 import { windowManager, Window } from 'node-window-manager';
-import { getFileIcon } from 'extract-file-icon';
 import console = require('console');
-import { appWindow } from '.';
-import { TOOLBAR_HEIGHT } from '~/renderer/app/constants';
+import { TOOLBAR_HEIGHT } from '~/renderer/app/constants/design';
 import { ProcessWindow } from './process-window';
 
 const containsPoint = (bounds: any, point: any) => {
@@ -75,6 +66,12 @@ export class AppWindow extends BrowserWindow {
       this.loadURL(join('file://', app.getAppPath(), 'build/app.html'));
     }
 
+    if (platform() === 'win32') {
+      this.activateWindowCapturing();
+    }
+  }
+
+  public activateWindowCapturing() {
     const updateBounds = () => {
       this.isMoving = true;
 
@@ -82,6 +79,9 @@ export class AppWindow extends BrowserWindow {
         this.resizeWindow(this.selectedWindow);
       }
     };
+
+    const handle = this.getNativeWindowHandle().readInt32LE(0);
+    this.window = new Window(handle);
 
     this.on('move', updateBounds);
     this.on('resize', updateBounds);
@@ -93,14 +93,6 @@ export class AppWindow extends BrowserWindow {
     });
 
     this.interval = setInterval(this.intervalCallback, 100);
-
-    ipcMain.on('select-window', (e: any, id: number) => {
-      this.selectWindow(this.windows.find(x => x.handle === id));
-    });
-
-    ipcMain.on('detach-window', (e: any, id: number) => {
-      this.detachWindow(this.windows.find(x => x.handle === id));
-    });
 
     windowManager.on('window-activated', (window: Window) => {
       this.webContents.send('select-tab', window.handle);
@@ -148,16 +140,9 @@ export class AppWindow extends BrowserWindow {
 
           clearInterval(this.interval);
 
-          const sf = windowManager.getScaleFactor(
-            windowManager.getMonitorFromWindow(this.window),
-          );
+          const sf = windowManager.getScaleFactor(this.window.getMonitor());
 
           this.selectedWindow.lastBounds = bounds;
-
-          bounds.width = Math.round(bounds.width / sf);
-          bounds.height = Math.round(bounds.height / sf);
-          bounds.x = Math.round(bounds.x / sf);
-          bounds.y = Math.round(bounds.y / sf);
 
           this.setContentBounds({
             width: bounds.width,
@@ -177,7 +162,7 @@ export class AppWindow extends BrowserWindow {
       if (this.draggedWindow && this.willAttachWindow) {
         const win = this.draggedWindow;
 
-        win.setParent(this.window);
+        win.setOwner(this.window);
 
         this.windows.push(win);
 
@@ -233,13 +218,13 @@ export class AppWindow extends BrowserWindow {
     if (
       !this.isMinimized() &&
       this.draggedWindow &&
-      this.draggedWindow.getParent().handle === 0 &&
+      this.draggedWindow.getOwner().handle === 0 &&
       !this.windows.find(x => x.handle === this.draggedWindow.handle)
     ) {
       const winBounds = this.draggedWindow.getBounds();
       const { lastBounds } = this.draggedWindow;
       const contentBounds = this.getContentArea();
-      const cursor = windowManager.getMousePoint();
+      const cursor = screen.getCursorScreenPoint();
 
       cursor.y = winBounds.y;
 
@@ -256,18 +241,20 @@ export class AppWindow extends BrowserWindow {
       ) {
         if (!this.draggedIn) {
           const title = this.draggedWindow.getTitle();
-          const icon = getFileIcon(this.draggedWindow.process.path);
+          app.getFileIcon(this.draggedWindow.process.path, (err, icon) => {
+            if (err) return log.error(err);
 
-          this.draggedWindow.lastTitle = title;
+            this.draggedWindow.lastTitle = title;
 
-          this.webContents.send('add-tab', {
-            id: this.draggedWindow.handle,
-            title,
-            icon,
+            this.webContents.send('add-tab', {
+              id: this.draggedWindow.handle,
+              title,
+              icon: icon.toPNG(),
+            });
+
+            this.draggedIn = true;
+            this.willAttachWindow = true;
           });
-
-          this.draggedIn = true;
-          this.willAttachWindow = true;
         }
       } else if (this.draggedIn && !this.detached) {
         this.webContents.send('remove-tab', this.draggedWindow.handle);
@@ -284,15 +271,6 @@ export class AppWindow extends BrowserWindow {
     bounds.y += TOOLBAR_HEIGHT;
     bounds.height -= TOOLBAR_HEIGHT;
 
-    const sf = windowManager.getScaleFactor(
-      windowManager.getMonitorFromWindow(this.window),
-    );
-
-    bounds.x = Math.round(bounds.x * sf);
-    bounds.y = Math.round(bounds.y * sf) + 1;
-    bounds.width = Math.round(bounds.width * sf);
-    bounds.height = Math.round(bounds.height * sf) - 1;
-
     return bounds;
   }
 
@@ -300,7 +278,12 @@ export class AppWindow extends BrowserWindow {
     if (!window) return;
 
     if (this.selectedWindow) {
-      if (window.handle === this.selectedWindow.handle) return;
+      if (
+        window.handle === this.selectedWindow.handle &&
+        !this.isWindowHidden
+      ) {
+        return;
+      }
 
       this.selectedWindow.hide();
     }
@@ -308,6 +291,7 @@ export class AppWindow extends BrowserWindow {
     window.show();
 
     this.selectedWindow = window;
+    this.isWindowHidden = false;
 
     this.resizeWindow(window);
   }

@@ -1,4 +1,4 @@
-import { BrowserWindow, app, screen, globalShortcut } from 'electron';
+import { BrowserWindow, app, screen, globalShortcut, ipcMain } from 'electron';
 import { resolve, join } from 'path';
 import { platform } from 'os';
 import mouseEvents from 'mouse-hooks';
@@ -97,6 +97,14 @@ export class AppWindow extends BrowserWindow {
 
     this.interval = setInterval(this.intervalCallback, 100);
 
+    ipcMain.on('select-window', (e: any, id: number) => {
+      this.selectWindow(this.windows.find(x => x.handle === id));
+    });
+
+    ipcMain.on('detach-window', (e: any, id: number) => {
+      this.detachWindow(this.windows.find(x => x.handle === id));
+    });
+
     windowManager.on('window-activated', (window: Window) => {
       this.webContents.send('select-tab', window.handle);
 
@@ -130,38 +138,6 @@ export class AppWindow extends BrowserWindow {
     });
 
     mouseEvents.on('mouse-up', async data => {
-      if (this.selectedWindow && !this.isMoving) {
-        const bounds = this.selectedWindow.getBounds();
-        const { lastBounds } = this.selectedWindow;
-
-        if (
-          !this.isMaximized() &&
-          (bounds.width !== lastBounds.width ||
-            bounds.height !== lastBounds.height)
-        ) {
-          this.isUpdatingContentBounds = true;
-
-          clearInterval(this.interval);
-
-          const sf = windowManager.getScaleFactor(this.window.getMonitor());
-
-          this.selectedWindow.lastBounds = bounds;
-
-          this.setContentBounds({
-            width: bounds.width,
-            height: bounds.height + TOOLBAR_HEIGHT,
-            x: bounds.x,
-            y: bounds.y - TOOLBAR_HEIGHT - 1,
-          });
-
-          this.interval = setInterval(this.intervalCallback, 100);
-
-          this.isUpdatingContentBounds = false;
-        }
-      }
-
-      this.isMoving = false;
-
       if (this.draggedWindow && this.willAttachWindow) {
         const win = this.draggedWindow;
 
@@ -245,7 +221,7 @@ export class AppWindow extends BrowserWindow {
         if (!this.draggedIn) {
           const title = this.draggedWindow.getTitle();
           app.getFileIcon(this.draggedWindow.process.path, (err, icon) => {
-            if (err) return log.error(err);
+            if (err) console.error(err);
 
             this.draggedWindow.lastTitle = title;
 
@@ -281,10 +257,7 @@ export class AppWindow extends BrowserWindow {
     if (!window) return;
 
     if (this.selectedWindow) {
-      if (
-        window.handle === this.selectedWindow.handle &&
-        !this.isWindowHidden
-      ) {
+      if (window.handle === this.selectedWindow.handle) {
         return;
       }
 
@@ -294,7 +267,6 @@ export class AppWindow extends BrowserWindow {
     window.show();
 
     this.selectedWindow = window;
-    this.isWindowHidden = false;
 
     this.resizeWindow(window);
   }

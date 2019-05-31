@@ -1,6 +1,6 @@
 import { windowManager, Window } from 'node-window-manager';
 import mouseEvents from 'mouse-hooks';
-import { appWindow } from '..';
+import { appWindow } from '.';
 
 export class ProcessWindow extends Window {
   public resizable = false;
@@ -17,7 +17,6 @@ export class ProcessWindow extends Window {
   constructor(handle: number) {
     super(handle);
 
-    this.toggleTransparency(true);
     this.lastBounds = this.getBounds();
     this.initialBounds = this.getBounds();
   }
@@ -40,10 +39,12 @@ export class ProcessWindow extends Window {
   public show() {
     super.show();
     this.setOpacity(1);
+    this.toggleTransparency(false);
   }
 
   public hide() {
     super.hide();
+    this.toggleTransparency(true);
     this.setOpacity(0);
   }
 }

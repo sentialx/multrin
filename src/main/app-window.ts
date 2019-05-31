@@ -138,6 +138,38 @@ export class AppWindow extends BrowserWindow {
     });
 
     mouseEvents.on('mouse-up', async data => {
+      if (this.selectedWindow && !this.isMoving) {
+        const bounds = this.selectedWindow.getBounds();
+        const { lastBounds } = this.selectedWindow;
+
+        if (
+          !this.isMaximized() &&
+          (bounds.width !== lastBounds.width ||
+            bounds.height !== lastBounds.height)
+        ) {
+          this.isUpdatingContentBounds = true;
+
+          clearInterval(this.interval);
+
+          const sf = windowManager.getScaleFactor(this.window.getMonitor());
+
+          this.selectedWindow.lastBounds = bounds;
+
+          this.setContentBounds({
+            width: bounds.width,
+            height: bounds.height + TOOLBAR_HEIGHT,
+            x: bounds.x,
+            y: bounds.y - TOOLBAR_HEIGHT - 1,
+          });
+
+          this.interval = setInterval(this.intervalCallback, 100);
+
+          this.isUpdatingContentBounds = false;
+        }
+      }
+
+      this.isMoving = false;
+
       if (this.draggedWindow && this.willAttachWindow) {
         const win = this.draggedWindow;
 

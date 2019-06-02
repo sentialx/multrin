@@ -5,7 +5,8 @@ import { windowManager, Window } from 'node-window-manager';
 import console = require('console');
 import { TOOLBAR_HEIGHT } from '~/renderer/app/constants/design';
 import { ProcessWindow } from './process-window';
-import iohook from 'iohook';
+
+const iohook = require('iohook');
 
 const containsPoint = (bounds: any, point: any) => {
   return (
@@ -47,13 +48,12 @@ export class AppWindow extends BrowserWindow {
       icon: resolve(app.getAppPath(), 'static/app-icons/icon.png'),
     });
 
+    iohook.start();
+
     const { x, y } = screen.getCursorScreenPoint();
     const currentDisplay = screen.getDisplayNearestPoint({ x, y });
     this.setPosition(currentDisplay.workArea.x, currentDisplay.workArea.y);
     this.center();
-
-    const handle = this.getNativeWindowHandle().readInt32LE(0);
-    this.window = new Window(handle);
 
     process.on('uncaughtException', error => {
       console.error(error);
@@ -66,7 +66,7 @@ export class AppWindow extends BrowserWindow {
       this.loadURL(join('file://', app.getAppPath(), 'build/app.html'));
     }
 
-    if (platform() === 'win32') {
+    if (platform() === 'win32' || platform() === 'darwin') {
       this.activateWindowCapturing();
     }
   }
@@ -80,13 +80,10 @@ export class AppWindow extends BrowserWindow {
       }
     };
 
-    const handle = this.getNativeWindowHandle().readInt32LE(0);
-    this.window = new Window(handle);
-
     this.on('move', updateBounds);
     this.on('resize', updateBounds);
     this.on('focus', () => {
-      this.selectedWindow.bringToTop();
+      if (this.selectedWindow) this.selectedWindow.bringToTop();
     });
 
     this.on('close', () => {
@@ -111,8 +108,12 @@ export class AppWindow extends BrowserWindow {
     windowManager.on('window-activated', (window: Window) => {
       this.webContents.send('select-tab', window.handle);
 
+      if (window.process.id === process.pid && !this.window) {
+        this.window = window;
+      }
+
       if (
-        window.handle === handle ||
+        window.handle === this.window.handle ||
         (this.selectedWindow && window.handle === this.selectedWindow.handle)
       ) {
         if (!globalShortcut.isRegistered('CmdOrCtrl+Tab')) {
@@ -133,7 +134,7 @@ export class AppWindow extends BrowserWindow {
           windowManager.getActiveWindow().handle,
         );
 
-        if (this.draggedWindow.handle === handle) {
+        if (this.draggedWindow.handle === this.window.handle) {
           this.draggedWindow = null;
           return;
         }
@@ -153,8 +154,6 @@ export class AppWindow extends BrowserWindow {
           this.isUpdatingContentBounds = true;
 
           clearInterval(this.interval);
-
-          const sf = windowManager.getScaleFactor(this.window.getMonitor());
 
           this.selectedWindow.lastBounds = bounds;
 

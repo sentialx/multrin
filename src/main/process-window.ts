@@ -1,6 +1,7 @@
 import { windowManager, Window } from 'node-window-manager';
-import iohook from 'iohook';
 import { appWindow } from '.';
+
+const iohook = require('iohook');
 
 export class ProcessWindow extends Window {
   public resizable = false;

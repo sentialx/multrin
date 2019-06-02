@@ -1,11 +1,11 @@
 import { BrowserWindow, app, screen, globalShortcut, ipcMain } from 'electron';
 import { resolve, join } from 'path';
 import { platform } from 'os';
-import mouseEvents from 'mouse-hooks';
 import { windowManager, Window } from 'node-window-manager';
 import console = require('console');
 import { TOOLBAR_HEIGHT } from '~/renderer/app/constants/design';
 import { ProcessWindow } from './process-window';
+import iohook from 'iohook';
 
 const containsPoint = (bounds: any, point: any) => {
   return (
@@ -85,6 +85,9 @@ export class AppWindow extends BrowserWindow {
 
     this.on('move', updateBounds);
     this.on('resize', updateBounds);
+    this.on('focus', () => {
+      this.selectedWindow.bringToTop();
+    });
 
     this.on('close', () => {
       clearInterval(this.interval);
@@ -122,7 +125,7 @@ export class AppWindow extends BrowserWindow {
       }
     });
 
-    mouseEvents.on('mouse-down', () => {
+    iohook.on('mousedown', e => {
       if (this.isMinimized()) return;
 
       setTimeout(() => {
@@ -137,7 +140,7 @@ export class AppWindow extends BrowserWindow {
       }, 50);
     });
 
-    mouseEvents.on('mouse-up', async data => {
+    iohook.on('mouseup', async data => {
       if (this.selectedWindow && !this.isMoving) {
         const bounds = this.selectedWindow.getBounds();
         const { lastBounds } = this.selectedWindow;
@@ -229,7 +232,6 @@ export class AppWindow extends BrowserWindow {
     if (
       !this.isMinimized() &&
       this.draggedWindow &&
-      this.draggedWindow.getOwner().handle === 0 &&
       !this.windows.find(x => x.handle === this.draggedWindow.handle)
     ) {
       const winBounds = this.draggedWindow.getBounds();

@@ -1,5 +1,5 @@
 import { windowManager, Window } from 'node-window-manager';
-import mouseEvents from 'mouse-hooks';
+import iohook from 'iohook';
 import { appWindow } from '.';
 
 export class ProcessWindow extends Window {
@@ -24,7 +24,7 @@ export class ProcessWindow extends Window {
   public detach() {
     this.setOwner(null);
 
-    mouseEvents.once('mouse-up', () => {
+    iohook.once('mouseup', () => {
       setTimeout(() => {
         this.setBounds({
           width: this.initialBounds.width,
@@ -40,6 +40,7 @@ export class ProcessWindow extends Window {
     super.show();
     this.setOpacity(1);
     this.toggleTransparency(false);
+    this.bringToTop();
   }
 
   public hide() {

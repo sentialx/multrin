@@ -1,4 +1,11 @@
-import { BrowserWindow, app, screen, globalShortcut, ipcMain } from 'electron';
+import {
+  BrowserWindow,
+  app,
+  screen,
+  globalShortcut,
+  ipcMain,
+  ipcRenderer,
+} from 'electron';
 import { resolve, join } from 'path';
 import { platform } from 'os';
 import { windowManager, Window } from 'node-window-manager';
@@ -82,7 +89,8 @@ export class AppWindow extends BrowserWindow {
 
     this.on('move', updateBounds);
     this.on('resize', updateBounds);
-    this.on('focus', () => {
+
+    ipcMain.on('focus', () => {
       if (this.selectedWindow) this.selectedWindow.bringToTop();
     });
 
@@ -142,19 +150,14 @@ export class AppWindow extends BrowserWindow {
     });
 
     iohook.on('mouseup', async data => {
-      if (this.selectedWindow && !this.isMoving) {
+      if (this.selectedWindow) {
         const bounds = this.selectedWindow.getBounds();
-        const { lastBounds } = this.selectedWindow;
+        const area = this.getContentArea();
 
         if (
           !this.isMaximized() &&
-          (bounds.width !== lastBounds.width ||
-            bounds.height !== lastBounds.height)
+          (bounds.width !== area.width || bounds.height !== area.height)
         ) {
-          this.isUpdatingContentBounds = true;
-
-          clearInterval(this.interval);
-
           this.selectedWindow.lastBounds = bounds;
 
           this.setContentBounds({
@@ -163,10 +166,6 @@ export class AppWindow extends BrowserWindow {
             x: bounds.x,
             y: bounds.y - TOOLBAR_HEIGHT - 1,
           });
-
-          this.interval = setInterval(this.intervalCallback, 100);
-
-          this.isUpdatingContentBounds = false;
         }
       }
 
@@ -208,22 +207,6 @@ export class AppWindow extends BrowserWindow {
         if (!window.isWindow()) {
           this.detachWindow(window);
           this.webContents.send('remove-tab', window.handle);
-        }
-      }
-
-      if (this.selectedWindow) {
-        const contentBounds = this.getContentArea();
-        const bounds = this.selectedWindow.getBounds();
-        const { lastBounds } = this.selectedWindow;
-
-        if (
-          (contentBounds.x !== bounds.x || contentBounds.y !== bounds.y) &&
-          (bounds.width === lastBounds.width &&
-            bounds.height === lastBounds.height)
-        ) {
-          const window = this.selectedWindow;
-          this.detachWindow(window);
-          this.detached = true;
         }
       }
     }
@@ -311,13 +294,6 @@ export class AppWindow extends BrowserWindow {
 
     window.setBounds(newBounds);
     window.lastBounds = newBounds;
-
-    const bounds = window.getBounds();
-
-    if (bounds.width > newBounds.width || bounds.height > newBounds.height) {
-      this.setContentSize(bounds.width, bounds.height + TOOLBAR_HEIGHT);
-      this.setMinimumSize(bounds.width, bounds.height + TOOLBAR_HEIGHT);
-    }
   }
 
   detachWindow(window: ProcessWindow) {

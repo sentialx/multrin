@@ -24,17 +24,14 @@ export class ProcessWindow extends Window {
 
   public detach() {
     this.setOwner(null);
+    this.bringToTop();
 
-    iohook.once('mouseup', () => {
-      setTimeout(() => {
-        this.setBounds({
-          width: this.initialBounds.width,
-          height: this.initialBounds.height,
-        });
-
-        appWindow.webContents.send('remove-tab', this.handle);
-      }, 50);
+    this.setBounds({
+      width: this.initialBounds.width,
+      height: this.initialBounds.height,
     });
+
+    appWindow.webContents.send('remove-tab', this.handle);
   }
 
   public show() {

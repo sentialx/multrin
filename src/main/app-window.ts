@@ -26,7 +26,7 @@ export class AppWindow extends BrowserWindow {
   public draggedIn = false;
   public detached = false;
   public willAttachWindow = false;
-
+  public isMoving = false;
   public isUpdatingContentBounds = false;
 
   public interval: any;
@@ -70,7 +70,19 @@ export class AppWindow extends BrowserWindow {
 
   public activateWindowCapturing() {
     const updateBounds = () => {
-      if (!this.isUpdatingContentBounds) {
+      this.isMoving = true;
+
+      if (platform() === 'darwin') {
+        for (const win of this.windows) {
+          if (
+            win &&
+            ((this.selectedWindow !== win && this.isUpdatingContentBounds) ||
+              !this.isUpdatingContentBounds)
+          ) {
+            this.resizeWindow(win);
+          }
+        }
+      } else if (!this.isUpdatingContentBounds) {
         this.resizeWindow(this.selectedWindow);
       }
     };
@@ -80,6 +92,12 @@ export class AppWindow extends BrowserWindow {
 
     ipcMain.on('focus', () => {
       if (this.selectedWindow) this.selectedWindow.bringToTop();
+    });
+
+    this.on('focus', () => {
+      if (this.selectedWindow && this.isMoving) {
+        this.selectedWindow.bringToTop();
+      }
     });
 
     this.on('close', () => {
@@ -102,8 +120,6 @@ export class AppWindow extends BrowserWindow {
     });
 
     windowManager.on('window-activated', (window: Window) => {
-      this.webContents.send('select-tab', window.id);
-
       if (
         this.isFocused() ||
         (this.selectedWindow && window.id === this.selectedWindow.id)
@@ -122,6 +138,10 @@ export class AppWindow extends BrowserWindow {
       if (this.isMinimized()) return;
 
       setTimeout(() => {
+        if (this.isFocused()) {
+          this.draggedWindow = null;
+          return;
+        }
         this.draggedWindow = new ProcessWindow(
           windowManager.getActiveWindow().id,
         );

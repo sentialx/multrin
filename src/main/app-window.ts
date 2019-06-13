@@ -267,9 +267,7 @@ export class AppWindow extends BrowserWindow {
     }
 
     window.show();
-
     this.selectedWindow = window;
-
     this.resizeWindow(window);
   }
 

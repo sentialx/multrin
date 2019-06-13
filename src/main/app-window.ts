@@ -37,6 +37,7 @@ export class AppWindow extends BrowserWindow {
       width: 900,
       height: 700,
       show: true,
+      fullscreenable: false,
       titleBarStyle: 'hiddenInset',
       webPreferences: {
         plugins: true,

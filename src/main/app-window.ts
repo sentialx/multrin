@@ -121,6 +121,10 @@ export class AppWindow extends BrowserWindow {
     });
 
     windowManager.on('window-activated', (window: Window) => {
+      setTimeout(() => {
+        this.webContents.send('select-tab', window.id);
+      });
+
       if (
         this.isFocused() ||
         (this.selectedWindow && window.id === this.selectedWindow.id)

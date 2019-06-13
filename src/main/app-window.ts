@@ -31,6 +31,8 @@ export class AppWindow extends BrowserWindow {
 
   public interval: any;
 
+  private _selectedTab = false;
+
   constructor() {
     super({
       frame: process.env.ENV === 'dev' || platform() === 'darwin',
@@ -121,9 +123,11 @@ export class AppWindow extends BrowserWindow {
     });
 
     windowManager.on('window-activated', (window: Window) => {
-      setTimeout(() => {
+      if (!this._selectedTab) {
         this.webContents.send('select-tab', window.id);
-      });
+      }
+
+      this._selectedTab = true;
 
       if (
         this.isFocused() ||
@@ -141,6 +145,10 @@ export class AppWindow extends BrowserWindow {
 
     iohook.on('mousedown', () => {
       if (this.isMinimized()) return;
+
+      if (this.isFocused()) {
+        this._selectedTab = true;
+      }
 
       setTimeout(() => {
         if (this.isFocused()) {

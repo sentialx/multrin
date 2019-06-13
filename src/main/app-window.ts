@@ -1,11 +1,4 @@
-import {
-  BrowserWindow,
-  app,
-  screen,
-  globalShortcut,
-  ipcMain,
-  ipcRenderer,
-} from 'electron';
+import { BrowserWindow, app, screen, globalShortcut, ipcMain } from 'electron';
 import { resolve, join } from 'path';
 import { platform } from 'os';
 import { windowManager, Window } from 'node-window-manager';
@@ -28,14 +21,13 @@ export class AppWindow extends BrowserWindow {
   public windows: ProcessWindow[] = [];
   public selectedWindow: ProcessWindow;
 
-  public window: Window;
   public draggedWindow: ProcessWindow;
 
   public draggedIn = false;
   public detached = false;
-  public isMoving = false;
-  public isUpdatingContentBounds = false;
   public willAttachWindow = false;
+
+  public isUpdatingContentBounds = false;
 
   public interval: any;
 
@@ -80,8 +72,6 @@ export class AppWindow extends BrowserWindow {
 
   public activateWindowCapturing() {
     const updateBounds = () => {
-      this.isMoving = true;
-
       if (!this.isUpdatingContentBounds) {
         this.resizeWindow(this.selectedWindow);
       }
@@ -106,23 +96,19 @@ export class AppWindow extends BrowserWindow {
     this.interval = setInterval(this.intervalCallback, 100);
 
     ipcMain.on('select-window', (e: any, id: number) => {
-      this.selectWindow(this.windows.find(x => x.handle === id));
+      this.selectWindow(this.windows.find(x => x.id === id));
     });
 
     ipcMain.on('detach-window', (e: any, id: number) => {
-      this.detachWindow(this.windows.find(x => x.handle === id));
+      this.detachWindow(this.windows.find(x => x.id === id));
     });
 
     windowManager.on('window-activated', (window: Window) => {
-      this.webContents.send('select-tab', window.handle);
-
-      if (window.process.id === process.pid && !this.window) {
-        this.window = window;
-      }
+      this.webContents.send('select-tab', window.id);
 
       if (
-        window.handle === this.window.handle ||
-        (this.selectedWindow && window.handle === this.selectedWindow.handle)
+        this.isFocused() ||
+        (this.selectedWindow && window.id === this.selectedWindow.id)
       ) {
         if (!globalShortcut.isRegistered('CmdOrCtrl+Tab')) {
           globalShortcut.register('CmdOrCtrl+Tab', () => {
@@ -134,50 +120,102 @@ export class AppWindow extends BrowserWindow {
       }
     });
 
-    iohook.on('mousedown', e => {
+    iohook.on('mousedown', () => {
       if (this.isMinimized()) return;
 
       setTimeout(() => {
         this.draggedWindow = new ProcessWindow(
-          windowManager.getActiveWindow().handle,
+          windowManager.getActiveWindow().id,
         );
-
-        if (this.draggedWindow.handle === this.window.handle) {
-          this.draggedWindow = null;
-          return;
-        }
       }, 50);
     });
 
-    iohook.on('mouseup', async data => {
-      if (this.selectedWindow) {
+    iohook.on('mousedrag', (e: any) => {
+      if (
+        this.draggedWindow &&
+        this.selectedWindow &&
+        this.draggedWindow.id === this.selectedWindow.id
+      ) {
+        this.isUpdatingContentBounds = true;
         const bounds = this.selectedWindow.getBounds();
-        const area = this.getContentArea();
 
-        if (
-          !this.isMaximized() &&
-          (bounds.width !== area.width || bounds.height !== area.height)
-        ) {
+        if (!this.isMaximized()) {
           this.selectedWindow.lastBounds = bounds;
 
           this.setContentBounds({
             width: bounds.width,
             height: bounds.height + TOOLBAR_HEIGHT,
             x: bounds.x,
-            y: bounds.y - TOOLBAR_HEIGHT - 1,
-          });
+            y: bounds.y - TOOLBAR_HEIGHT,
+          } as any);
         }
+        return;
       }
 
-      this.isMoving = false;
+      if (
+        !this.isMinimized() &&
+        this.draggedWindow &&
+        !this.windows.find(x => x.id === this.draggedWindow.id)
+      ) {
+        const winBounds = this.draggedWindow.getBounds();
+        const { lastBounds } = this.draggedWindow;
+        const contentBounds = this.getContentArea();
+
+        e.y = winBounds.y;
+
+        contentBounds.y -= TOOLBAR_HEIGHT;
+
+        if (this.windows.length > 0) {
+          contentBounds.height = 2 * TOOLBAR_HEIGHT;
+        }
+
+        if (
+          !this.detached &&
+          containsPoint(contentBounds, e) &&
+          (winBounds.x !== lastBounds.x || winBounds.y !== lastBounds.y)
+        ) {
+          if (!this.draggedIn) {
+            const title = this.draggedWindow.getTitle();
+            app.getFileIcon(this.draggedWindow.path, (err, icon) => {
+              if (err) console.error(err);
+
+              this.draggedWindow.lastTitle = title;
+
+              this.webContents.send('add-tab', {
+                id: this.draggedWindow.id,
+                title,
+                icon: icon.toPNG(),
+              });
+
+              this.draggedIn = true;
+              this.willAttachWindow = true;
+            });
+          }
+        } else if (this.draggedIn && !this.detached) {
+          this.webContents.send('remove-tab', this.draggedWindow.id);
+
+          this.draggedIn = false;
+          this.willAttachWindow = false;
+        }
+      }
+    });
+
+    iohook.on('mouseup', async () => {
+      if (this.isUpdatingContentBounds) {
+        this.resizeWindow(this.selectedWindow);
+      }
+
+      this.isUpdatingContentBounds = false;
 
       if (this.draggedWindow && this.willAttachWindow) {
         const win = this.draggedWindow;
 
-        win.setOwner(this.window);
+        if (platform() === 'win32') {
+          const handle = this.getNativeWindowHandle().readInt32LE(0);
+          win.setOwner(handle);
+        }
 
         this.windows.push(win);
-
         this.willAttachWindow = false;
 
         setTimeout(() => {
@@ -191,14 +229,12 @@ export class AppWindow extends BrowserWindow {
   }
 
   intervalCallback = () => {
-    if (this.isMoving) return;
-
     if (!this.isMinimized()) {
       for (const window of this.windows) {
         const title = window.getTitle();
         if (window.lastTitle !== title) {
           this.webContents.send('update-tab-title', {
-            id: window.handle,
+            id: window.id,
             title,
           });
           window.lastTitle = title;
@@ -206,56 +242,8 @@ export class AppWindow extends BrowserWindow {
 
         if (!window.isWindow()) {
           this.detachWindow(window);
-          this.webContents.send('remove-tab', window.handle);
+          this.webContents.send('remove-tab', window.id);
         }
-      }
-    }
-
-    if (
-      !this.isMinimized() &&
-      this.draggedWindow &&
-      !this.windows.find(x => x.handle === this.draggedWindow.handle)
-    ) {
-      const winBounds = this.draggedWindow.getBounds();
-      const { lastBounds } = this.draggedWindow;
-      const contentBounds = this.getContentArea();
-      const cursor = screen.getCursorScreenPoint();
-
-      cursor.y = winBounds.y;
-
-      contentBounds.y -= TOOLBAR_HEIGHT;
-
-      if (this.windows.length > 0) {
-        contentBounds.height = 2 * TOOLBAR_HEIGHT;
-      }
-
-      if (
-        !this.detached &&
-        containsPoint(contentBounds, cursor) &&
-        (winBounds.x !== lastBounds.x || winBounds.y !== lastBounds.y)
-      ) {
-        if (!this.draggedIn) {
-          const title = this.draggedWindow.getTitle();
-          app.getFileIcon(this.draggedWindow.process.path, (err, icon) => {
-            if (err) console.error(err);
-
-            this.draggedWindow.lastTitle = title;
-
-            this.webContents.send('add-tab', {
-              id: this.draggedWindow.handle,
-              title,
-              icon: icon.toPNG(),
-            });
-
-            this.draggedIn = true;
-            this.willAttachWindow = true;
-          });
-        }
-      } else if (this.draggedIn && !this.detached) {
-        this.webContents.send('remove-tab', this.draggedWindow.handle);
-
-        this.draggedIn = false;
-        this.willAttachWindow = false;
       }
     }
   };
@@ -273,7 +261,7 @@ export class AppWindow extends BrowserWindow {
     if (!window) return;
 
     if (this.selectedWindow) {
-      if (window.handle === this.selectedWindow.handle) {
+      if (window.id === this.selectedWindow.id) {
         return;
       }
 
@@ -305,6 +293,6 @@ export class AppWindow extends BrowserWindow {
 
     window.detach();
 
-    this.windows = this.windows.filter(x => x.handle !== window.handle);
+    this.windows = this.windows.filter(x => x.id !== window.id);
   }
 }

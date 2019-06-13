@@ -31,18 +31,16 @@ export class ProcessWindow extends Window {
       height: this.initialBounds.height,
     });
 
-    appWindow.webContents.send('remove-tab', this.handle);
+    appWindow.webContents.send('remove-tab', this.id);
   }
 
   public show() {
-    super.show();
     this.setOpacity(1);
     this.toggleTransparency(false);
     this.bringToTop();
   }
 
   public hide() {
-    super.hide();
     this.toggleTransparency(true);
     this.setOpacity(0);
   }

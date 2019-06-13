@@ -71,14 +71,14 @@
     "mobx": "5.10.1",
     "mobx-react": "6.0.3",
     "node-vibrant": "3.2.0-alpha",
-    "node-window-manager": "1.0.0",
+    "node-window-manager": "1.0.1",
     "react": "16.8.6",
     "react-dom": "16.8.6",
     "styled-components": "4.3.1"
   },
   "cmake-js": {
     "runtime": "electron",
-    "runtimeVersion": "5.0.2"
+    "runtimeVersion": "5.0.3"
   },
   "iohook": {
     "targets": [

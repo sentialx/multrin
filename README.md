@@ -41,18 +41,16 @@ Multrin has some very important components:
 
 - Tabs from [Wexond](https://github.com/wexond/wexond)
 - [`node-window-manager`](https://github.com/sentialx/node-window-manager) for managing the docked windows
-- [`mouse-hooks`](https://github.com/sentialx/mouse-hooks) for listening to global mouse events, for example when dropping a window into Multrin.
 
-# Running
+# Contributing
 
-Before running Multrin, please ensure you have [`Node.js`](https://nodejs.org/en/) installed on your machine. You can use `npm`, although I highly recommend to use `yarn`. In this guide I will use `yarn`.
+If you have found any bugs or just want to see some new features in Multrin, feel free to open an issue. I'm open to any suggestions and bug reports would be really helpful for me and appreciated very much. Multrin is in heavy development and some bugs may occur. Also, please don't hesitate to open a pull request. This is really important to me and for the further development of this project.
 
-To install `yarn`, please run:
-```bash
-$ npm i -g yarn
-```
+## Running
 
-Also you will need build tools. To install them, please run as administrator:
+Before running Multrin, please ensure you have [`Node.js`](https://nodejs.org/en/) installed on your machine.
+
+When running on Windows, make sure you have build tools installed. You can install them by running as **administrator**:
 
 ```bash
 $ npm i -g windows-build-tools
@@ -70,19 +68,11 @@ The given command below will run Multrin in the development mode.
 $ yarn dev
 ```
 
-## Other commands
+### Other commands
 
 You can also run other commands, for other tasks like building the app or linting the code, by using the commands described below.
 
-### Usage:
-
-Using `yarn`:
-
-```bash
-$ yarn <command>
-```
-
-Using `npm`:
+#### Usage:
 
 ```bash
 $ npm run <command>

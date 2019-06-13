@@ -34,8 +34,6 @@ export class AppWindow extends BrowserWindow {
   constructor() {
     super({
       frame: process.env.ENV === 'dev' || platform() === 'darwin',
-      minWidth: 400,
-      minHeight: 450,
       width: 900,
       height: 700,
       show: true,

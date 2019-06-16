@@ -14,7 +14,7 @@ Although Multrin long-term plan focuses mainly on integrating it with [Wexond](h
 
 </div>
 
-> NOTE: Multrin works currently only on Windows since it's dependent on `node-window-manager` which also only supports Windows. I'm working on macOS and Linux support.
+> NOTE: Multrin works currently only on Windows and macOS. Support for Linux coming soon.
 
 # Features
 
@@ -84,6 +84,7 @@ $ npm run <command>
 | ------------------ | -------------------------------------------- |
 | `build-production` | Bundles Multrin's source in production mode. |
 | `compile-win32`    | Compiles Multrin binaries for Windows.       |
+| `compile-darwin`   | Compiles Multrin binaries for macOS.         |
 | `electron-rebuild` | Rebuilds all dependencies for `Electron`.    |
 | `lint`             | Lints code.                                  |
 | `lint-fix`         | Fixes eslint errors if any                   |

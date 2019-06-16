@@ -128,7 +128,11 @@ export const StyledBorder = styled.div`
   position: absolute;
   width: 1px;
   height: 20px;
-  background-color: rgba(0, 0, 0, ${transparency.dividers});
+  background-color: ${(props: any) =>
+    props.theme.dark
+      ? `rgba(255, 255, 255, ${transparency.dividers})`
+      : `rgba(0, 0, 0, ${transparency.dividers})`};
+
   right: 0px;
 
   ${({ visible }: { visible: boolean }) => css`

@@ -134,10 +134,19 @@ export class AppWindow extends BrowserWindow {
         this.selectedWindow &&
         this.draggedWindow.id === this.selectedWindow.id
       ) {
-        this.isUpdatingContentBounds = true;
         const bounds = this.selectedWindow.getBounds();
+        const { lastBounds } = this.selectedWindow;
 
-        if (!this.isMaximized()) {
+        if (
+          (bounds.x !== lastBounds.x || bounds.y !== lastBounds.y) &&
+          bounds.width === lastBounds.width &&
+          bounds.height === lastBounds.height
+        ) {
+          this.detachWindow(this.selectedWindow);
+          this.detached = true;
+        } else {
+          this.isUpdatingContentBounds = true;
+
           this.selectedWindow.lastBounds = bounds;
 
           this.setContentBounds({

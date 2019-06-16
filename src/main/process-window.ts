@@ -23,11 +23,6 @@ export class ProcessWindow extends Window {
   public detach() {
     this.setOwner(null);
 
-    this.setBounds({
-      width: this.initialBounds.width,
-      height: this.initialBounds.height,
-    });
-
     appWindow.webContents.send('remove-tab', this.id);
 
     setTimeout(() => {

@@ -175,8 +175,18 @@ export class AppWindow extends BrowserWindow {
           bounds.width === lastBounds.width &&
           bounds.height === lastBounds.height
         ) {
+          const win = this.selectedWindow;
           this.detachWindow(this.selectedWindow);
           this.detached = true;
+
+          iohook.once('mouseup', () => {
+            setTimeout(() => {
+              win.setBounds({
+                width: win.initialBounds.width,
+                height: win.initialBounds.height,
+              });
+            }, 50);
+          });
         } else {
           this.isUpdatingContentBounds = true;
 

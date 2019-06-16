@@ -4,11 +4,11 @@ import { platform } from 'os';
 
 import store from '~/renderer/app/store';
 import { StyledToolbar } from './style';
-import { WindowsButtons } from '../WindowsButtons';
 import { Tabbar } from '../Tabbar';
 import ToolbarButton from '../ToolbarButton';
 import { icons } from '../../constants';
 import { ipcRenderer } from 'electron';
+import { WindowsButtons } from 'react-windows-controls';
 
 const onUpdateClick = () => {
   ipcRenderer.send('update-install');

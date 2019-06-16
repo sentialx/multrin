@@ -8,7 +8,8 @@ import { Tabbar } from '../Tabbar';
 import ToolbarButton from '../ToolbarButton';
 import { icons } from '../../constants';
 import { ipcRenderer } from 'electron';
-import { WindowsButtons } from 'react-windows-controls';
+import { WindowsControls } from 'react-windows-controls';
+import { closeWindow, minimizeWindow, maximizeWindow } from '../../utils';
 
 const onUpdateClick = () => {
   ipcRenderer.send('update-install');
@@ -36,7 +37,14 @@ export const Toolbar = observer(() => {
         style={{ marginRight: 16 }}
         onClick={onThemeClick}
       />
-      {platform() !== 'darwin' && <WindowsButtons />}
+      {platform() !== 'darwin' && (
+        <WindowsControls
+          onClose={closeWindow}
+          onMaximize={maximizeWindow}
+          onMinimize={minimizeWindow}
+          dark={store.isDark}
+        />
+      )}
     </StyledToolbar>
   );
 });

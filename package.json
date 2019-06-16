@@ -66,6 +66,7 @@
   "dependencies": {
     "bindings": "1.5.0",
     "electron-updater": "4.0.6",
+    "extract-file-icon": "0.3.0",
     "gsap": "2.1.3",
     "iohook": "0.4.6",
     "mobx": "5.10.1",

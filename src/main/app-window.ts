@@ -6,6 +6,7 @@ import console = require('console');
 import { TOOLBAR_HEIGHT } from '~/renderer/app/constants/design';
 import { ProcessWindow } from './process-window';
 
+const fileIcon = require('extract-file-icon');
 const iohook = require('iohook');
 
 const containsPoint = (bounds: any, point: any) => {
@@ -161,7 +162,7 @@ export class AppWindow extends BrowserWindow {
       }, 50);
     });
 
-    iohook.on('mousedrag', (e: any) => {
+    iohook.on('mousedrag', async (e: any) => {
       if (
         this.draggedWindow &&
         this.selectedWindow &&
@@ -225,21 +226,19 @@ export class AppWindow extends BrowserWindow {
           (winBounds.x !== lastBounds.x || winBounds.y !== lastBounds.y)
         ) {
           if (!this.draggedIn) {
+            const win = this.draggedWindow;
             const title = this.draggedWindow.getTitle();
-            app.getFileIcon(this.draggedWindow.path, (err, icon) => {
-              if (err) console.error(err);
 
-              this.draggedWindow.lastTitle = title;
+            win.lastTitle = title;
 
-              this.webContents.send('add-tab', {
-                id: this.draggedWindow.id,
-                title,
-                icon: icon.toPNG(),
-              });
-
-              this.draggedIn = true;
-              this.willAttachWindow = true;
+            this.webContents.send('add-tab', {
+              id: win.id,
+              title,
+              icon: fileIcon(win.path),
             });
+
+            this.draggedIn = true;
+            this.willAttachWindow = true;
           }
         } else if (this.draggedIn && !this.detached) {
           this.webContents.send('remove-tab', this.draggedWindow.id);

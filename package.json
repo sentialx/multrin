@@ -80,7 +80,7 @@
   },
   "cmake-js": {
     "runtime": "electron",
-    "runtimeVersion": "5.0.3"
+    "runtimeVersion": "5.0.4"
   },
   "iohook": {
     "targets": [

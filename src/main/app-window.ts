@@ -49,8 +49,6 @@ export class AppWindow extends BrowserWindow {
       icon: resolve(app.getAppPath(), 'static/app-icons/icon.png'),
     });
 
-    iohook.start();
-
     const { x, y } = screen.getCursorScreenPoint();
     const currentDisplay = screen.getDisplayNearestPoint({ x, y });
     this.setPosition(currentDisplay.workArea.x, currentDisplay.workArea.y);

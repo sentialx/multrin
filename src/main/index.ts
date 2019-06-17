@@ -4,6 +4,8 @@ import { platform, homedir } from 'os';
 import { AppWindow } from './app-window';
 import { autoUpdater } from 'electron-updater';
 
+const iohook = require('iohook');
+
 ipcMain.setMaxListeners(0);
 
 app.setPath('userData', resolve(homedir(), '.multrin'));
@@ -21,6 +23,8 @@ if (!gotTheLock) {
     }
   });
 }
+
+iohook.start();
 
 app.on('ready', () => {
   // Create our menu entries so that we can use macOS shortcuts

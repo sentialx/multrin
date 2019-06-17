@@ -239,7 +239,7 @@ export class AppWindow extends BrowserWindow {
             this.webContents.send('add-tab', {
               id: win.id,
               title,
-              icon: fileIcon(win.path),
+              icon: fileIcon(win.path, 16),
             });
 
             this.draggedIn = true;

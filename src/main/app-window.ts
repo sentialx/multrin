@@ -60,8 +60,9 @@ export class AppWindow extends BrowserWindow {
       console.error(error);
     });
 
+    this.webContents.openDevTools({ mode: 'detach' });
+
     if (process.env.ENV === 'dev') {
-      this.webContents.openDevTools({ mode: 'detach' });
       this.loadURL('http://localhost:4444/app.html');
     } else {
       this.loadURL(join('file://', app.getAppPath(), 'build/app.html'));
@@ -158,6 +159,7 @@ export class AppWindow extends BrowserWindow {
         }
         this.draggedWindow = new ProcessWindow(
           windowManager.getActiveWindow().id,
+          this,
         );
       }, 50);
     });

@@ -8,7 +8,19 @@ ipcMain.setMaxListeners(0);
 
 app.setPath('userData', resolve(homedir(), '.multrin'));
 
-export let appWindow: AppWindow;
+export let appWindows: AppWindow[] = [];
+
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  app.quit();
+} else {
+  app.on('second-instance', (e, argv) => {
+    if (appWindows.length > 0) {
+      appWindows.push(new AppWindow());
+    }
+  });
+}
 
 app.on('ready', () => {
   // Create our menu entries so that we can use macOS shortcuts
@@ -43,15 +55,17 @@ app.on('ready', () => {
   );
 
   app.on('activate', () => {
-    if (appWindow === null) {
-      appWindow = new AppWindow();
+    if (appWindows.length === 0) {
+      appWindows.push(new AppWindow());
     }
   });
 
-  appWindow = new AppWindow();
+  appWindows.push(new AppWindow());
 
   autoUpdater.on('update-downloaded', ({ version }) => {
-    appWindow.webContents.send('update-available', version);
+    for (const w of appWindows) {
+      w.webContents.send('update-available', version);
+    }
   });
 
   ipcMain.on('update-install', () => {
@@ -62,10 +76,6 @@ app.on('ready', () => {
     if (process.env.ENV !== 'dev') {
       autoUpdater.checkForUpdates();
     }
-  });
-
-  ipcMain.on('window-focus', () => {
-    appWindow.webContents.focus();
   });
 });
 

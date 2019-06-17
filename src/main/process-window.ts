@@ -1,5 +1,5 @@
 import { Window } from 'node-window-manager';
-import { appWindow } from '.';
+import { AppWindow } from './app-window';
 
 export class ProcessWindow extends Window {
   public resizable = false;
@@ -13,17 +13,21 @@ export class ProcessWindow extends Window {
   public lastBounds: any;
   public initialBounds: any;
 
-  constructor(handle: number) {
+  public parentWindow: AppWindow;
+
+  constructor(handle: any, appWindow: AppWindow) {
     super(handle);
 
     this.lastBounds = this.getBounds();
     this.initialBounds = this.getBounds();
+
+    this.parentWindow = appWindow;
   }
 
   public detach() {
     this.setOwner(null);
 
-    appWindow.webContents.send('remove-tab', this.id);
+    this.parentWindow.webContents.send('remove-tab', this.id);
 
     setTimeout(() => {
       this.bringToTop();

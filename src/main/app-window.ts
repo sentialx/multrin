@@ -36,7 +36,7 @@ export class AppWindow extends BrowserWindow {
 
   constructor() {
     super({
-      frame: process.env.ENV === 'dev' || platform() === 'darwin',
+      frame: false,
       width: 900,
       height: 700,
       show: true,
@@ -94,7 +94,9 @@ export class AppWindow extends BrowserWindow {
     this.on('resize', updateBounds);
 
     ipcMain.on('focus', () => {
-      if (this.selectedWindow) this.selectedWindow.bringToTop();
+      if (this.selectedWindow && !this.isMoving) {
+        this.selectedWindow.bringToTop();
+      }
     });
 
     this.on('focus', () => {
@@ -166,7 +168,8 @@ export class AppWindow extends BrowserWindow {
       if (
         this.draggedWindow &&
         this.selectedWindow &&
-        this.draggedWindow.id === this.selectedWindow.id
+        this.draggedWindow.id === this.selectedWindow.id &&
+        !this.isFocused()
       ) {
         const bounds = this.selectedWindow.getBounds();
         const { lastBounds } = this.selectedWindow;
@@ -188,7 +191,7 @@ export class AppWindow extends BrowserWindow {
               });
             }, 50);
           });
-        } else {
+        } else if (!this.isMoving) {
           this.isUpdatingContentBounds = true;
 
           this.selectedWindow.lastBounds = bounds;
@@ -199,6 +202,8 @@ export class AppWindow extends BrowserWindow {
             x: bounds.x,
             y: bounds.y - TOOLBAR_HEIGHT,
           } as any);
+
+          this.isMoving = false;
         }
         return;
       }
@@ -250,6 +255,8 @@ export class AppWindow extends BrowserWindow {
     });
 
     iohook.on('mouseup', async () => {
+      this.isMoving = false;
+
       if (this.isUpdatingContentBounds) {
         this.resizeWindow(this.selectedWindow);
       }

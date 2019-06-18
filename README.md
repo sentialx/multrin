@@ -48,7 +48,7 @@ If you have found any bugs or just want to see some new features in Multrin, fee
 
 ## Running
 
-Before running Multrin, please ensure you have [`Node.js`](https://nodejs.org/en/) installed on your machine.
+Before running Multrin in development mode, please ensure you have [`Node.js`](https://nodejs.org/en/) installed on your machine.
 
 When running on Windows, make sure you have build tools installed. You can install them by running as **administrator**:
 

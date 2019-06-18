@@ -19,7 +19,7 @@ Although Multrin long-term plan focuses mainly on integrating it with [Wexond](h
 # Features
 
 - Dark theme
-- `Ctrl + Tab` keyboard shortcut to change selected tab
+- <kbd>Ctrl</kbd>+<kbd>Tab</kbd> keyboard shortcut to change selected tab
 
 ### Sponsors
 

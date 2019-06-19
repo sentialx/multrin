@@ -5,45 +5,45 @@ const {
   EnvPlugin,
   CopyPlugin,
   JSONPlugin,
-  StyledComponentsPlugin
-} = require("fuse-box");
-const { spawn } = require("child_process");
+  StyledComponentsPlugin,
+} = require('fuse-box');
+const { spawn } = require('child_process');
 
-const production = process.env.NODE_ENV === "dev" ? false : true;
+const production = process.env.NODE_ENV === 'dev' ? false : true;
 
 const getConfig = (target, name) => {
   return {
-    homeDir: "src/",
+    homeDir: 'src/',
     cache: !production,
     target,
     output: `build/$name.js`,
-    tsConfig: "./tsconfig.json",
+    tsConfig: './tsconfig.json',
     useTypescriptCompiler: true,
     plugins: [
-      EnvPlugin({ NODE_ENV: production ? "production" : "development" }),
+      EnvPlugin({ NODE_ENV: production ? 'production' : 'development' }),
       production &&
         QuantumPlugin({
           bakeApiIntoBundle: name,
           treeshake: true,
           removeExportsInterop: false,
           uglify: {
-            es6: true
-          }
-        })
+            es6: true,
+          },
+        }),
     ],
     alias: {
-      "~": "~/"
+      '~': '~/',
     },
     log: {
       showBundledFiles: false,
-      clearTerminalOnBundle: true
-    }
+      clearTerminalOnBundle: true,
+    },
   };
 };
 
 const getRendererConfig = (target, name) => {
   const cfg = Object.assign({}, getConfig(target, name), {
-    sourceMaps: !production
+    sourceMaps: !production,
   });
 
   return cfg;
@@ -52,24 +52,24 @@ const getRendererConfig = (target, name) => {
 const getWebIndexPlugin = name => {
   return WebIndexPlugin({
     template: `static/pages/${name}.html`,
-    path: production ? "." : "/",
+    path: production ? '.' : '/',
     target: `${name}.html`,
-    bundles: [name]
+    bundles: [name],
   });
 };
 
 const getCopyPlugin = () => {
   return CopyPlugin({
-    files: ["*.woff2", "*.png", "*.svg"],
-    dest: "assets",
-    resolve: production ? "./assets" : "/assets"
+    files: ['*.woff2', '*.png', '*.svg'],
+    dest: 'assets',
+    resolve: production ? './assets' : '/assets',
   });
 };
 
 const main = () => {
-  const fuse = FuseBox.init(getConfig("server", "main"));
+  const fuse = FuseBox.init(getConfig('server', 'main'));
 
-  const app = fuse.bundle("main").instructions(`> [main/index.ts]`);
+  const app = fuse.bundle('main').instructions(`> [main/index.ts]`);
 
   if (!production) {
     app.watch();
@@ -79,7 +79,7 @@ const main = () => {
 };
 
 const renderer = (name, port) => {
-  const cfg = getRendererConfig("electron", name);
+  const cfg = getRendererConfig('electron', name);
 
   cfg.plugins.push(getWebIndexPlugin(name));
   cfg.plugins.push(JSONPlugin());
@@ -97,11 +97,11 @@ const renderer = (name, port) => {
   if (!production) {
     app.hmr({ port, socketURI: `ws://localhost:${port}` }).watch();
 
-    if (name === "app") {
+    if (name === 'app') {
       return fuse.run().then(() => {
-        const child = spawn("npm", ["start"], {
+        const child = spawn('npm', ['start'], {
           shell: true,
-          stdio: "inherit"
+          stdio: 'inherit',
         });
       });
     }
@@ -110,5 +110,5 @@ const renderer = (name, port) => {
   fuse.run();
 };
 
-renderer("app", 4444);
+renderer('app', 4444);
 main();

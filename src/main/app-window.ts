@@ -129,7 +129,7 @@ export class AppWindow extends BrowserWindow {
         this.webContents.send('select-tab', window.id);
       }
 
-      this._selectedTab = true;
+      this._selectedTab = false;
 
       if (
         this.isFocused() ||

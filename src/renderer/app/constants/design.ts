@@ -1,5 +1,5 @@
 // Toolbar
-export const TOOLBAR_HEIGHT = 40;
+export const TOOLBAR_HEIGHT = 34;
 export const TOOLBAR_BUTTON_WIDTH = 36;
 
 // Widths

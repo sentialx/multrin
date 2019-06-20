@@ -30,18 +30,21 @@ export class AppWindow extends BrowserWindow {
   public isMoving = false;
   public isUpdatingContentBounds = false;
 
+  public height = 700;
+
   public interval: any;
 
   private _selectedTab = false;
 
   constructor() {
     super({
-      frame: process.env.ENV === 'dev' || platform() === 'darwin',
+      frame: false,
       width: 900,
       height: 700,
       show: true,
       fullscreenable: false,
       titleBarStyle: 'hiddenInset',
+      minHeight: TOOLBAR_HEIGHT,
       webPreferences: {
         plugins: true,
         nodeIntegration: true,
@@ -91,7 +94,11 @@ export class AppWindow extends BrowserWindow {
     };
 
     this.on('move', updateBounds);
-    this.on('resize', updateBounds);
+    this.on('resize', () => {
+      if (this.windows.length === 0) {
+        this.height = this.getBounds().height;
+      }
+    });
 
     ipcMain.on('focus', () => {
       if (this.selectedWindow && !this.isMoving) {
@@ -196,9 +203,11 @@ export class AppWindow extends BrowserWindow {
 
           this.selectedWindow.lastBounds = bounds;
 
+          this.height = bounds.height;
+
           this.setContentBounds({
             width: bounds.width,
-            height: bounds.height + TOOLBAR_HEIGHT,
+            height: TOOLBAR_HEIGHT,
             x: bounds.x,
             y: bounds.y - TOOLBAR_HEIGHT,
           } as any);
@@ -274,6 +283,9 @@ export class AppWindow extends BrowserWindow {
         this.windows.push(win);
         this.willAttachWindow = false;
 
+        this.setBounds({ height: TOOLBAR_HEIGHT } as any);
+        this.setResizable(false);
+
         setTimeout(() => {
           this.selectWindow(win);
         }, 50);
@@ -308,7 +320,7 @@ export class AppWindow extends BrowserWindow {
     const bounds = this.getContentBounds();
 
     bounds.y += TOOLBAR_HEIGHT;
-    bounds.height -= TOOLBAR_HEIGHT;
+    bounds.height = this.height - TOOLBAR_HEIGHT;
 
     return bounds;
   }
@@ -348,5 +360,12 @@ export class AppWindow extends BrowserWindow {
     window.detach();
 
     this.windows = this.windows.filter(x => x.id !== window.id);
+
+    if (this.windows.length === 0) {
+      this.setBounds({
+        height: this.height,
+      } as any);
+      this.setResizable(true);
+    }
   }
 }

@@ -25,8 +25,6 @@ export class ProcessWindow extends Window {
   }
 
   public detach() {
-    this.setOwner(null);
-
     this.parentWindow.webContents.send('remove-tab', this.id);
 
     setTimeout(() => {

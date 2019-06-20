@@ -275,11 +275,6 @@ export class AppWindow extends BrowserWindow {
       if (this.draggedWindow && this.willAttachWindow) {
         const win = this.draggedWindow;
 
-        if (platform() === 'win32') {
-          const handle = this.getNativeWindowHandle().readInt32LE(0);
-          win.setOwner(handle);
-        }
-
         this.windows.push(win);
         this.willAttachWindow = false;
 

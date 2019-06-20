@@ -30,8 +30,6 @@ export class AppWindow extends BrowserWindow {
   public isMoving = false;
   public isUpdatingContentBounds = false;
 
-  public height = 700;
-
   public interval: any;
 
   private _selectedTab = false;
@@ -44,7 +42,6 @@ export class AppWindow extends BrowserWindow {
       show: true,
       fullscreenable: false,
       titleBarStyle: 'hiddenInset',
-      minHeight: TOOLBAR_HEIGHT,
       webPreferences: {
         plugins: true,
         nodeIntegration: true,
@@ -94,11 +91,7 @@ export class AppWindow extends BrowserWindow {
     };
 
     this.on('move', updateBounds);
-    this.on('resize', () => {
-      if (this.windows.length === 0) {
-        this.height = this.getBounds().height;
-      }
-    });
+    this.on('resize', updateBounds);
 
     ipcMain.on('focus', () => {
       if (this.selectedWindow && !this.isMoving) {
@@ -203,11 +196,9 @@ export class AppWindow extends BrowserWindow {
 
           this.selectedWindow.lastBounds = bounds;
 
-          this.height = bounds.height + TOOLBAR_HEIGHT;
-
           this.setContentBounds({
             width: bounds.width,
-            height: TOOLBAR_HEIGHT,
+            height: bounds.height + TOOLBAR_HEIGHT,
             x: bounds.x,
             y: bounds.y - TOOLBAR_HEIGHT,
           } as any);
@@ -275,11 +266,13 @@ export class AppWindow extends BrowserWindow {
       if (this.draggedWindow && this.willAttachWindow) {
         const win = this.draggedWindow;
 
+        if (platform() === 'win32') {
+          const handle = this.getNativeWindowHandle().readInt32LE(0);
+          win.setOwner(handle);
+        }
+
         this.windows.push(win);
         this.willAttachWindow = false;
-
-        this.setBounds({ height: TOOLBAR_HEIGHT } as any);
-        this.setResizable(false);
 
         setTimeout(() => {
           this.selectWindow(win);
@@ -315,7 +308,7 @@ export class AppWindow extends BrowserWindow {
     const bounds = this.getContentBounds();
 
     bounds.y += TOOLBAR_HEIGHT;
-    bounds.height = this.height - TOOLBAR_HEIGHT;
+    bounds.height -= TOOLBAR_HEIGHT;
 
     return bounds;
   }
@@ -355,12 +348,5 @@ export class AppWindow extends BrowserWindow {
     window.detach();
 
     this.windows = this.windows.filter(x => x.id !== window.id);
-
-    if (this.windows.length === 0) {
-      this.setBounds({
-        height: this.height,
-      } as any);
-      this.setResizable(true);
-    }
   }
 }

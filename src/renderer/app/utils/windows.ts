@@ -6,7 +6,7 @@ export const closeWindow = () => {
   getCurrentWindow().close();
 };
 
-export const minimizeWindow = () => {
+export const minimizeWindow = (e: any) => {
   getCurrentWindow().minimize();
 };
 

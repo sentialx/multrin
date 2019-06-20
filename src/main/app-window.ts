@@ -100,7 +100,7 @@ export class AppWindow extends BrowserWindow {
     });
 
     this.on('focus', () => {
-      if (this.selectedWindow && this.isMoving) {
+      if (platform() === 'darwin' && this.selectedWindow && this.isMoving) {
         this.selectedWindow.bringToTop();
       }
     });

@@ -40,6 +40,7 @@ export const Toolbar = observer(() => {
       {platform() !== 'darwin' && (
         <WindowsControls
           style={{ '-webkit-app-region': 'no-drag' }}
+          onMouseUp={(e: any) => e.stopPropagation()}
           onClose={closeWindow}
           onMaximize={maximizeWindow}
           onMinimize={minimizeWindow}

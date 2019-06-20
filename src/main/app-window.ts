@@ -203,7 +203,7 @@ export class AppWindow extends BrowserWindow {
 
           this.selectedWindow.lastBounds = bounds;
 
-          this.height = bounds.height;
+          this.height = bounds.height + TOOLBAR_HEIGHT;
 
           this.setContentBounds({
             width: bounds.width,

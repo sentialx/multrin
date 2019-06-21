@@ -1,5 +1,5 @@
 language: node_js
-node_js: '11'
+node_js: '12'
 sudo: enabled
 dist: trusty
 install:
@@ -9,6 +9,7 @@ cache:
     - '$HOME/.npm'
 os:
   - osx
+  - windows
 addons:
   apt:
     sources:
@@ -25,3 +26,4 @@ addons:
 
 script:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]] && [[ "$TRAVIS_BRANCH" == "master" ]]; then npm run compile-darwin ;fi
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]] && [[ "$TRAVIS_BRANCH" == "master" ]]; then npm run compile-win32 ;fi

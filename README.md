@@ -5,7 +5,7 @@
 <div align="center">
   <h1>Multrin</h1>
 
-[![AppVeyor](https://img.shields.io/appveyor/ci/sentialx/multrin.svg?style=flat-square)](https://ci.appveyor.com/project/sentialx/multrin)
+[![Travis](https://img.shields.io/travis/com/sentialx/multrin.svg?style=flat-square)](https://travis-ci.com/sentialx/multrin)
 [![Downloads](https://img.shields.io/github/downloads/sentialx/multrin/total.svg?style=flat-square)](https://github.com/sentialx/multrin/releases)
 
 Multrin is a ~~cross-platform~~ app built on top of  `Electron`, `React`, `styled-components` and `TypeScript`, that lets you to organize apps in tabs, by just dropping them onto Multrin. It aims to greatly improve your productivity and organization.
@@ -20,14 +20,6 @@ Although Multrin long-term plan focuses mainly on integrating it with [Wexond](h
 
 - Dark theme
 - <kbd>Ctrl</kbd>+<kbd>Tab</kbd> keyboard shortcut to change selected tab
-
-### Sponsors
-
-[![Sponsors](https://opencollective.com/multrin/tiers/sponsor.svg?avatarHeight=48)](https://opencollective.com/multrin)
-
-### Backers
-
-[![Backers](https://opencollective.com/multrin/tiers/backer.svg?avatarHeight=48)](https://opencollective.com/multrin)
 
 # Screenshots
 
@@ -93,9 +85,13 @@ $ npm run <command>
 
 > NOTE: `compile-win32` command will produce publishing errors at the end. Just ignore them.
 
-# Authors
+### Sponsors
 
-[@sentialx](https://github.com/sentialx)
+[![Sponsors](https://opencollective.com/multrin/tiers/sponsor.svg?avatarHeight=48)](https://opencollective.com/multrin)
+
+### Backers
+
+[![Backers](https://opencollective.com/multrin/tiers/backer.svg?avatarHeight=48)](https://opencollective.com/multrin)
 
 <a href="https://www.patreon.com/bePatron?u=12270966">
     <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">

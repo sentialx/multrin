@@ -21,14 +21,6 @@ Although Multrin long-term plan focuses mainly on integrating it with [Wexond](h
 - Dark theme
 - <kbd>Ctrl</kbd>+<kbd>Tab</kbd> keyboard shortcut to change selected tab
 
-### Sponsors
-
-[![Sponsors](https://opencollective.com/multrin/tiers/sponsor.svg?avatarHeight=48)](https://opencollective.com/multrin)
-
-### Backers
-
-[![Backers](https://opencollective.com/multrin/tiers/backer.svg?avatarHeight=48)](https://opencollective.com/multrin)
-
 # Screenshots
 
 ![](screenshots/screen1.gif)
@@ -93,9 +85,13 @@ $ npm run <command>
 
 > NOTE: `compile-win32` command will produce publishing errors at the end. Just ignore them.
 
-# Authors
+### Sponsors
 
-[@sentialx](https://github.com/sentialx)
+[![Sponsors](https://opencollective.com/multrin/tiers/sponsor.svg?avatarHeight=48)](https://opencollective.com/multrin)
+
+### Backers
+
+[![Backers](https://opencollective.com/multrin/tiers/backer.svg?avatarHeight=48)](https://opencollective.com/multrin)
 
 <a href="https://www.patreon.com/bePatron?u=12270966">
     <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">

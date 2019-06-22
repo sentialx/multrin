@@ -124,12 +124,6 @@ export class AppWindow extends BrowserWindow {
       }
     });
 
-    this.on('focus', () => {
-      if (platform() === 'darwin' && this.selectedWindow && this.isMoving) {
-        this.selectedWindow.bringToTop();
-      }
-    });
-
     this.on('close', () => {
       clearInterval(this.interval);
 

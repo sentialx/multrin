@@ -300,10 +300,11 @@ export class AppWindow extends BrowserWindow {
         this.willAttachWindow = false;
 
         if (this.windows.length === 1) {
-          this.setMaximumSize(0, 50);
-          this.setBounds({ height: 40 } as any);
+          this.setMaximumSize(0, platform() === 'win32' ? 50 : TOOLBAR_HEIGHT);
+          const h = platform() === 'win32' ? 40 : TOOLBAR_HEIGHT;
+          this.setBounds({ height: h } as any);
           // Need to call it twice, to avoid unresponsive window bug
-          this.setBounds({ height: 40 } as any);
+          this.setBounds({ height: h } as any);
         }
 
         setTimeout(() => {

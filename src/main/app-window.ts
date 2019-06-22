@@ -46,6 +46,7 @@ export class AppWindow extends BrowserWindow {
       titleBarStyle: 'hiddenInset',
       minHeight: TOOLBAR_HEIGHT,
       maximizable: platform() !== 'darwin',
+      minimizable: platform() !== 'darwin',
       webPreferences: {
         plugins: true,
         nodeIntegration: true,

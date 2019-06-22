@@ -306,6 +306,10 @@ export class AppWindow extends BrowserWindow {
           this.setBounds({ height: h } as any);
           // Need to call it twice, to avoid unresponsive window bug
           this.setBounds({ height: h } as any);
+
+          if (platform() === 'darwin') {
+            this.setResizable(false);
+          }
         }
 
         setTimeout(() => {

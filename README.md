@@ -6,6 +6,7 @@
   <h1>Multrin</h1>
 
 [![Travis](https://img.shields.io/travis/com/sentialx/multrin.svg?style=flat-square)](https://travis-ci.com/sentialx/multrin)
+[![Discord](https://img.shields.io/discord/591959345789403148.svg?style=flat-square)](https://discord.gg/JZHDTj)
 [![Downloads](https://img.shields.io/github/downloads/sentialx/multrin/total.svg?style=flat-square)](https://github.com/sentialx/multrin/releases)
 
 Multrin is a ~~cross-platform~~ app built on top of  `Electron`, `React`, `styled-components` and `TypeScript`, that lets you to organize apps in tabs, by just dropping them onto Multrin. It aims to greatly improve your productivity and organization.

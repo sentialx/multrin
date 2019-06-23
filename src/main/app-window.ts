@@ -5,6 +5,7 @@ import { windowManager, Window } from 'node-window-manager';
 import console = require('console');
 import { TOOLBAR_HEIGHT } from '~/renderer/app/constants/design';
 import { ProcessWindow } from './process-window';
+import { Container } from './container';
 
 const fileIcon = require('extract-file-icon');
 const iohook = require('iohook');
@@ -19,14 +20,15 @@ const containsPoint = (bounds: any, point: any) => {
 };
 
 export class AppWindow extends BrowserWindow {
-  public windows: ProcessWindow[] = [];
-  public selectedWindow: ProcessWindow;
+  public containers: Container[] = [];
+  public selectedContainer: Container;
 
   public draggedWindow: ProcessWindow;
 
   public draggedIn = false;
   public detached = false;
   public willAttachWindow = false;
+  public willSplitWindow = false;
   public isMoving = false;
   public isUpdatingContentBounds = false;
 
@@ -77,7 +79,7 @@ export class AppWindow extends BrowserWindow {
   }
 
   public activateWindowCapturing() {
-    const updateBounds = () => {
+    /*const updateBounds = () => {
       this.isMoving = true;
 
       if (platform() === 'darwin') {
@@ -95,9 +97,9 @@ export class AppWindow extends BrowserWindow {
       }
     };
 
-    this.on('move', updateBounds);
+    this.on('move', updateBounds);*/
     this.on('resize', () => {
-      if (this.windows.length === 0) {
+      if (this.containers.length === 0) {
         this.height = this.getBounds().height;
       } else if (!this.isMaximized()) {
         this.setBounds({ height: TOOLBAR_HEIGHT } as any);
@@ -109,39 +111,39 @@ export class AppWindow extends BrowserWindow {
     this.on('maximize', () => {
       normalHeight = this.height;
       this.height = screen.getPrimaryDisplay().workAreaSize.height;
-      this.resizeWindow(this.selectedWindow);
+      // this.resizeWindow(this.selectedWindow);
     });
 
     this.on('unmaximize', () => {
       this.height = normalHeight;
-      this.resizeWindow(this.selectedWindow);
+      // this.resizeWindow(this.selectedWindow);
       this.setBounds({ height: TOOLBAR_HEIGHT } as any);
     });
 
-    ipcMain.on('focus', () => {
+    /*ipcMain.on('focus', () => {
       if (this.selectedWindow && !this.isMoving) {
         this.selectedWindow.bringToTop();
       }
-    });
+    });*/
 
     this.on('close', () => {
       clearInterval(this.interval);
 
-      for (const window of this.windows) {
+      /*for (const window of this.windows) {
         window.show();
         this.detachWindow(window);
-      }
+      }*/
     });
 
     this.interval = setInterval(this.intervalCallback, 100);
 
     ipcMain.on('select-window', (e: any, id: number) => {
-      this.selectWindow(this.windows.find(x => x.id === id));
+      this.selectContainer(this.containers.find(x => x.id === id));
     });
 
-    ipcMain.on('detach-window', (e: any, id: number) => {
+    /*ipcMain.on('detach-window', (e: any, id: number) => {
       this.detachWindow(this.windows.find(x => x.id === id));
-    });
+    });*/
 
     windowManager.on('window-activated', (window: Window) => {
       if (!this._selectedTab) {
@@ -150,7 +152,7 @@ export class AppWindow extends BrowserWindow {
 
       this._selectedTab = false;
 
-      if (
+      /*if (
         this.isFocused() ||
         (this.selectedWindow && window.id === this.selectedWindow.id)
       ) {
@@ -161,7 +163,7 @@ export class AppWindow extends BrowserWindow {
         }
       } else if (globalShortcut.isRegistered('CmdOrCtrl+Tab')) {
         globalShortcut.unregister('CmdOrCtrl+Tab');
-      }
+      }*/
     });
 
     iohook.on('mousedown', () => {
@@ -183,8 +185,10 @@ export class AppWindow extends BrowserWindow {
       }, 50);
     });
 
+    let draggedContainer: Container;
+
     iohook.on('mousedrag', async (e: any) => {
-      if (
+      /*if (
         this.draggedWindow &&
         this.selectedWindow &&
         this.draggedWindow.id === this.selectedWindow.id &&
@@ -227,13 +231,9 @@ export class AppWindow extends BrowserWindow {
           this.isMoving = false;
         }
         return;
-      }
+      }*/
 
-      if (
-        !this.isMinimized() &&
-        this.draggedWindow &&
-        !this.windows.find(x => x.id === this.draggedWindow.id)
-      ) {
+      if (!this.isMinimized() && this.draggedWindow) {
         const winBounds = this.draggedWindow.getBounds();
         const { lastBounds } = this.draggedWindow;
         const contentBounds = this.getContentArea();
@@ -242,8 +242,13 @@ export class AppWindow extends BrowserWindow {
 
         contentBounds.y -= TOOLBAR_HEIGHT;
 
-        if (this.windows.length > 0) {
-          contentBounds.height = 2 * TOOLBAR_HEIGHT;
+        if (this.containers.length > 0) {
+          contentBounds.height = TOOLBAR_HEIGHT;
+        }
+
+        if (this.selectedContainer && containsPoint(this.getContentArea(), e)) {
+          this.selectedContainer.addWindow(this.draggedWindow, e);
+          this.willSplitWindow = true;
         }
 
         if (
@@ -253,12 +258,15 @@ export class AppWindow extends BrowserWindow {
         ) {
           if (!this.draggedIn) {
             const win = this.draggedWindow;
+            const container = new Container(this, win);
+
             const title = this.draggedWindow.getTitle();
 
+            draggedContainer = container;
             win.lastTitle = title;
 
             this.webContents.send('add-tab', {
-              id: win.id,
+              id: container.id,
               title,
               icon: fileIcon(win.path, 16),
             });
@@ -266,8 +274,8 @@ export class AppWindow extends BrowserWindow {
             this.draggedIn = true;
             this.willAttachWindow = true;
           }
-        } else if (this.draggedIn && !this.detached) {
-          this.webContents.send('remove-tab', this.draggedWindow.id);
+        } else if (this.draggedIn && !this.detached && draggedContainer) {
+          this.webContents.send('remove-tab', draggedContainer.id);
 
           this.draggedIn = false;
           this.willAttachWindow = false;
@@ -279,46 +287,61 @@ export class AppWindow extends BrowserWindow {
       this.isMoving = false;
 
       if (this.isUpdatingContentBounds) {
-        this.resizeWindow(this.selectedWindow);
+        // this.resizeWindow(this.selectedWindow);
       }
 
       this.isUpdatingContentBounds = false;
 
-      if (this.draggedWindow && this.willAttachWindow) {
-        const win = this.draggedWindow;
+      if (this.draggedWindow) {
+        if (this.willAttachWindow) {
+          const win = this.draggedWindow;
+          const container = draggedContainer;
 
-        if (platform() === 'win32') {
-          const handle = this.getNativeWindowHandle().readInt32LE(0);
-          win.setOwner(handle);
-        }
+          win.dragged = false;
 
-        this.windows.push(win);
-        this.willAttachWindow = false;
-
-        if (this.windows.length === 1) {
-          this.setMaximumSize(0, platform() === 'win32' ? 50 : TOOLBAR_HEIGHT);
-          const h = platform() === 'win32' ? 40 : TOOLBAR_HEIGHT;
-          this.setBounds({ height: h } as any);
-          // Need to call it twice, to avoid unresponsive window bug
-          this.setBounds({ height: h } as any);
-
-          if (platform() === 'darwin') {
-            this.setResizable(false);
+          if (platform() === 'win32') {
+            const handle = this.getNativeWindowHandle().readInt32LE(0);
+            win.setOwner(handle);
           }
-        }
 
-        setTimeout(() => {
-          this.selectWindow(win);
-        }, 50);
+          this.containers.push(draggedContainer);
+          this.willAttachWindow = false;
+
+          if (this.containers.length === 1) {
+            this.setMaximumSize(
+              0,
+              platform() === 'win32' ? 50 : TOOLBAR_HEIGHT,
+            );
+            const h = platform() === 'win32' ? 40 : TOOLBAR_HEIGHT;
+            this.setBounds({ height: h } as any);
+            // Need to call it twice, to avoid unresponsive window bug
+            this.setBounds({ height: h } as any);
+
+            if (platform() === 'darwin') {
+              this.setResizable(false);
+            }
+          }
+
+          draggedContainer.rearrangeWindows();
+
+          setTimeout(() => {
+            this.selectContainer(container);
+          }, 50);
+        } else {
+          this.willSplitWindow = false;
+          this.draggedWindow.dragged = false;
+          this.selectedContainer.rearrangeWindows();
+        }
       }
 
+      draggedContainer = null;
       this.draggedWindow = null;
       this.detached = false;
     });
   }
 
   intervalCallback = () => {
-    if (!this.isMinimized()) {
+    /*if (!this.isMinimized()) {
       for (const window of this.windows) {
         const title = window.getTitle();
         if (window.lastTitle !== title) {
@@ -334,7 +357,7 @@ export class AppWindow extends BrowserWindow {
           this.webContents.send('remove-tab', window.id);
         }
       }
-    }
+    }*/
   };
 
   getContentArea() {
@@ -346,33 +369,23 @@ export class AppWindow extends BrowserWindow {
     return bounds;
   }
 
-  selectWindow(window: ProcessWindow) {
-    if (!window) return;
+  selectContainer(container: Container) {
+    if (!container) return;
 
-    if (this.selectedWindow) {
-      if (window.id === this.selectedWindow.id) {
+    if (this.selectedContainer) {
+      if (container.id === this.selectedContainer.id) {
         return;
       }
 
-      this.selectedWindow.hide();
+      this.selectedContainer.hideWindows();
     }
 
-    window.show();
-    this.selectedWindow = window;
-    this.resizeWindow(window);
-  }
-
-  resizeWindow(window: ProcessWindow) {
-    if (!window || this.isMinimized()) return;
-
-    const newBounds = this.getContentArea();
-
-    window.setBounds(newBounds);
-    window.lastBounds = newBounds;
+    container.showWindows();
+    this.selectedContainer = container;
   }
 
   detachWindow(window: ProcessWindow) {
-    if (!window) return;
+    /*if (!window) return;
 
     if (this.selectedWindow === window) {
       this.selectedWindow = null;
@@ -388,6 +401,6 @@ export class AppWindow extends BrowserWindow {
         height: this.height,
       } as any);
       this.setResizable(true);
-    }
+    }*/
   }
 }

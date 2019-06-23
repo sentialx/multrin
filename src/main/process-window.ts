@@ -15,6 +15,9 @@ export class ProcessWindow extends Window {
 
   public parentWindow: AppWindow;
 
+  public dragged = false;
+  public rowId: number;
+
   constructor(handle: any, appWindow: AppWindow) {
     super(handle);
 

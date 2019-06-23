@@ -82,11 +82,19 @@ export class Container {
       }
     } else {
       for (const row of this.rows) {
-        if (
+        let dir = -1;
+
+        if (y - area.y <= row.position + 50 && y - area.y >= row.position) {
+          dir = 0;
+        } else if (
           y - area.y <= row.position + row.size &&
           y - area.y >= row.position + row.size - 50
         ) {
-          this.rows.splice(this.rows.indexOf(row) + 1, 0, {
+          dir = 1;
+        }
+
+        if (dir !== -1) {
+          this.rows.splice(this.rows.indexOf(row) + dir, 0, {
             id: rowId,
             count: 0,
             size: 0,
@@ -95,9 +103,7 @@ export class Container {
 
           window.rowId = rowId;
 
-          if (this.windows.indexOf(window) === -1) {
-            this.windows.push(window);
-          }
+          this.windows.push(window);
 
           rowId++;
 

@@ -4,13 +4,19 @@ import console = require('console');
 import { platform } from 'os';
 
 let id = 1;
-let rowId = 1;
+let rowId = 0;
 
-interface Space {
+interface Row {
   id: number;
-  count: number;
-  size: number;
-  position: number;
+  height?: number;
+  y?: number;
+}
+
+interface Column {
+  id: number;
+  width?: number;
+  x?: number;
+  rows: Row[];
 }
 
 export class Container {
@@ -18,19 +24,20 @@ export class Container {
 
   private appWindow: AppWindow;
 
-  public rows: Space[] = [];
-  public columns: Space[] = [];
+  public columns: Column[] = [];
 
   public windows: ProcessWindow[] = [];
 
   constructor(appWindow: AppWindow, window: ProcessWindow) {
     this.appWindow = appWindow;
 
-    this.rows.push({
-      id: 0,
-      count: 1,
-      size: 0,
-      position: 0,
+    this.columns.push({
+      id: rowId++,
+      rows: [
+        {
+          id: rowId++,
+        },
+      ],
     });
 
     window.rowId = 0;
@@ -46,23 +53,34 @@ export class Container {
 
     const area = this.appWindow.getContentArea();
 
-    const rowHeight = area.height / this.rows.length;
+    const colWidth = area.width / this.columns.length;
 
-    for (const row of this.rows) {
-      row.position = this.rows.indexOf(row) * rowHeight;
-      row.size = rowHeight;
+    for (let i = 0; i < this.columns.length; i++) {
+      const col = this.columns[i];
+      const rowHeight = area.height / col.rows.length;
 
-      const window = this.windows.find(x => x.rowId === row.id);
-      if (window && !window.dragged) {
-        const bounds: any = {
-          x: area.x,
-          y: area.y + row.position,
-          width: area.width,
-          height: row.size,
-        };
+      col.x = i * colWidth;
+      col.width = colWidth;
 
-        window.setBounds(bounds);
-        window.lastBounds = bounds;
+      for (let j = 0; j < col.rows.length; j++) {
+        const row = col.rows[i];
+        row.y = i * rowHeight;
+        row.height = rowHeight;
+
+        const window = this.windows.find(
+          x => x.rowId === row.id && x.columnId === col.id,
+        );
+        if (window && !window.dragged) {
+          const bounds: any = {
+            x: area.x + col.x,
+            y: area.y + row.y,
+            width: col.width,
+            height: row.height,
+          };
+
+          window.setBounds(bounds);
+          window.lastBounds = bounds;
+        }
       }
     }
   }

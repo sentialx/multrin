@@ -221,7 +221,7 @@ export class AppWindow extends BrowserWindow {
         }
 
         if (this.selectedContainer) {
-          this.selectedContainer.addWindow(this.draggedWindow, e);
+          this.selectedContainer.dragWindow(this.draggedWindow, e);
           this.willSplitWindow = true;
         }
 

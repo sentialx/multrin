@@ -89,7 +89,7 @@ export class Container {
     }
   }
 
-  addWindow(window: ProcessWindow, { x, y }: any) {
+  dragWindow(window: ProcessWindow, { x, y }: any) {
     const area = this.appWindow.getContentArea();
 
     const win = this.windows.find(x => x.id === window.id);

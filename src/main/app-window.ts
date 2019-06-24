@@ -74,26 +74,26 @@ export class AppWindow extends BrowserWindow {
   }
 
   public activateWindowCapturing() {
-    /*const updateBounds = () => {
+    const updateBounds = () => {
       this.isMoving = true;
 
       if (platform() === 'darwin') {
-        for (const win of this.windows) {
+        for (const c of this.containers) {
           if (
-            win &&
-            ((this.selectedWindow !== win && this.isUpdatingContentBounds) ||
+            c &&
+            ((this.selectedContainer !== c && this.isUpdatingContentBounds) ||
               !this.isUpdatingContentBounds)
           ) {
-            this.resizeWindow(win);
+            c.rearrangeWindows();
           }
         }
       } else if (!this.isUpdatingContentBounds) {
-        this.resizeWindow(this.selectedWindow);
+        this.selectedContainer.rearrangeWindows();
       }
     };
 
     this.on('move', updateBounds);
-    this.on('resize', updateBounds);*/
+    this.on('resize', updateBounds);
 
     /*ipcMain.on('focus', () => {
       if (this.selectedWindow && !this.isMoving) {

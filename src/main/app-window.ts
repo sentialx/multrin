@@ -182,6 +182,7 @@ export class AppWindow extends BrowserWindow {
           windowManager.getActiveWindow().id,
           this,
         );
+        this.draggedWindow.dragged = true;
       }, 50);
     });
 
@@ -246,7 +247,7 @@ export class AppWindow extends BrowserWindow {
           contentBounds.height = TOOLBAR_HEIGHT;
         }
 
-        if (this.selectedContainer && containsPoint(this.getContentArea(), e)) {
+        if (this.selectedContainer) {
           this.selectedContainer.addWindow(this.draggedWindow, e);
           this.willSplitWindow = true;
         }

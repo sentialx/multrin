@@ -69,15 +69,17 @@ export class Container {
   addWindow(window: ProcessWindow, { x, y }: any) {
     const area = this.appWindow.getContentArea();
 
-    window.dragged = true;
+    const win = this.windows.find(x => x.id === window.id);
 
-    if (this.windows.indexOf(window) !== -1) {
-      const row = this.rows.find(x => x.id === window.rowId);
+    if (win) {
+      const row = this.rows.find(x => x.id === win.rowId);
+
+      win.dragged = true;
 
       if (row) {
         if (y - area.y > row.position + row.size || y - area.y < row.position) {
-          this.rows = this.rows.filter(x => x.id !== window.rowId);
-          this.windows = this.windows.filter(x => x.id !== window.id);
+          this.rows = this.rows.filter(x => x.id !== win.rowId);
+          this.windows = this.windows.filter(x => x.id !== win.id);
         }
       }
     } else {

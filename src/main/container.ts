@@ -28,8 +28,6 @@ export class Container {
 
   public windows: ProcessWindow[] = [];
 
-  private isAddingRow = false;
-
   constructor(appWindow: AppWindow, window: ProcessWindow) {
     this.appWindow = appWindow;
 
@@ -103,8 +101,11 @@ export class Container {
       win.dragged = true;
 
       if (
-        x - area.x > col.x + col.width ||
-        (x - area.x < col.x && col.rows.length === 1)
+        (x - area.x > col.x + col.width ||
+          x - area.x < col.x ||
+          y < area.y ||
+          y > area.y + area.height) &&
+        col.rows.length === 1
       ) {
         this.columns = this.columns.filter(x => x.id !== win.columnId);
         this.windows = this.windows.filter(x => x.id !== win.id);
@@ -117,7 +118,6 @@ export class Container {
       if (y - area.y > row.y + row.height || y - area.y < row.y) {
         col.rows = col.rows.filter(x => x.id !== win.rowId);
         this.windows = this.windows.filter(x => x.id !== win.id);
-        this.isAddingRow = false;
       }
     } else {
       for (const col of this.columns) {
@@ -144,7 +144,7 @@ export class Container {
           dirX = 1;
         }
 
-        if (dirX !== -1 && !this.isAddingRow) {
+        if (dirX !== -1) {
           colId = spaceId++;
           rowId = spaceId++;
 
@@ -174,8 +174,6 @@ export class Container {
               col.rows.splice(col.rows.indexOf(row) + dirY, 0, {
                 id: rowId,
               });
-
-              this.isAddingRow = true;
 
               break;
             }

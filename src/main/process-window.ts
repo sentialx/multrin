@@ -1,6 +1,8 @@
 import { Window } from 'node-window-manager';
 import { AppWindow } from './app-window';
 
+const iohook = require('iohook');
+
 export class ProcessWindow extends Window {
   public resizable = false;
   public maximizable = false;
@@ -34,6 +36,15 @@ export class ProcessWindow extends Window {
     setTimeout(() => {
       this.bringToTop();
     }, 50);
+
+    iohook.once('mouseup', () => {
+      setTimeout(() => {
+        this.setBounds({
+          width: this.initialBounds.width,
+          height: this.initialBounds.height,
+        });
+      }, 50);
+    });
   }
 
   public show() {

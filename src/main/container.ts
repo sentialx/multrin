@@ -19,14 +19,16 @@ interface Column {
   rows: Row[];
 }
 
+const iohook = require('iohook');
+
 export class Container {
   public id: number = id++;
 
-  private appWindow: AppWindow;
-
   public columns: Column[] = [];
-
   public windows: ProcessWindow[] = [];
+
+  private appWindow: AppWindow;
+  private _handler: any;
 
   constructor(appWindow: AppWindow, window: ProcessWindow) {
     this.appWindow = appWindow;
@@ -91,6 +93,19 @@ export class Container {
 
   detachWindow(window: ProcessWindow) {
     window.detach();
+
+    const handler = () => {
+      setTimeout(() => {
+        window.setBounds({
+          width: window.initialBounds.width,
+          height: window.initialBounds.height,
+        });
+      }, 50);
+    };
+
+    this._handler = handler;
+
+    iohook.once('mouseup', handler);
 
     this.windows = this.windows.filter(x => x.id !== window.id);
 
@@ -194,6 +209,9 @@ export class Container {
         if (dirY !== -1 || dirX !== -1) {
           window.rowId = rowId;
           window.columnId = colId;
+          if (this._handler) {
+            iohook.off('mouseup', this._handler);
+          }
 
           if (platform() === 'win32') {
             const handle = this.appWindow

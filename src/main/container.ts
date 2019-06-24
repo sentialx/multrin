@@ -89,9 +89,18 @@ export class Container {
     }
   }
 
+  detachWindow(window: ProcessWindow) {
+    window.detach();
+
+    this.windows = this.windows.filter(x => x.id !== window.id);
+
+    if (this.windows.length === 0) {
+      this.appWindow.removeContainer(this);
+    }
+  }
+
   dragWindow(window: ProcessWindow, { x, y }: any) {
     const area = this.appWindow.getContentArea();
-
     const win = this.windows.find(x => x.id === window.id);
 
     if (win) {
@@ -108,7 +117,7 @@ export class Container {
         col.rows.length === 1
       ) {
         this.columns = this.columns.filter(x => x.id !== win.columnId);
-        this.windows = this.windows.filter(x => x.id !== win.id);
+        this.detachWindow(win);
         return;
       }
 
@@ -122,7 +131,7 @@ export class Container {
         x > col.x + col.width
       ) {
         col.rows = col.rows.filter(x => x.id !== win.rowId);
-        this.windows = this.windows.filter(x => x.id !== win.id);
+        this.detachWindow(win);
       }
     } else {
       for (const col of this.columns) {

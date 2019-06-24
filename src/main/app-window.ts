@@ -286,10 +286,11 @@ export class AppWindow extends BrowserWindow {
           setTimeout(() => {
             this.selectContainer(container);
           }, 50);
-        } else {
+        } else if (this.willSplitWindow) {
           this.willSplitWindow = false;
           this.draggedWindow.dragged = false;
-          this.selectedContainer.rearrangeWindows();
+
+          if (this.selectedContainer) this.selectedContainer.rearrangeWindows();
         }
       }
 
@@ -343,15 +344,12 @@ export class AppWindow extends BrowserWindow {
     this.selectedContainer = container;
   }
 
-  detachWindow(window: ProcessWindow) {
-    /*if (!window) return;
-
-    if (this.selectedWindow === window) {
-      this.selectedWindow = null;
+  removeContainer(container: Container) {
+    if (this.selectedContainer === container) {
+      this.selectedContainer = null;
     }
 
-    window.detach();
-
-    this.windows = this.windows.filter(x => x.id !== window.id);*/
+    this.webContents.send('remove-tab', container.id);
+    this.containers = this.containers.filter(x => x.id !== container.id);
   }
 }

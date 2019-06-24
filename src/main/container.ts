@@ -4,7 +4,7 @@ import console = require('console');
 import { platform } from 'os';
 
 let id = 1;
-let rowId = 0;
+let spaceId = 0;
 
 interface Row {
   id: number;
@@ -31,16 +31,20 @@ export class Container {
   constructor(appWindow: AppWindow, window: ProcessWindow) {
     this.appWindow = appWindow;
 
+    let colId = spaceId++;
+    let rowId = spaceId++;
+
     this.columns.push({
-      id: rowId++,
+      id: colId,
       rows: [
         {
-          id: rowId++,
+          id: rowId,
         },
       ],
     });
 
-    window.rowId = 0;
+    window.rowId = rowId;
+    window.columnId = colId;
     window.dragged = true;
 
     this.windows.push(window);
@@ -63,8 +67,8 @@ export class Container {
       col.width = colWidth;
 
       for (let j = 0; j < col.rows.length; j++) {
-        const row = col.rows[i];
-        row.y = i * rowHeight;
+        const row = col.rows[j];
+        row.y = j * rowHeight;
         row.height = rowHeight;
 
         const window = this.windows.find(
@@ -91,38 +95,88 @@ export class Container {
     const win = this.windows.find(x => x.id === window.id);
 
     if (win) {
-      const row = this.rows.find(x => x.id === win.rowId);
+      const col = this.columns.find(x => x.id === win.columnId);
+      if (!col) return;
 
       win.dragged = true;
 
-      if (row) {
-        if (y - area.y > row.position + row.size || y - area.y < row.position) {
-          this.rows = this.rows.filter(x => x.id !== win.rowId);
-          this.windows = this.windows.filter(x => x.id !== win.id);
-        }
+      if (x - area.x > col.x + col.width || x - area.x < col.x) {
+        this.columns = this.columns.filter(x => x.id !== win.columnId);
+        this.windows = this.windows.filter(x => x.id !== win.id);
+        return;
+      }
+
+      const row = col.rows.find(x => x.id === win.rowId);
+      if (!row) return;
+
+      if (y - area.y > row.y + row.height || y - area.y < row.y) {
+        col.rows = col.rows.filter(x => x.id !== win.rowId);
+        this.windows = this.windows.filter(x => x.id !== win.id);
       }
     } else {
-      for (const row of this.rows) {
-        let dir = -1;
-
-        if (y - area.y <= row.position + 50 && y - area.y >= row.position) {
-          dir = 0;
-        } else if (
-          y - area.y <= row.position + row.size &&
-          y - area.y >= row.position + row.size - 50
+      for (const col of this.columns) {
+        if (
+          x - area.x < col.x ||
+          x - area.x > col.x + col.width ||
+          y < area.y ||
+          y > area.y + area.height
         ) {
-          dir = 1;
+          continue;
         }
 
-        if (dir !== -1) {
-          this.rows.splice(this.rows.indexOf(row) + dir, 0, {
-            id: rowId,
-            count: 0,
-            size: 0,
-            position: 0,
-          });
+        let dirX = -1;
+        let dirY = -1;
+        let colId = -1;
+        let rowId = -1;
 
+        if (x - area.x <= col.x + 50 && x - area.x >= col.x) {
+          dirX = 0;
+        } else if (
+          x - area.x <= col.x + col.width &&
+          x - area.x >= col.x + col.width - 50
+        ) {
+          dirX = 1;
+        }
+
+        if (dirX !== -1) {
+          colId = spaceId++;
+          rowId = spaceId++;
+
+          this.columns.splice(this.columns.indexOf(col) + dirX, 0, {
+            id: colId,
+            rows: [
+              {
+                id: rowId,
+              },
+            ],
+          });
+        } else {
+          for (const row of col.rows) {
+            if (y - area.y <= row.y + 50 && y - area.y >= row.y) {
+              dirY = 0;
+            } else if (
+              y - area.y <= row.y + row.height &&
+              y - area.y >= row.y + row.height - 50
+            ) {
+              dirY = 1;
+            }
+
+            if (dirY !== -1) {
+              rowId = spaceId++;
+              colId = col.id;
+
+              col.rows.splice(col.rows.indexOf(row) + dirY, 0, {
+                id: rowId,
+              });
+
+              break;
+            }
+          }
+        }
+
+        if (dirY !== -1 || dirX !== -1) {
           window.rowId = rowId;
+          window.columnId = colId;
 
           if (platform() === 'win32') {
             const handle = this.appWindow
@@ -132,8 +186,6 @@ export class Container {
           }
 
           this.windows.push(window);
-
-          rowId++;
 
           break;
         }

@@ -32,8 +32,6 @@ export class AppWindow extends BrowserWindow {
   public isMoving = false;
   public isUpdatingContentBounds = false;
 
-  public height = 700;
-
   public interval: any;
 
   private _selectedTab = false;
@@ -46,9 +44,6 @@ export class AppWindow extends BrowserWindow {
       show: true,
       fullscreenable: false,
       titleBarStyle: 'hiddenInset',
-      minHeight: TOOLBAR_HEIGHT,
-      maximizable: platform() !== 'darwin',
-      minimizable: platform() !== 'darwin',
       webPreferences: {
         plugins: true,
         nodeIntegration: true,
@@ -97,28 +92,8 @@ export class AppWindow extends BrowserWindow {
       }
     };
 
-    this.on('move', updateBounds);*/
-    this.on('resize', () => {
-      if (this.containers.length === 0) {
-        this.height = this.getBounds().height;
-      } else if (!this.isMaximized()) {
-        this.setBounds({ height: TOOLBAR_HEIGHT } as any);
-      }
-    });
-
-    let normalHeight = 0;
-
-    this.on('maximize', () => {
-      normalHeight = this.height;
-      this.height = screen.getPrimaryDisplay().workAreaSize.height;
-      // this.resizeWindow(this.selectedWindow);
-    });
-
-    this.on('unmaximize', () => {
-      this.height = normalHeight;
-      // this.resizeWindow(this.selectedWindow);
-      this.setBounds({ height: TOOLBAR_HEIGHT } as any);
-    });
+    this.on('move', updateBounds);
+    this.on('resize', updateBounds);*/
 
     /*ipcMain.on('focus', () => {
       if (this.selectedWindow && !this.isMoving) {
@@ -220,11 +195,9 @@ export class AppWindow extends BrowserWindow {
 
           this.selectedWindow.lastBounds = bounds;
 
-          this.height = bounds.height + TOOLBAR_HEIGHT;
-
           this.setContentBounds({
             width: bounds.width,
-            height: TOOLBAR_HEIGHT,
+            height: bounds.height + TOOLBAR_HEIGHT,
             x: bounds.x,
             y: bounds.y - TOOLBAR_HEIGHT,
           } as any);
@@ -308,21 +281,6 @@ export class AppWindow extends BrowserWindow {
           this.containers.push(draggedContainer);
           this.willAttachWindow = false;
 
-          if (this.containers.length === 1) {
-            this.setMaximumSize(
-              0,
-              platform() === 'win32' ? 50 : TOOLBAR_HEIGHT,
-            );
-            const h = platform() === 'win32' ? 40 : TOOLBAR_HEIGHT;
-            this.setBounds({ height: h } as any);
-            // Need to call it twice, to avoid unresponsive window bug
-            this.setBounds({ height: h } as any);
-
-            if (platform() === 'darwin') {
-              this.setResizable(false);
-            }
-          }
-
           draggedContainer.rearrangeWindows();
 
           setTimeout(() => {
@@ -365,7 +323,7 @@ export class AppWindow extends BrowserWindow {
     const bounds = this.getContentBounds();
 
     bounds.y += TOOLBAR_HEIGHT;
-    bounds.height = this.height - TOOLBAR_HEIGHT;
+    bounds.height -= TOOLBAR_HEIGHT;
 
     return bounds;
   }
@@ -394,14 +352,6 @@ export class AppWindow extends BrowserWindow {
 
     window.detach();
 
-    this.windows = this.windows.filter(x => x.id !== window.id);
-
-    if (this.windows.length === 0) {
-      this.setMaximumSize(0, 5000);
-      this.setBounds({
-        height: this.height,
-      } as any);
-      this.setResizable(true);
-    }*/
+    this.windows = this.windows.filter(x => x.id !== window.id);*/
   }
 }

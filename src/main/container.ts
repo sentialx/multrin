@@ -1,6 +1,7 @@
 import { AppWindow } from './app-window';
 import { ProcessWindow } from './process-window';
 import console = require('console');
+import { platform } from 'os';
 
 let id = 1;
 let rowId = 1;
@@ -104,6 +105,13 @@ export class Container {
           });
 
           window.rowId = rowId;
+
+          if (platform() === 'win32') {
+            const handle = this.appWindow
+              .getNativeWindowHandle()
+              .readInt32LE(0);
+            window.setOwner(handle);
+          }
 
           this.windows.push(window);
 

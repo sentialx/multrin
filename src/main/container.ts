@@ -63,12 +63,12 @@ export class Container {
       const col = this.columns[i];
       const rowHeight = area.height / col.rows.length;
 
-      col.x = i * colWidth;
+      col.x = area.x + i * colWidth;
       col.width = colWidth;
 
       for (let j = 0; j < col.rows.length; j++) {
         const row = col.rows[j];
-        row.y = j * rowHeight;
+        row.y = area.y + j * rowHeight;
         row.height = rowHeight;
 
         const window = this.windows.find(
@@ -76,8 +76,8 @@ export class Container {
         );
         if (window && !window.dragged) {
           const bounds: any = {
-            x: area.x + col.x,
-            y: area.y + row.y,
+            x: col.x,
+            y: row.y,
             width: col.width,
             height: row.height,
           };
@@ -101,8 +101,8 @@ export class Container {
       win.dragged = true;
 
       if (
-        (x - area.x > col.x + col.width ||
-          x - area.x < col.x ||
+        (x > col.x + col.width ||
+          x < col.x ||
           y < area.y ||
           y > area.y + area.height) &&
         col.rows.length === 1
@@ -115,15 +115,20 @@ export class Container {
       const row = col.rows.find(x => x.id === win.rowId);
       if (!row) return;
 
-      if (y - area.y > row.y + row.height || y - area.y < row.y) {
+      if (
+        y > row.y + row.height ||
+        y < row.y ||
+        x < col.x ||
+        x > col.x + col.width
+      ) {
         col.rows = col.rows.filter(x => x.id !== win.rowId);
         this.windows = this.windows.filter(x => x.id !== win.id);
       }
     } else {
       for (const col of this.columns) {
         if (
-          x - area.x < col.x ||
-          x - area.x > col.x + col.width ||
+          x < col.x ||
+          x > col.x + col.width ||
           y < area.y ||
           y > area.y + area.height
         ) {
@@ -135,12 +140,9 @@ export class Container {
         let colId = -1;
         let rowId = -1;
 
-        if (x - area.x <= col.x + 50 && x - area.x >= col.x) {
+        if (x <= col.x + 50 && x >= col.x) {
           dirX = 0;
-        } else if (
-          x - area.x <= col.x + col.width &&
-          x - area.x >= col.x + col.width - 50
-        ) {
+        } else if (x <= col.x + col.width && x >= col.x + col.width - 50) {
           dirX = 1;
         }
 
@@ -158,11 +160,11 @@ export class Container {
           });
         } else {
           for (const row of col.rows) {
-            if (y - area.y <= row.y + 50 && y - area.y >= row.y) {
+            if (y <= row.y + 50 && y >= row.y) {
               dirY = 0;
             } else if (
-              y - area.y <= row.y + row.height &&
-              y - area.y >= row.y + row.height - 50
+              y <= row.y + row.height &&
+              y >= row.y + row.height - 50
             ) {
               dirY = 1;
             }

@@ -203,13 +203,16 @@ export class AppWindow extends BrowserWindow {
         }
 
         if (
-          !this.detached &&
           containsPoint(contentBounds, e) &&
           (winBounds.x !== lastBounds.x || winBounds.y !== lastBounds.y)
         ) {
           if (!this.draggedIn) {
             const win = this.draggedWindow;
             const container = new Container(this, win);
+
+            if (this.selectedContainer) {
+              this.selectedContainer.removeWindow(win.id);
+            }
 
             const title = this.draggedWindow.getTitle();
 
@@ -225,7 +228,7 @@ export class AppWindow extends BrowserWindow {
             this.draggedIn = true;
             this.willAttachWindow = true;
           }
-        } else if (this.draggedIn && !this.detached && draggedContainer) {
+        } else if (this.draggedIn && draggedContainer) {
           this.webContents.send('remove-tab', draggedContainer.id);
 
           this.draggedIn = false;
@@ -278,6 +281,7 @@ export class AppWindow extends BrowserWindow {
       draggedContainer = null;
       this.draggedWindow = null;
       this.detached = false;
+      this.draggedIn = false;
     });
   }
 

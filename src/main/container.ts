@@ -116,6 +116,7 @@ export class Container {
 
   removeWindow(id: number) {
     const win = this.windows.find(x => x.id === id);
+    if (!win) return;
 
     const col = this.columns.find(x => x.id === win.columnId);
     if (!col) return;
@@ -282,6 +283,8 @@ export class Container {
     for (const window of this.windows) {
       window.show();
     }
+
+    this.rearrangeWindows();
   }
 
   hideWindows() {

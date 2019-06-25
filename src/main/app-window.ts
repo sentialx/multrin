@@ -208,11 +208,12 @@ export class AppWindow extends BrowserWindow {
         ) {
           if (!this.draggedIn) {
             const win = this.draggedWindow;
-            const container = new Container(this, win);
 
             if (this.selectedContainer) {
               this.selectedContainer.removeWindow(win.id);
             }
+
+            const container = new Container(this, win);
 
             const title = this.draggedWindow.getTitle();
 

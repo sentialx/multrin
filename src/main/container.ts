@@ -142,10 +142,24 @@ export class Container {
 
     const handler = () => {
       setTimeout(() => {
-        window.setBounds({
-          width: window.initialBounds.width,
-          height: window.initialBounds.height,
-        });
+        if (this.windows.length === 0) {
+          this.appWindow.removeContainer(this);
+        }
+
+        const b = window.getBounds();
+        const a = this.appWindow.getBounds();
+
+        if (
+          b.x < a.x ||
+          b.x > a.x + a.width ||
+          b.y < a.y ||
+          b.y > a.y + a.height
+        ) {
+          window.setBounds({
+            width: window.initialBounds.width,
+            height: window.initialBounds.height,
+          });
+        }
       }, 50);
     };
 
@@ -154,10 +168,6 @@ export class Container {
     iohook.once('mouseup', handler);
 
     this.windows = this.windows.filter(x => x.id !== window.id);
-
-    if (this.windows.length === 0) {
-      this.appWindow.removeContainer(this);
-    }
   }
 
   dragWindow(window: ProcessWindow, { x, y }: any) {

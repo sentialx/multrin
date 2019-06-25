@@ -112,11 +112,6 @@ export class AppWindow extends BrowserWindow {
           container.detachWindow(window);
         }
       }
-
-      /*for (const window of this.windows) {
-        window.show();
-        this.detachWindow(window);
-      }*/
     });
 
     this.interval = setInterval(this.intervalCallback, 100);
@@ -125,9 +120,11 @@ export class AppWindow extends BrowserWindow {
       this.selectContainer(this.containers.find(x => x.id === id));
     });
 
-    /*ipcMain.on('detach-window', (e: any, id: number) => {
-      this.detachWindow(this.windows.find(x => x.id === id));
-    });*/
+    ipcMain.on('detach-window', (e: any, id: number) => {
+      for (const container of this.containers) {
+        container.removeWindow(id);
+      }
+    });
 
     globalShortcut.register('CmdOrCtrl+Tab', () => {
       if (this.isFocused()) {

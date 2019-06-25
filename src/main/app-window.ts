@@ -180,8 +180,11 @@ export class AppWindow extends BrowserWindow {
 
         if (this.selectedContainer) {
           if (
-            winBounds.width !== lastBounds.width ||
-            winBounds.height !== lastBounds.height
+            this.selectedContainer.windows.find(
+              x => x.id === this.draggedWindow.id,
+            ) &&
+            (winBounds.width !== lastBounds.width ||
+              winBounds.height !== lastBounds.height)
           ) {
             this.draggedWindow.resizing = true;
             this.isUpdatingContentBounds = true;

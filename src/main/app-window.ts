@@ -87,7 +87,7 @@ export class AppWindow extends BrowserWindow {
             c.rearrangeWindows();
           }
         }
-      } else if (!this.isUpdatingContentBounds) {
+      } else if (!this.isUpdatingContentBounds && this.selectedContainer) {
         this.selectedContainer.rearrangeWindows();
       }
     };
@@ -95,14 +95,23 @@ export class AppWindow extends BrowserWindow {
     this.on('move', updateBounds);
     this.on('resize', updateBounds);
 
-    /*ipcMain.on('focus', () => {
-      if (this.selectedWindow && !this.isMoving) {
-        this.selectedWindow.bringToTop();
+    ipcMain.on('focus', () => {
+      if (this.selectedContainer && !this.isMoving) {
+        for (const window of this.selectedContainer.windows) {
+          window.bringToTop();
+        }
       }
-    });*/
+    });
 
     this.on('close', () => {
       clearInterval(this.interval);
+
+      for (const container of this.containers) {
+        for (const window of container.windows) {
+          window.show();
+          container.detachWindow(window);
+        }
+      }
 
       /*for (const window of this.windows) {
         window.show();
@@ -120,25 +129,18 @@ export class AppWindow extends BrowserWindow {
       this.detachWindow(this.windows.find(x => x.id === id));
     });*/
 
+    globalShortcut.register('CmdOrCtrl+Tab', () => {
+      if (this.isFocused()) {
+        this.webContents.send('next-tab');
+      }
+    });
+
     windowManager.on('window-activated', (window: Window) => {
       if (!this._selectedTab) {
         this.webContents.send('select-tab', window.id);
       }
 
       this._selectedTab = false;
-
-      /*if (
-        this.isFocused() ||
-        (this.selectedWindow && window.id === this.selectedWindow.id)
-      ) {
-        if (!globalShortcut.isRegistered('CmdOrCtrl+Tab')) {
-          globalShortcut.register('CmdOrCtrl+Tab', () => {
-            this.webContents.send('next-tab');
-          });
-        }
-      } else if (globalShortcut.isRegistered('CmdOrCtrl+Tab')) {
-        globalShortcut.unregister('CmdOrCtrl+Tab');
-      }*/
     });
 
     iohook.on('mousedown', () => {

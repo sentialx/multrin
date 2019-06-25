@@ -167,30 +167,18 @@ export class Container {
       const col = this.columns.find(x => x.id === win.columnId);
       if (!col) return;
 
+      const row = col.rows.find(x => x.id === win.rowId);
+
       win.dragged = true;
 
       if (
         x > col.x + col.width ||
         x < col.x ||
         y < area.y ||
-        y > area.y + area.height
+        y > area.y + area.height ||
+        ((row && y > row.y + row.height) || y < row.y)
       ) {
-        this.columns = this.columns.filter(x => x.id !== win.columnId);
-        this.detachWindow(win);
-        return;
-      }
-
-      const row = col.rows.find(x => x.id === win.rowId);
-      if (!row) return;
-
-      if (
-        y > row.y + row.height ||
-        y < row.y ||
-        x < col.x ||
-        x > col.x + col.width
-      ) {
-        col.rows = col.rows.filter(x => x.id !== win.rowId);
-        this.detachWindow(win);
+        this.removeWindow(win.id);
       }
     } else {
       for (const col of this.columns) {

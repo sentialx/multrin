@@ -114,6 +114,28 @@ export class Container {
     }
   }
 
+  removeWindow(id: number) {
+    const win = this.windows.find(x => x.id === id);
+
+    const col = this.columns.find(x => x.id === win.columnId);
+    if (!col) return;
+
+    if (col.rows.length === 1) {
+      this.columns = this.columns.filter(x => x.id !== win.columnId);
+      this.detachWindow(win);
+    }
+
+    if (!col) return;
+
+    const row = col.rows.find(x => x.id === win.rowId);
+    if (!row) return;
+
+    col.rows = col.rows.filter(x => x.id !== win.rowId);
+    this.detachWindow(win);
+
+    this.rearrangeWindows();
+  }
+
   detachWindow(window: ProcessWindow) {
     window.detach();
 
@@ -148,11 +170,10 @@ export class Container {
       win.dragged = true;
 
       if (
-        (x > col.x + col.width ||
-          x < col.x ||
-          y < area.y ||
-          y > area.y + area.height) &&
-        col.rows.length === 1
+        x > col.x + col.width ||
+        x < col.x ||
+        y < area.y ||
+        y > area.y + area.height
       ) {
         this.columns = this.columns.filter(x => x.id !== win.columnId);
         this.detachWindow(win);

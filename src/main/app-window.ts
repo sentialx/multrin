@@ -163,49 +163,6 @@ export class AppWindow extends BrowserWindow {
     let draggedContainer: Container;
 
     iohook.on('mousedrag', async (e: any) => {
-      /*if (
-        this.draggedWindow &&
-        this.selectedWindow &&
-        this.draggedWindow.id === this.selectedWindow.id &&
-        !this.isFocused()
-      ) {
-        const bounds = this.selectedWindow.getBounds();
-        const { lastBounds } = this.selectedWindow;
-
-        if (
-          (bounds.x !== lastBounds.x || bounds.y !== lastBounds.y) &&
-          bounds.width === lastBounds.width &&
-          bounds.height === lastBounds.height
-        ) {
-          const win = this.selectedWindow;
-          this.detachWindow(this.selectedWindow);
-          this.detached = true;
-
-          iohook.once('mouseup', () => {
-            setTimeout(() => {
-              win.setBounds({
-                width: win.initialBounds.width,
-                height: win.initialBounds.height,
-              });
-            }, 50);
-          });
-        } else if (!this.isMoving) {
-          this.isUpdatingContentBounds = true;
-
-          this.selectedWindow.lastBounds = bounds;
-
-          this.setContentBounds({
-            width: bounds.width,
-            height: bounds.height + TOOLBAR_HEIGHT,
-            x: bounds.x,
-            y: bounds.y - TOOLBAR_HEIGHT,
-          } as any);
-
-          this.isMoving = false;
-        }
-        return;
-      }*/
-
       if (!this.isMinimized() && this.draggedWindow) {
         const winBounds = this.draggedWindow.getBounds();
         const { lastBounds } = this.draggedWindow;
@@ -323,23 +280,27 @@ export class AppWindow extends BrowserWindow {
   }
 
   intervalCallback = () => {
-    /*if (!this.isMinimized()) {
-      for (const window of this.windows) {
-        const title = window.getTitle();
-        if (window.lastTitle !== title) {
-          this.webContents.send('update-tab-title', {
-            id: window.id,
-            title,
-          });
-          window.lastTitle = title;
+    if (!this.isMinimized()) {
+      for (const container of this.containers) {
+        if (container.windows.length === 1) {
+          const window = container.windows[0];
+          const title = window.getTitle();
+          if (window.lastTitle !== title) {
+            this.webContents.send('update-tab-title', {
+              id: container.id,
+              title,
+            });
+            window.lastTitle = title;
+          }
         }
 
-        if (!window.isWindow()) {
-          this.detachWindow(window);
-          this.webContents.send('remove-tab', window.id);
+        for (const window of container.windows) {
+          if (!window.isWindow()) {
+            container.removeWindow(window.id);
+          }
         }
       }
-    }*/
+    }
   };
 
   getContentArea() {

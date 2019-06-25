@@ -11,8 +11,6 @@
 
 Multrin is a ~~cross-platform~~ app built on top of  `Electron`, `React`, `styled-components` and `TypeScript`, that lets you to organize apps in tabs, by just dropping them onto Multrin. It aims to greatly improve your productivity and organization.
 
-Although Multrin long-term plan focuses mainly on integrating it with [Wexond](https://github.com/wexond/wexond) web browser, it is developed as a stand-alone application.
-
 </div>
 
 > NOTE: Multrin works currently only on Windows and macOS. Support for Linux coming soon.

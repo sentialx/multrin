@@ -134,7 +134,12 @@ export class AppWindow extends BrowserWindow {
 
     windowManager.on('window-activated', (window: Window) => {
       if (!this._selectedTab) {
-        this.webContents.send('select-tab', window.id);
+        for (const container of this.containers) {
+          if (container.windows.find(x => x.id === window.id)) {
+            this.webContents.send('select-tab', container.id);
+            break;
+          }
+        }
       }
 
       this._selectedTab = false;

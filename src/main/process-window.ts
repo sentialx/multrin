@@ -16,6 +16,8 @@ export class ProcessWindow extends Window {
   public parentWindow: AppWindow;
 
   public dragged = false;
+  public resizing = false;
+
   public rowId: number;
   public columnId: number;
 

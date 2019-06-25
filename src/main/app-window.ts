@@ -221,8 +221,16 @@ export class AppWindow extends BrowserWindow {
         }
 
         if (this.selectedContainer) {
-          this.selectedContainer.dragWindow(this.draggedWindow, e);
-          this.willSplitWindow = true;
+          if (
+            winBounds.width !== lastBounds.width ||
+            winBounds.height !== lastBounds.height
+          ) {
+            this.selectedContainer.resizeWindow(this.draggedWindow);
+            this.draggedWindow.resizing = true;
+          } else if (!this.draggedWindow.resizing) {
+            this.selectedContainer.dragWindow(this.draggedWindow, e);
+            this.willSplitWindow = true;
+          }
         }
 
         if (
@@ -267,11 +275,12 @@ export class AppWindow extends BrowserWindow {
       this.isUpdatingContentBounds = false;
 
       if (this.draggedWindow) {
+        this.draggedWindow.dragged = false;
+        this.draggedWindow.resizing = false;
+
         if (this.willAttachWindow) {
           const win = this.draggedWindow;
           const container = draggedContainer;
-
-          win.dragged = false;
 
           if (platform() === 'win32') {
             const handle = this.getNativeWindowHandle().readInt32LE(0);
@@ -288,7 +297,6 @@ export class AppWindow extends BrowserWindow {
           }, 50);
         } else if (this.willSplitWindow) {
           this.willSplitWindow = false;
-          this.draggedWindow.dragged = false;
 
           if (this.selectedContainer) this.selectedContainer.rearrangeWindows();
         }

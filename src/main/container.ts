@@ -17,6 +17,7 @@ interface Column {
   width?: number;
   x?: number;
   rows: Row[];
+  weight: number;
 }
 
 const iohook = require('iohook');
@@ -38,6 +39,7 @@ export class Container {
 
     this.columns.push({
       id: colId,
+      weight: 1,
       rows: [
         {
           id: rowId,
@@ -58,15 +60,36 @@ export class Container {
     if (this.appWindow.isMinimized()) return;
 
     const area = this.appWindow.getContentArea();
-
     const colWidth = area.width / this.columns.length;
 
-    for (let i = 0; i < this.columns.length; i++) {
-      const col = this.columns[i];
+    /*
+    let spaceLeft = area.width;
+
+    const sortedCols = this.columns
+      .slice()
+      .sort((a, b) => b.weight - a.weight)
+      .filter(x => x.weight !== 1)
+      .concat(this.columns.filter(x => x.weight === 1));
+
+    for (let i = 0; i < sortedCols.length; i++) {
+      const col = sortedCols[i];
+      const colWidth = (spaceLeft / (sortedCols.length - i)) * col.weight;
+      spaceLeft -= colWidth;
+      col.width = colWidth;
+    }
+    */
+
+    for (const col of this.columns) {
+      col.width = colWidth;
+    }
+
+    let left = 0;
+
+    for (const col of this.columns) {
       const rowHeight = area.height / col.rows.length;
 
-      col.x = area.x + i * colWidth;
-      col.width = colWidth;
+      col.x = area.x + left;
+      left += col.width;
 
       for (let j = 0; j < col.rows.length; j++) {
         const row = col.rows[j];
@@ -176,6 +199,7 @@ export class Container {
 
           this.columns.splice(this.columns.indexOf(col) + dirX, 0, {
             id: colId,
+            weight: 1,
             rows: [
               {
                 id: rowId,
@@ -226,6 +250,19 @@ export class Container {
         }
       }
     }
+
+    this.rearrangeWindows();
+  }
+
+  resizeWindow(window: ProcessWindow) {
+    /*const win = this.windows.find(x => x.id === window.id);
+    const col = this.columns.find(x => x.id === win.columnId);
+
+    col.weight =
+      win.getBounds().width /
+      (this.appWindow.getContentArea().width / this.columns.length);
+
+    this.columns[this.columns.indexOf(col) + 1].weight = 1;*/
 
     this.rearrangeWindows();
   }

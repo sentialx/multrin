@@ -279,7 +279,11 @@ export class AppWindow extends BrowserWindow {
       this.isMoving = false;
 
       if (this.isUpdatingContentBounds) {
-        // this.resizeWindow(this.selectedWindow);
+        setTimeout(() => {
+          if (this.selectedContainer) {
+            this.selectedContainer.rearrangeWindows();
+          }
+        }, 100);
       }
 
       this.isUpdatingContentBounds = false;
@@ -311,10 +315,6 @@ export class AppWindow extends BrowserWindow {
           if (this.selectedContainer) this.selectedContainer.rearrangeWindows();
         }
       }
-
-      setTimeout(() => {
-        if (this.selectedContainer) this.selectedContainer.rearrangeWindows();
-      }, 50);
 
       draggedContainer = null;
       this.draggedWindow = null;

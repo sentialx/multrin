@@ -15,6 +15,12 @@ export class ProcessWindow extends Window {
 
   public parentWindow: AppWindow;
 
+  public dragged = false;
+  public resizing = false;
+
+  public rowId: number;
+  public columnId: number;
+
   constructor(handle: any, appWindow: AppWindow) {
     super(handle);
 
@@ -26,8 +32,6 @@ export class ProcessWindow extends Window {
 
   public detach() {
     this.setOwner(null);
-
-    this.parentWindow.webContents.send('remove-tab', this.id);
 
     setTimeout(() => {
       this.bringToTop();

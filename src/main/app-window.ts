@@ -157,7 +157,6 @@ export class AppWindow extends BrowserWindow {
           windowManager.getActiveWindow().id,
           this,
         );
-        this.draggedWindow.dragged = true;
       }, 50);
     });
 
@@ -225,8 +224,19 @@ export class AppWindow extends BrowserWindow {
             winBounds.width !== lastBounds.width ||
             winBounds.height !== lastBounds.height
           ) {
-            this.selectedContainer.resizeWindow(this.draggedWindow);
             this.draggedWindow.resizing = true;
+            this.isUpdatingContentBounds = true;
+
+            const cBounds = this.getContentBounds();
+
+            this.setContentBounds({
+              width: cBounds.width + (winBounds.width - lastBounds.width),
+              height: cBounds.height + winBounds.height - lastBounds.height,
+              x: cBounds.x + winBounds.x - lastBounds.x,
+              y: cBounds.y + winBounds.y - lastBounds.y,
+            } as any);
+
+            this.draggedWindow.lastBounds = winBounds;
           } else if (!this.draggedWindow.resizing) {
             this.selectedContainer.dragWindow(this.draggedWindow, e);
             this.willSplitWindow = true;
@@ -301,6 +311,10 @@ export class AppWindow extends BrowserWindow {
           if (this.selectedContainer) this.selectedContainer.rearrangeWindows();
         }
       }
+
+      setTimeout(() => {
+        if (this.selectedContainer) this.selectedContainer.rearrangeWindows();
+      }, 50);
 
       draggedContainer = null;
       this.draggedWindow = null;

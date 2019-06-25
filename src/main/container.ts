@@ -233,6 +233,7 @@ export class Container {
         if (dirY !== -1 || dirX !== -1) {
           window.rowId = rowId;
           window.columnId = colId;
+          window.dragged = true;
           if (this._handler) {
             iohook.off('mouseup', this._handler);
           }
@@ -255,8 +256,9 @@ export class Container {
   }
 
   resizeWindow(window: ProcessWindow) {
-    /*const win = this.windows.find(x => x.id === window.id);
-    const col = this.columns.find(x => x.id === win.columnId);
+    const win = this.windows.find(x => x.id === window.id);
+
+    /*const col = this.columns.find(x => x.id === win.columnId);
 
     col.weight =
       win.getBounds().width /

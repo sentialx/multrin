@@ -8,6 +8,7 @@
 [![Travis](https://img.shields.io/travis/com/sentialx/multrin.svg?style=flat-square)](https://travis-ci.com/sentialx/multrin)
 [![Discord](https://img.shields.io/discord/591959345789403148.svg?style=flat-square)](https://discord.gg/fXvVFQz)
 [![Downloads](https://img.shields.io/github/downloads/sentialx/multrin/total.svg?style=flat-square)](https://github.com/sentialx/multrin/releases)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsentialx%2Fmultrin.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsentialx%2Fmultrin?ref=badge_shield)
 
 Multrin is a ~~cross-platform~~ app built on top of  `Electron`, `React`, `styled-components` and `TypeScript`, that lets you to organize apps in tabs, by just dropping them onto Multrin. It aims to greatly improve your productivity and organization.
 
@@ -87,7 +88,6 @@ $ npm run <command>
 ### Sponsors
 
 [![Sponsors](https://opencollective.com/multrin/tiers/sponsor.svg?avatarHeight=48)](https://opencollective.com/multrin)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsentialx%2Fmultrin.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsentialx%2Fmultrin?ref=badge_shield)
 
 ### Backers
 

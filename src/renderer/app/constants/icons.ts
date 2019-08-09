@@ -1,17 +1,6 @@
-import windowsClose from '~/shared/resources/icons/windows/close.svg';
-import windowsMaximize from '~/shared/resources/icons/windows/maximize.svg';
-import windowsMinimize from '~/shared/resources/icons/windows/minimize.svg';
-import close from '~/shared/resources/icons/close.svg';
-import dropWindow from '~/shared/resources/icons/drop-window.svg';
-import download from '~/shared/resources/icons/download.svg';
-import theme from '~/shared/resources/icons/theme.svg';
-
 export const icons = {
-  windowsClose,
-  windowsMaximize,
-  windowsMinimize,
-  close,
-  dropWindow,
-  download,
-  theme,
+  close: require('~/shared/resources/icons/close.svg'),
+  dropWindow: require( '~/shared/resources/icons/drop-window.svg'),
+  download: require('~/shared/resources/icons/download.svg'),
+  theme: require('~/shared/resources/icons/theme.svg'),
 };

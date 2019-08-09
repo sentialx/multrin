@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const postcssPresetEnv = require('postcss-preset-env');
+const postcssMixins = require('postcss-mixins');
 /* eslint-enable */
 
 const PORT = 4444;
@@ -61,7 +62,7 @@ const getBaseConfig = name => {
               loader: 'postcss-loader',
               options: {
                 ident: 'postcss',
-                plugins: () => [postcssPresetEnv()],
+                plugins: () => [postcssMixins(), postcssPresetEnv()],
               },
             },
           ],

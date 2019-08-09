@@ -59,6 +59,7 @@
     "mobx": "5.13.0",
     "mobx-react": "6.1.2",
     "postcss-loader": "^3.0.0",
+    "postcss-mixins": "^6.2.2",
     "postcss-preset-env": "^6.7.0",
     "prettier": "1.18.2",
     "react": "16.9.0",

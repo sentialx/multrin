@@ -39,6 +39,8 @@
     "@types/react": "16.9.0",
     "@types/react-dom": "16.8.5",
     "@types/styled-components": "4.1.18",
+    "@typescript-eslint/eslint-plugin": "^1.13.0",
+    "@typescript-eslint/parser": "^1.13.0",
     "cache-loader": "^4.1.0",
     "concurrently": "^4.1.1",
     "cross-env": "5.2.0",
@@ -61,7 +63,11 @@
     "webpack": "4.39.1",
     "webpack-cli": "3.3.6",
     "webpack-dev-server": "^3.7.2",
-    "webpack-merge": "^4.2.1"
+    "webpack-merge": "^4.2.1",
+    "eslint": "^6.1.0",
+    "eslint-config-prettier": "^6.0.0",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-react": "^7.14.3"
   },
   "dependencies": {
     "electron-updater": "4.1.2",

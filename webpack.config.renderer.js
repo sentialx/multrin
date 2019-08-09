@@ -5,8 +5,9 @@ const { join } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const postcssPresetEnv = require('postcss-preset-env');
+const postcssNested = require('postcss-nested');
 const postcssMixins = require('postcss-mixins');
+const postcssVariables = require('postcss-css-variables');
 /* eslint-enable */
 
 const PORT = 4444;
@@ -53,16 +54,18 @@ const getBaseConfig = name => {
               loader: 'css-loader',
               options: {
                 modules: true,
-                camelCase: true,
-                importLoaders: 1,
-                localIdentName: '[name]--[local]--[hash:base64:5]',
+                localsConvention: 'camelCase',
               },
             },
             {
               loader: 'postcss-loader',
               options: {
                 ident: 'postcss',
-                plugins: () => [postcssMixins(), postcssPresetEnv()],
+                plugins: () => [
+                  postcssMixins(),
+                  postcssVariables(),
+                  postcssNested(),
+                ],
               },
             },
           ],

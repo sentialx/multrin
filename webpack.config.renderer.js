@@ -19,7 +19,7 @@ const getHtml = (scope, name) => {
 
 const applyEntries = (scope, config, entries) => {
   for (const entry of entries) {
-    config.entry[entry] = [`./src/renderer/views/${entry}`];
+    config.entry[entry] = [`./src/renderer/${entry}`];
     config.plugins.push(getHtml(scope, entry));
 
     if (dev) {

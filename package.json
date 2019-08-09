@@ -12,7 +12,7 @@
     "styled-components"
   ],
   "homepage": "https://github.com/sentialx/multrin#readme",
-  "main": "build/main.js",
+  "main": "build/main.bundle.js",
   "author": {
     "name": "Eryk Rakowski",
     "email": "sentialx@gmail.com"

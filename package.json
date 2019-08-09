@@ -31,8 +31,8 @@
     "url": "https://github.com/sentialx/multrin/issues"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV='dev' node fuse.js",
-    "build": "node fuse.js",
+    "dev": "concurrently \"cross-env ENV='dev' webpack-dev-server --config webpack.config.renderer.js\" \" cross-env ENV='dev' webpack\"",
+    "build": "concurrently \"webpack --config webpack.config.renderer.js\" \"webpack\"",
     "start": "cross-env ENV='dev' electron .",
     "compile-win32": "npm run build && electron-builder -w -p always",
     "compile-darwin": "npm run build && electron-builder -m -p always",
@@ -54,14 +54,11 @@
     "cross-env": "5.2.0",
     "electron": "5.0.4",
     "electron-builder": "20.43.0",
-    "fuse-box": "3.7.1",
     "prettier": "1.18.2",
-    "terser": "4.0.0",
     "tslint": "5.17.0",
     "tslint-config-airbnb": "5.11.1",
     "tslint-config-prettier": "1.18.0",
-    "typescript": "3.5.2",
-    "typescript-plugin-styled-components": "1.4.3"
+    "typescript": "3.5.2"
   },
   "dependencies": {
     "bindings": "1.5.0",

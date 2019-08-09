@@ -3,7 +3,6 @@ import * as ReactDOM from 'react-dom';
 
 import { App } from './components/App';
 import { fonts } from '../constants';
-import store from './store';
 import { ipcRenderer } from 'electron';
 
 ipcRenderer.setMaxListeners(0);

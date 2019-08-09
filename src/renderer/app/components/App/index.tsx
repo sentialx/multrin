@@ -1,4 +1,5 @@
 import { observer } from 'mobx-react';
+import { hot } from 'react-hot-loader/root';
 import * as React from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
@@ -14,7 +15,7 @@ window.onmouseup = () => {
   ipcRenderer.send('focus');
 };
 
-export const App = observer(() => {
+export const App = hot(observer(() => {
   return (
     <ThemeProvider
       theme={{
@@ -33,4 +34,4 @@ export const App = observer(() => {
       </React.Fragment>
     </ThemeProvider>
   );
-});
+}));

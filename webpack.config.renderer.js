@@ -76,4 +76,4 @@ applyEntries('app', appConfig, [
   'app',
 ]);
 
-module.exports = [appConfig, webConfig];
+module.exports = [appConfig];

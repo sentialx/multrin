@@ -86,19 +86,20 @@
   },
   "cmake-js": {
     "runtime": "electron",
-    "runtimeVersion": "6.0.0"
+    "runtimeVersion": "6.0.1"
   },
   "iohook": {
     "targets": [
       "node-72",
-      "electron-70"
+      "electron-73"
     ],
     "platforms": [
       "win32",
       "darwin"
     ],
     "arches": [
-      "x64"
+      "x64",
+      "ia32"
     ]
   }
 }

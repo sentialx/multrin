@@ -4,6 +4,8 @@ const { getConfig, dev } = require('./webpack.config.base');
 const { join } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const postcssPresetEnv = require('postcss-preset-env');
 /* eslint-enable */
 
 const PORT = 4444;
@@ -30,10 +32,42 @@ const applyEntries = (scope, config, entries) => {
 
 const getBaseConfig = name => {
   const config = {
-    plugins: [new HardSourceWebpackPlugin()],
+    plugins: [
+      new HardSourceWebpackPlugin(),
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+      }),
+    ],
 
     output: {},
     entry: {},
+
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                camelCase: true,
+                importLoaders: 1,
+                localIdentName: '[name]--[local]--[hash:base64:5]',
+              },
+            },
+            {
+              loader: 'postcss-loader',
+              options: {
+                ident: 'postcss',
+                plugins: () => [postcssPresetEnv()],
+              },
+            },
+          ],
+        },
+      ],
+    },
 
     optimization: {
       splitChunks: {
@@ -68,12 +102,10 @@ const appConfig = getConfig(getBaseConfig('app'), {
     port: PORT,
     hot: true,
     inline: true,
-    disableHostCheck: true
+    disableHostCheck: true,
   },
 });
 
-applyEntries('app', appConfig, [
-  'app',
-]);
+applyEntries('app', appConfig, ['app']);
 
 module.exports = [appConfig];

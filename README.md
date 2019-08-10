@@ -10,7 +10,7 @@
 [![Downloads](https://img.shields.io/github/downloads/sentialx/multrin/total.svg?style=flat-square)](https://github.com/sentialx/multrin/releases)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsentialx%2Fmultrin.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsentialx%2Fmultrin?ref=badge_shield)
 
-Multrin is a ~~cross-platform~~ app built on top of  `Electron`, `React`, `styled-components` and `TypeScript`, that lets you to organize apps in tabs, by just dropping them onto Multrin. It aims to greatly improve your productivity and organization.
+Multrin is a cross-platform, that lets you to organize apps in tabs, by just dropping them onto Multrin. It aims to greatly improve your productivity and organization.
 
 </div>
 
@@ -51,39 +51,20 @@ $ npm i -g windows-build-tools
 Firstly, run this command to install all needed dependencies. If you have encountered any problems, please report it. I will try to help as much as I can.
 
 ```bash
-$ yarn
+$ npm i
 ```
 
 The given command below will run Multrin in the development mode.
 
 ```bash
-$ yarn dev
+$ npm run dev
 ```
 
-### Other commands
-
-You can also run other commands, for other tasks like building the app or linting the code, by using the commands described below.
-
-#### Usage:
+And in other terminal:
 
 ```bash
-$ npm run <command>
+$ npm start
 ```
-
-#### List of available commands:
-
-| Command            | Description                                  |
-| ------------------ | -------------------------------------------- |
-| `build-production` | Bundles Multrin's source in production mode. |
-| `compile-win32`    | Compiles Multrin binaries for Windows.       |
-| `compile-darwin`   | Compiles Multrin binaries for macOS.         |
-| `electron-rebuild` | Rebuilds all dependencies for `Electron`.    |
-| `lint`             | Lints code.                                  |
-| `lint-fix`         | Fixes eslint errors if any                   |
-| `start`            | Starts Multrin.                              |
-| `dev`              | Starts Multrin in the development mode       |
-
-> NOTE: `compile-win32` command will produce publishing errors at the end. Just ignore them.
 
 ### Sponsors
 
@@ -96,7 +77,6 @@ $ npm run <command>
 <a href="https://www.patreon.com/bePatron?u=12270966">
     <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
 </a>
-
 
 ## License
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsentialx%2Fmultrin.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsentialx%2Fmultrin?ref=badge_large)

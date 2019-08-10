@@ -1,6 +1,5 @@
 import { AppWindow } from './app-window';
 import { ProcessWindow } from './process-window';
-import console = require('console');
 import { platform } from 'os';
 
 let id = 1;
@@ -32,7 +31,7 @@ export class Container {
   private appWindow: AppWindow;
   private _handler: any;
 
-  constructor(appWindow: AppWindow, window: ProcessWindow) {
+  public constructor(appWindow: AppWindow, window: ProcessWindow) {
     this.appWindow = appWindow;
 
     let colId = spaceId++;
@@ -57,7 +56,7 @@ export class Container {
     this.rearrangeWindows();
   }
 
-  rearrangeWindows() {
+  public rearrangeWindows() {
     if (this.appWindow.isMinimized()) return;
 
     const area = this.appWindow.getContentArea();
@@ -100,7 +99,7 @@ export class Container {
     }
   }
 
-  removeWindow(id: number) {
+  public removeWindow(id: number) {
     const win = this.windows.find(x => x.id === id);
     if (!win) return;
 
@@ -127,7 +126,7 @@ export class Container {
     this.rearrangeWindows();
   }
 
-  detachWindow(window: ProcessWindow) {
+  public detachWindow(window: ProcessWindow) {
     window.detach();
 
     const handler = () => {
@@ -160,7 +159,7 @@ export class Container {
     this.windows = this.windows.filter(x => x.id !== window.id);
   }
 
-  dragWindow(window: ProcessWindow, { x, y }: any) {
+  public dragWindow(window: ProcessWindow, { x, y }: any) {
     const area = this.appWindow.getContentArea();
     const win = this.windows.find(x => x.id === window.id);
 
@@ -267,7 +266,7 @@ export class Container {
     this.rearrangeWindows();
   }
 
-  resizeWindow(window: ProcessWindow) {
+  public resizeWindow(window: ProcessWindow) {
     const win = this.windows.find(x => x.id === window.id);
     const col = this.columns.find(x => x.id === win.columnId);
     const affectedCol = this.columns[this.columns.indexOf(col) + 1];
@@ -290,7 +289,7 @@ export class Container {
     this.rearrangeWindows();
   }
 
-  showWindows() {
+  public showWindows() {
     for (const window of this.windows) {
       window.show();
     }
@@ -298,7 +297,7 @@ export class Container {
     this.rearrangeWindows();
   }
 
-  hideWindows() {
+  public hideWindows() {
     for (const window of this.windows) {
       window.hide();
     }

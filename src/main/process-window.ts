@@ -21,7 +21,7 @@ export class ProcessWindow extends Window {
   public rowId: number;
   public columnId: number;
 
-  constructor(handle: any, appWindow: AppWindow) {
+  public constructor(handle: any, appWindow: AppWindow) {
     super(handle);
 
     this.lastBounds = this.getBounds();

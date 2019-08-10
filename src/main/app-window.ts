@@ -36,7 +36,7 @@ export class AppWindow extends BrowserWindow {
 
   private _selectedTab = false;
 
-  constructor() {
+  public constructor() {
     super({
       frame: false,
       width: 900,
@@ -291,7 +291,7 @@ export class AppWindow extends BrowserWindow {
     });
   }
 
-  intervalCallback = () => {
+  private intervalCallback = () => {
     if (!this.isMinimized()) {
       for (const container of this.containers) {
         if (container.windows.length === 1) {
@@ -315,7 +315,7 @@ export class AppWindow extends BrowserWindow {
     }
   };
 
-  getContentArea() {
+  public getContentArea() {
     const bounds = this.getContentBounds();
 
     bounds.y += TOOLBAR_HEIGHT;
@@ -324,7 +324,7 @@ export class AppWindow extends BrowserWindow {
     return bounds;
   }
 
-  selectContainer(container: Container) {
+  public selectContainer(container: Container) {
     if (!container) return;
 
     if (this.selectedContainer) {
@@ -339,7 +339,7 @@ export class AppWindow extends BrowserWindow {
     this.selectedContainer = container;
   }
 
-  removeContainer(container: Container) {
+  public removeContainer(container: Container) {
     if (this.selectedContainer === container) {
       this.selectedContainer = null;
     }

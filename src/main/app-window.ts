@@ -157,10 +157,17 @@ export class AppWindow extends BrowserWindow {
           this.draggedWindow = null;
           return;
         }
-        this.draggedWindow = new ProcessWindow(
-          windowManager.getActiveWindow().id,
-          this,
-        );
+
+        const id = windowManager.getActiveWindow().id;
+
+        if (this.selectedContainer) {
+          const win = this.selectedContainer.windows.find(x => x.id === id);
+          this.draggedWindow = win;
+        }
+
+        if (!this.draggedWindow) {
+          this.draggedWindow = new ProcessWindow(id, this);
+        }
       }, 50);
     });
 
@@ -188,8 +195,9 @@ export class AppWindow extends BrowserWindow {
             (winBounds.width !== lastBounds.width ||
               winBounds.height !== lastBounds.height)
           ) {
-            this.draggedWindow.resizing = true;
-            this.isUpdatingContentBounds = true;
+            this.selectedContainer.resizeWindow(this.draggedWindow);
+
+            /*this.isUpdatingContentBounds = true;
 
             const cBounds = this.getContentBounds();
 
@@ -200,7 +208,7 @@ export class AppWindow extends BrowserWindow {
               y: cBounds.y + winBounds.y - lastBounds.y,
             } as any);
 
-            this.draggedWindow.lastBounds = winBounds;
+            this.draggedWindow.lastBounds = winBounds;*/
           } else if (!this.draggedWindow.resizing) {
             this.selectedContainer.dragWindow(this.draggedWindow, e);
             this.willSplitWindow = true;

@@ -2,12 +2,11 @@ import { BrowserWindow, app, screen, globalShortcut, ipcMain } from 'electron';
 import { resolve, join } from 'path';
 import { platform } from 'os';
 import { windowManager, Window } from 'node-window-manager';
-import console = require('console');
 import { TOOLBAR_HEIGHT } from '~/renderer/app/constants/design';
 import { ProcessWindow } from './process-window';
 import { Container } from './container';
+import * as fileIcon from 'extract-file-icon';
 
-const fileIcon = require('extract-file-icon');
 const iohook = require('iohook');
 
 const containsPoint = (bounds: any, point: any) => {
@@ -217,7 +216,8 @@ export class AppWindow extends BrowserWindow {
 
         if (
           containsPoint(contentBounds, e) &&
-          (winBounds.x !== lastBounds.x || winBounds.y !== lastBounds.y)
+          (winBounds.x !== lastBounds.x || winBounds.y !== lastBounds.y) &&
+          !this.draggedWindow.resizing
         ) {
           if (!this.draggedIn) {
             const win = this.draggedWindow;

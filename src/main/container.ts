@@ -268,8 +268,17 @@ export class Container {
 
   public resizeWindow(window: ProcessWindow) {
     const win = this.windows.find(x => x.id === window.id);
+    if (!win) return;
+
     const col = this.columns.find(x => x.id === win.columnId);
-    const affectedCol = this.columns[this.columns.indexOf(col) + 1];
+    if (!col) return;
+
+    const winBounds = win.getBounds();
+
+    let index = winBounds.x !== win.lastBounds.x ? -1 : 1;
+
+    const affectedCol = this.columns[this.columns.indexOf(col) + index];
+    if (!affectedCol) return;
 
     win.dragged = false;
     win.resizing = true;
@@ -277,7 +286,7 @@ export class Container {
     const baseWidth =
       this.appWindow.getContentArea().width / this.columns.length;
 
-    const change = win.getBounds().width - col.lastWidth;
+    let change = winBounds.width - col.lastWidth;
 
     col.width += change;
     affectedCol.width -= change;

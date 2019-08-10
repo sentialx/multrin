@@ -21,11 +21,15 @@ export class ProcessWindow extends Window {
   public rowId: number;
   public columnId: number;
 
+  public lastX: number;
+
   public constructor(handle: any, appWindow: AppWindow) {
     super(handle);
 
     this.lastBounds = this.getBounds();
     this.initialBounds = this.getBounds();
+
+    this.lastX = this.initialBounds.x;
 
     this.parentWindow = appWindow;
   }

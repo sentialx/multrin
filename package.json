@@ -44,6 +44,7 @@
     "cache-loader": "^4.1.0",
     "concurrently": "^4.1.1",
     "cross-env": "5.2.0",
+    "css-hot-loader": "^1.4.4",
     "css-loader": "^3.2.0",
     "electron": "6.0.1",
     "electron-builder": "21.2.0",

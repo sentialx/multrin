@@ -11,6 +11,7 @@ const postcssVariables = require('postcss-css-variables');
 /* eslint-enable */
 
 const PORT = 4444;
+const INCLUDE = join(__dirname, 'src');
 
 const getHtml = (scope, name) => {
   return new HtmlWebpackPlugin({
@@ -47,8 +48,14 @@ const getBaseConfig = name => {
     module: {
       rules: [
         {
+          test: /\.(png|gif|jpg|woff2|ttf|svg)$/,
+          include: INCLUDE,
+          use: ['file-loader'],
+        },
+        {
           test: /\.css$/,
           use: [
+            'css-hot-loader',
             MiniCssExtractPlugin.loader,
             {
               loader: 'css-loader',

@@ -21,11 +21,6 @@ const config = {
   module: {
     rules: [
       {
-        test: /\.(png|gif|jpg|woff2|ttf|svg)$/,
-        include: INCLUDE,
-        use: ['file-loader'],
-      },
-      {
         test: /\.tsx|ts$/,
         use: [
           'cache-loader',

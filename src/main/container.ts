@@ -130,6 +130,10 @@ export class Container {
 
     for (const c of this.columns) {
       c.weight = 1;
+
+      for (const r of c.rows) {
+        r.weight = 1;
+      }
     }
 
     this.rearrangeWindows();

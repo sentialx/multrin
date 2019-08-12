@@ -1,5 +1,6 @@
 import { Window } from 'node-window-manager';
 import { AppWindow } from './app-window';
+import { platform } from 'os';
 
 export class ProcessWindow extends Window {
   public resizable = false;
@@ -41,7 +42,10 @@ export class ProcessWindow extends Window {
   public show() {
     this.setOpacity(1);
     this.toggleTransparency(false);
-    this.bringToTop();
+
+    if (platform() !== 'win32') {
+      this.bringToTop();
+    }
   }
 
   public hide() {

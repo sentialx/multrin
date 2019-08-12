@@ -39,18 +39,15 @@ export class Store {
     y: 0,
   };
 
-  constructor() {
+  public constructor() {
     ipcRenderer.on('fullscreen', (e: any, fullscreen: boolean) => {
       this.isFullscreen = fullscreen;
     });
 
-    ipcRenderer.on(
-      'update-available',
-      (e: Electron.IpcMessageEvent, version: string) => {
-        this.updateInfo.version = version;
-        this.updateInfo.available = true;
-      },
-    );
+    ipcRenderer.on('update-available', (e, version: string) => {
+      this.updateInfo.version = version;
+      this.updateInfo.available = true;
+    });
 
     ipcRenderer.send('update-check');
 

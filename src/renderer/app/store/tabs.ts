@@ -47,7 +47,7 @@ export class TabsStore {
     interval: null as any,
   };
 
-  constructor() {
+  public constructor() {
     window.addEventListener('mouseup', this.onMouseUp);
     window.addEventListener('mousemove', this.onMouseMove);
     window.addEventListener('resize', this.onResize);

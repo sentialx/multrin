@@ -95,11 +95,7 @@ export class AppWindow extends BrowserWindow {
     this.on('resize', updateBounds);
 
     ipcMain.on('focus', () => {
-      if (this.selectedContainer && !this.isMoving) {
-        for (const window of this.selectedContainer.windows) {
-          window.bringToTop();
-        }
-      }
+      this.focusWindows();
     });
 
     this.on('close', () => {
@@ -115,8 +111,8 @@ export class AppWindow extends BrowserWindow {
 
     this.interval = setInterval(this.intervalCallback, 100);
 
-    ipcMain.on('select-window', (e: any, id: number) => {
-      this.selectContainer(this.containers.find(x => x.id === id));
+    ipcMain.on('select-window', (e: any, id: number, focus: boolean) => {
+      this.selectContainer(this.containers.find(x => x.id === id), focus);
     });
 
     ipcMain.on('detach-window', (e: any, id: number) => {
@@ -126,8 +122,16 @@ export class AppWindow extends BrowserWindow {
     });
 
     globalShortcut.register('CmdOrCtrl+Tab', () => {
-      if (this.isFocused()) {
+      const { id } = windowManager.getActiveWindow();
+      if (
+        this.isFocused() ||
+        this.containers.find(x => x.windows.find(y => y.id === id))
+      ) {
         this.webContents.send('next-tab');
+
+        ipcMain.once('select-window', () => {
+          this.focusWindows();
+        });
       }
     });
 
@@ -332,7 +336,7 @@ export class AppWindow extends BrowserWindow {
     return bounds;
   }
 
-  public selectContainer(container: Container) {
+  public selectContainer(container: Container, focus: boolean = false) {
     if (!container) return;
 
     if (this.selectedContainer) {
@@ -343,7 +347,7 @@ export class AppWindow extends BrowserWindow {
       this.selectedContainer.hideWindows();
     }
 
-    container.showWindows();
+    container.showWindows(focus);
     this.selectedContainer = container;
   }
 
@@ -354,5 +358,13 @@ export class AppWindow extends BrowserWindow {
 
     this.webContents.send('remove-tab', container.id);
     this.containers = this.containers.filter(x => x.id !== container.id);
+  }
+
+  public focusWindows() {
+    if (this.selectedContainer && !this.isMoving) {
+      for (const window of this.selectedContainer.windows) {
+        window.bringToTop();
+      }
+    }
   }
 }

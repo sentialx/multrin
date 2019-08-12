@@ -1,5 +1,0 @@
-@define-mixin centerIcon $size {
-  background-size: $size;
-  background-position: center;
-  background-repeat: no-repeat;
-}

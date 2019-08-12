@@ -9,6 +9,8 @@ interface Row {
   id: number;
   height?: number;
   y?: number;
+  weight: number;
+  lastHeight?: number;
 }
 
 interface Column {
@@ -43,6 +45,7 @@ export class Container {
       rows: [
         {
           id: rowId,
+          weight: 1,
         },
       ],
     });
@@ -68,17 +71,23 @@ export class Container {
     }
 
     let left = 0;
+    let top = 0;
 
     for (const col of this.columns) {
       const rowHeight = area.height / col.rows.length;
 
       col.x = area.x + left;
       left += col.width;
+      top = 0;
 
       for (let j = 0; j < col.rows.length; j++) {
         const row = col.rows[j];
-        row.y = area.y + j * rowHeight;
-        row.height = rowHeight;
+
+        row.height = Math.round(rowHeight * row.weight);
+        row.lastHeight = row.height;
+
+        row.y = area.y + top;
+        top += row.height;
 
         const window = this.windows.find(
           x => x.rowId === row.id && x.columnId === col.id,
@@ -214,6 +223,7 @@ export class Container {
             rows: [
               {
                 id: rowId,
+                weight: 1,
               },
             ],
           });
@@ -234,6 +244,7 @@ export class Container {
 
               col.rows.splice(col.rows.indexOf(row) + dirY, 0, {
                 id: rowId,
+                weight: 1,
               });
 
               break;
@@ -275,24 +286,46 @@ export class Container {
 
     const winBounds = win.getBounds();
 
-    let index = winBounds.x !== win.lastBounds.x ? -1 : 1;
-
-    const affectedCol = this.columns[this.columns.indexOf(col) + index];
-    if (!affectedCol) return;
-
     win.dragged = false;
     win.resizing = true;
 
-    const baseWidth =
-      this.appWindow.getContentArea().width / this.columns.length;
+    if (winBounds.width !== win.lastBounds.width) {
+      const index = winBounds.x !== win.lastBounds.x ? -1 : 1;
 
-    let change = winBounds.width - col.lastWidth;
+      const affectedCol = this.columns[this.columns.indexOf(col) + index];
+      if (!affectedCol) return;
 
-    col.width += change;
-    affectedCol.width -= change;
+      const baseWidth =
+        this.appWindow.getContentArea().width / this.columns.length;
 
-    for (const c of this.columns) {
-      c.weight = c.width / baseWidth;
+      const change = winBounds.width - col.lastWidth;
+
+      col.width += change;
+      affectedCol.width -= change;
+
+      for (const c of this.columns) {
+        c.weight = c.width / baseWidth;
+      }
+    } else if (winBounds.height !== win.lastBounds.height) {
+      const row = col.rows.find(x => x.id === win.rowId);
+      if (!row) return;
+
+      const index = winBounds.y !== win.lastBounds.y ? -1 : 1;
+
+      const affectedRow = col.rows[col.rows.indexOf(row) + index];
+      if (!affectedRow) return;
+
+      const baseHeight =
+        this.appWindow.getContentArea().height / col.rows.length;
+
+      const change = winBounds.height - row.lastHeight;
+
+      row.height += change;
+      affectedRow.height -= change;
+
+      for (const r of col.rows) {
+        r.weight = r.height / baseHeight;
+      }
     }
 
     this.rearrangeWindows();

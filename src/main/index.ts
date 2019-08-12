@@ -4,8 +4,6 @@ import { platform, homedir } from 'os';
 import { AppWindow } from './app-window';
 import { autoUpdater } from 'electron-updater';
 
-const iohook = require('iohook');
-
 ipcMain.setMaxListeners(0);
 
 app.setPath('userData', resolve(homedir(), '.multrin'));
@@ -23,6 +21,8 @@ if (!gotTheLock) {
     }
   });
 }
+
+export const iohook = require('iohook');
 
 iohook.start();
 

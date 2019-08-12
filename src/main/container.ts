@@ -1,6 +1,7 @@
 import { AppWindow } from './app-window';
 import { ProcessWindow } from './process-window';
 import { platform } from 'os';
+import { iohook } from '.';
 
 let id = 1;
 let spaceId = 0;
@@ -21,8 +22,6 @@ interface Column {
   weight: number;
   lastWidth?: number;
 }
-
-const iohook = require('iohook');
 
 export class Container {
   public id: number = id++;

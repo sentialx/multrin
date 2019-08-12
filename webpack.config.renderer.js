@@ -4,6 +4,7 @@ const { join, resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 /* eslint-enable */
 
 const PORT = 4444;
@@ -36,6 +37,11 @@ const getBaseConfig = name => {
       new MiniCssExtractPlugin({
         filename: '[name].css',
       }),
+      new OptimizeCssAssetsPlugin({
+        cssProcessorPluginOptions: {
+          preset: ['default', { discardComments: { removeAll: true } }],
+        },
+      }),
     ],
 
     output: {},
@@ -57,7 +63,7 @@ const getBaseConfig = name => {
               loader: 'css-loader',
               options: {
                 sourceMap: dev,
-                localsConvention: 'camelCase',
+                localsConvention: 'camelCaseOnly',
                 modules: {
                   localIdentName: '[local]--[hash:base64:5]',
                 },

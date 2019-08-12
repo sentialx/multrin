@@ -6,8 +6,7 @@ import { TOOLBAR_HEIGHT } from '~/renderer/app/constants/design';
 import { ProcessWindow } from './process-window';
 import { Container } from './container';
 import * as fileIcon from 'extract-file-icon';
-
-const iohook = require('iohook');
+import { iohook } from '.';
 
 const containsPoint = (bounds: any, point: any) => {
   return (

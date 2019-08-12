@@ -281,7 +281,7 @@ export class Container {
     this.rearrangeWindows();
   }
 
-  public resizeWindow(window: ProcessWindow) {
+  public resizeWindow(window: ProcessWindow, resizeWinCb: () => void) {
     const win = this.windows.find(x => x.id === window.id);
     if (!win) return;
 
@@ -297,7 +297,7 @@ export class Container {
       const index = winBounds.x !== win.lastBounds.x ? -1 : 1;
 
       const affectedCol = this.columns[this.columns.indexOf(col) + index];
-      if (!affectedCol) return;
+      if (!affectedCol) return resizeWinCb();
 
       const baseWidth =
         this.appWindow.getContentArea().width / this.columns.length;
@@ -317,7 +317,7 @@ export class Container {
       const index = winBounds.y !== win.lastBounds.y ? -1 : 1;
 
       const affectedRow = col.rows[col.rows.indexOf(row) + index];
-      if (!affectedRow) return;
+      if (!affectedRow) return resizeWinCb();
 
       const baseHeight =
         this.appWindow.getContentArea().height / col.rows.length;

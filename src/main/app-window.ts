@@ -198,20 +198,20 @@ export class AppWindow extends BrowserWindow {
             (winBounds.width !== lastBounds.width ||
               winBounds.height !== lastBounds.height)
           ) {
-            this.selectedContainer.resizeWindow(this.draggedWindow);
+            this.selectedContainer.resizeWindow(this.draggedWindow, () => {
+              this.isUpdatingContentBounds = true;
 
-            /*this.isUpdatingContentBounds = true;
+              const cBounds = this.getContentBounds();
 
-            const cBounds = this.getContentBounds();
+              this.setContentBounds({
+                width: cBounds.width + (winBounds.width - lastBounds.width),
+                height: cBounds.height + winBounds.height - lastBounds.height,
+                x: cBounds.x + winBounds.x - lastBounds.x,
+                y: cBounds.y + winBounds.y - lastBounds.y,
+              } as any);
 
-            this.setContentBounds({
-              width: cBounds.width + (winBounds.width - lastBounds.width),
-              height: cBounds.height + winBounds.height - lastBounds.height,
-              x: cBounds.x + winBounds.x - lastBounds.x,
-              y: cBounds.y + winBounds.y - lastBounds.y,
-            } as any);
-
-            this.draggedWindow.lastBounds = winBounds;*/
+              this.draggedWindow.lastBounds = winBounds;
+            });
           } else if (!this.draggedWindow.resizing) {
             this.selectedContainer.dragWindow(this.draggedWindow, e);
             this.willSplitWindow = true;

@@ -1,13 +1,10 @@
 /* eslint-disable */
 const webpack = require('webpack');
 const { getConfig, dev } = require('./webpack.config.base');
-const { join } = require('path');
+const { join, resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const postcssNested = require('postcss-nested');
-const postcssMixins = require('postcss-mixins');
-const postcssVariables = require('postcss-css-variables');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 /* eslint-enable */
 
 const PORT = 4444;
@@ -53,27 +50,22 @@ const getBaseConfig = name => {
           use: ['file-loader'],
         },
         {
-          test: /\.css$/,
+          test: /\.scss$/,
           use: [
             'css-hot-loader',
             MiniCssExtractPlugin.loader,
             {
               loader: 'css-loader',
               options: {
-                modules: true,
+                sourceMap: dev,
                 localsConvention: 'camelCase',
+                modules: {
+                  localIdentName: '[local]--[hash:base64:5]',
+                },
               },
             },
             {
-              loader: 'postcss-loader',
-              options: {
-                ident: 'postcss',
-                plugins: () => [
-                  postcssMixins(),
-                  postcssVariables(),
-                  postcssNested(),
-                ],
-              },
+              loader: 'sass-loader',
             },
           ],
         },

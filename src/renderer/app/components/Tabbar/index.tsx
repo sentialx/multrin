@@ -5,7 +5,7 @@ import HorizontalScrollbar from '../HorizontalScrollbar';
 import store from '~/renderer/app/store';
 import { Tabs } from '../Tabs';
 
-import * as styles from './style.css';
+import * as styles from './style.scss';
 
 const getContainer = () => store.tabsStore.containerRef.current;
 

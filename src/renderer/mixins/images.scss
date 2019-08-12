@@ -1,0 +1,22 @@
+@mixin center-icon($size: contain) {
+  $s: $size;
+
+  @if $size != 'contain' {
+    $s: #{$s} auto;
+  }
+
+  background-size: $s;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@mixin custom-image($width, $height, $lelft, $top) {
+  background-size: width $height;
+  background-position: $left $top;
+  background-repeat: no-repeat;
+}
+
+@mixin cover-image {
+  background-size: cover;
+  background-repeat: no-repeat;
+}

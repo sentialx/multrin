@@ -1,12 +1,14 @@
 /* eslint-disable */
 const webpack = require('webpack');
 const { getConfig, dev } = require('./webpack.config.base');
-const { join } = require('path');
+const { join, resolve } = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 /* eslint-enable */
 
 const PORT = 4444;
+const INCLUDE = join(__dirname, 'src');
 
 const getHtml = (scope, name) => {
   return new HtmlWebpackPlugin({
@@ -30,10 +32,51 @@ const applyEntries = (scope, config, entries) => {
 
 const getBaseConfig = name => {
   const config = {
-    plugins: [new HardSourceWebpackPlugin()],
+    plugins: [
+      new HardSourceWebpackPlugin(),
+      new MiniCssExtractPlugin({
+        filename: '[name].css',
+      }),
+    ],
 
     output: {},
     entry: {},
+
+    module: {
+      rules: [
+        {
+          test: /\.(png|gif|jpg|woff2|ttf|svg)$/,
+          include: INCLUDE,
+          use: ['file-loader'],
+        },
+        {
+          test: /\.scss$/,
+          use: [
+            'css-hot-loader',
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: dev,
+                localsConvention: 'camelCase',
+                modules: {
+                  localIdentName: '[local]--[hash:base64:5]',
+                },
+              },
+            },
+            {
+              loader: 'sass-loader',
+            },
+            {
+              loader: 'sass-resources-loader',
+              options: {
+                resources: resolve(INCLUDE, 'renderer/mixins/*.scss'),
+              },
+            },
+          ],
+        },
+      ],
+    },
 
     optimization: {
       splitChunks: {
@@ -68,12 +111,10 @@ const appConfig = getConfig(getBaseConfig('app'), {
     port: PORT,
     hot: true,
     inline: true,
-    disableHostCheck: true
+    disableHostCheck: true,
   },
 });
 
-applyEntries('app', appConfig, [
-  'app',
-]);
+applyEntries('app', appConfig, ['app']);
 
 module.exports = [appConfig];

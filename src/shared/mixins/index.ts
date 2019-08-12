@@ -1,4 +1,3 @@
-export * from './cursors';
 export * from './images';
 export * from './positioning';
 export * from './scroll';

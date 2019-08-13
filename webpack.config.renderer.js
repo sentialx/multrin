@@ -82,6 +82,6 @@ const appConfig = getConfig(getBaseConfig('app'), {
   },
 });
 
-applyEntries('app', appConfig, ['app']);
+applyEntries('app', appConfig, ['app', 'menu']);
 
 module.exports = [appConfig];

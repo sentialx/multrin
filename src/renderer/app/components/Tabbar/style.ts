@@ -1,4 +1,6 @@
-.tabbar {
+import styled from 'styled-components';
+
+export const StyledTabbar = styled.div`
   height: 100%;
   width: 100%;
   position: relative;
@@ -6,9 +8,9 @@
   transition: 0.3s opacity, 0.3s transform;
   margin-right: 32px;
   display: flex;
-}
+`;
 
-.tabs-container {
+export const TabsContainer = styled.div`
   height: 100%;
   width: 100%;
   position: relative;
@@ -16,4 +18,4 @@
   white-space: nowrap;
   display: flex;
   align-items: center;
-}
+`;

@@ -19,21 +19,19 @@ export class Store {
     version: '',
   };
 
-  @observable
-  public isDark = false;
-
   @computed
   public get background() {
-    return this.isDark ? '#212121' : '#fff';
+    return this.settings.dark ? '#212121' : '#fff';
   }
 
   @computed
   public get foreground() {
-    return this.isDark ? '#fff' : '#000';
+    return this.settings.dark ? '#fff' : '#000';
   }
 
   public windowId = remote.getCurrentWindow().id;
 
+  @observable
   public settings: any = {};
 
   public mouse = {
@@ -53,17 +51,11 @@ export class Store {
 
     ipcRenderer.send('update-check');
 
-    this.isDark = remote.systemPreferences.isDarkMode();
+    this.settings = ipcRenderer.sendSync('get-settings');
 
-    if (!existsSync(settingsPath)) {
-      this.saveSettings();
-    } else {
-      this.settings = JSON.parse(readFileSync(settingsPath, 'utf8'));
-    }
-  }
-
-  public saveSettings() {
-    writeFileSync(settingsPath, JSON.stringify(this.settings), 'utf8');
+    ipcRenderer.on('update-settings', (e, s) => {
+      this.settings = { ...this.settings, ...s };
+    });
   }
 }
 

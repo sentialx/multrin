@@ -18,6 +18,11 @@ const onChangeIconClick = () => {
   ipcRenderer.send(`change-icon-${store.id}`);
 };
 
+const onDarkClick = () => {
+  store.settings.dark = !store.settings.dark;
+  store.saveSettings();
+};
+
 export const QuickMenu = observer(() => {
   return (
     <div
@@ -31,6 +36,10 @@ export const QuickMenu = observer(() => {
           <MenuItem onClick={onChangeIconClick}>
             <Icon icon={icons.photo}></Icon>
             <MenuItemTitle>Change window icon</MenuItemTitle>
+          </MenuItem>
+          <MenuItem onClick={onDarkClick}>
+            <Icon icon={icons.theme}></Icon>
+            <MenuItemTitle>Dark theme</MenuItemTitle>
           </MenuItem>
         </MenuItems>
       </Content>

@@ -12,6 +12,22 @@ export class Store {
   public id = ipcRenderer.sendSync(
     `get-window-id-${remote.getCurrentWindow().id}`,
   );
+
+  public settings: any;
+
+  public constructor() {
+    this.settings = ipcRenderer.sendSync('get-settings');
+
+    ipcRenderer.on('update-settings', (e, s) => {
+      this.settings = s;
+    });
+  }
+
+  public saveSettings() {
+    ipcRenderer.send('save-settings', {
+      settings: JSON.stringify(this.settings),
+    });
+  }
 }
 
 export default new Store();

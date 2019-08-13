@@ -15,7 +15,7 @@ export const App = hot(
     return (
       <ThemeProvider
         theme={{
-          dark: store.isDark,
+          dark: store.settings.dark,
           background: store.background,
           foreground: store.foreground,
         }}

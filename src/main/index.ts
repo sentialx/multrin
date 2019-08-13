@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { platform, homedir } from 'os';
 import { AppWindow } from './windows/app';
 import { autoUpdater } from 'electron-updater';
+import { Settings } from './settings';
 
 ipcMain.setMaxListeners(0);
 
@@ -21,6 +22,8 @@ if (!gotTheLock) {
     }
   });
 }
+
+export const settings = new Settings();
 
 export const iohook = require('iohook');
 

@@ -168,11 +168,11 @@ const Overlay = observer(({ tab }: { tab: Tab }) => {
       style={{
         backgroundColor: tab.isSelected
           ? shadeBlendConvert(
-              store.isDark ? 0.3 : 0.5,
+              store.settings.dark ? 0.3 : 0.5,
               tab.background,
               store.background,
             )
-          : store.isDark
+          : store.settings.dark
           ? 'rgba(255, 255, 255, 0.15)'
           : 'rgba(0, 0, 0, 0.04)',
       }}
@@ -195,7 +195,7 @@ export default observer(({ tab }: { tab: Tab }) => {
       style={{
         backgroundColor: tab.isSelected
           ? shadeBlendConvert(
-              store.isDark ? 0.4 : 0.6,
+              store.settings.dark ? 0.4 : 0.6,
               tab.background,
               store.background,
             )

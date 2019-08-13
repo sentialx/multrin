@@ -96,7 +96,7 @@ export class AppWindow extends BrowserWindow {
     this.on('resize', updateBounds);
 
     ipcMain.on('focus', () => {
-      if (this._autoFocus) {
+      if (this._autoFocus && platform() === 'darwin') {
         this.focusWindows();
       }
     });
@@ -122,6 +122,10 @@ export class AppWindow extends BrowserWindow {
 
     ipcMain.on('select-window', (e: any, id: number) => {
       this.selectContainer(this.containers.find(x => x.id === id));
+
+      if (platform() !== 'darwin') {
+        this.focusWindows();
+      }
     });
 
     ipcMain.on('detach-window', (e: any, id: number) => {

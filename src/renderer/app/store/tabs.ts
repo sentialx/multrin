@@ -37,6 +37,7 @@ export class TabsStore {
   public lastMouseX: number = 0;
   public mouseStartX: number = 0;
   public tabStartX: number = 0;
+  public draggedTab: Tab;
 
   public scrollbarRef = React.createRef<HorizontalScrollbar>();
   public containerRef = React.createRef<HTMLDivElement>();
@@ -253,7 +254,7 @@ export class TabsStore {
   };
 
   public onMouseMove = (e: any) => {
-    const { selectedTab } = store.tabsStore;
+    const { draggedTab } = this;
 
     if (this.isDragging) {
       const container = this.containerRef;
@@ -270,7 +271,7 @@ export class TabsStore {
         return;
       }
 
-      selectedTab.isDragging = true;
+      draggedTab.isDragging = true;
 
       const newLeft =
         tabStartX +
@@ -281,7 +282,7 @@ export class TabsStore {
       let left = Math.max(0, newLeft);
 
       if (
-        newLeft + selectedTab.width >
+        newLeft + draggedTab.width >
         boundingRect.width +
           boundingRect.left +
           container.current.scrollLeft -
@@ -291,14 +292,14 @@ export class TabsStore {
           boundingRect.width +
           boundingRect.left +
           container.current.scrollLeft -
-          selectedTab.width -
+          draggedTab.width -
           2 * TABS_PADDING;
       }
 
-      selectedTab.setLeft(left, false);
+      draggedTab.setLeft(left, false);
 
       this.getTabsToReplace(
-        selectedTab,
+        draggedTab,
         lastMouseX - e.pageX >= 1 ? 'left' : 'right',
       );
 

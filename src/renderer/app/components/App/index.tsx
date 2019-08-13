@@ -4,7 +4,6 @@ import * as React from 'react';
 import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 import { Toolbar } from '../Toolbar';
-import { ipcRenderer } from 'electron';
 import { Info, Icon, Handle } from './style';
 import { Style } from '~/renderer/app/style';
 import store from '../../store';

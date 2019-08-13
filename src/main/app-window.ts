@@ -134,9 +134,7 @@ export class AppWindow extends BrowserWindow {
     }
 
     windowManager.on('window-activated', (window: Window) => {
-      if (this.isFocused()) return;
-
-      if (this._selectedTab) return;
+      if (!this.isFocused()) return;
 
       for (const container of this.containers) {
         if (container.windows.find(x => x.id === window.id)) {
@@ -144,8 +142,6 @@ export class AppWindow extends BrowserWindow {
           break;
         }
       }
-
-      this._selectedTab = false;
     });
 
     iohook.on('mousedown', () => {

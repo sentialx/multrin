@@ -267,6 +267,13 @@ export class AppWindow extends BrowserWindow {
     iohook.on('mouseup', async () => {
       this.isMoving = false;
 
+      for (const container of this.containers) {
+        for (const window of container.windows) {
+          window.dragged = false;
+          window.resizing = false;
+        }
+      }
+
       if (this.isUpdatingContentBounds) {
         setTimeout(() => {
           if (this.selectedContainer) {
@@ -278,9 +285,6 @@ export class AppWindow extends BrowserWindow {
       this.isUpdatingContentBounds = false;
 
       if (this.draggedWindow) {
-        this.draggedWindow.dragged = false;
-        this.draggedWindow.resizing = false;
-
         if (this.willAttachWindow) {
           const win = this.draggedWindow;
           const container = draggedContainer;

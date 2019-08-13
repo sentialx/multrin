@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
 import { TOOLBAR_BUTTON_WIDTH } from '~/renderer/views/app/constants';
-import { centerImage } from '~/shared/mixins';
+import { centerIcon } from '~/shared/mixins';
 
 export const Icon = styled.div`
   width: 100%;
@@ -21,7 +21,7 @@ export const Icon = styled.div`
     icon: string;
     opacity: number;
   }) => css`
-    ${centerImage(`${size}px`, `${size}px`)};
+    ${centerIcon(size)};
     opacity: ${disabled ? 0.25 : opacity};
     background-image: url(${icon});
   `};

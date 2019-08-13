@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import { centerImage } from '~/shared/mixins';
+import { centerIcon } from '~/shared/mixins';
 import { icons } from '../../constants';
 
 export const Info = styled.div`
@@ -35,7 +35,7 @@ export const Info = styled.div`
 `;
 
 export const Icon = styled.div`
-  ${centerImage('64px', '64px')};
+  ${centerIcon(64)};
   width: 100%;
   height: 96px;
   background-image: url(${icons.dropWindow});

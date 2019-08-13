@@ -7,6 +7,7 @@ import { ProcessWindow } from '../process-window';
 import { Container } from '../container';
 import * as fileIcon from 'extract-file-icon';
 import { iohook } from '..';
+import { MenuWindow } from './menu';
 
 const containsPoint = (bounds: any, point: any) => {
   return (
@@ -20,6 +21,8 @@ const containsPoint = (bounds: any, point: any) => {
 export class AppWindow extends BrowserWindow {
   public containers: Container[] = [];
   public selectedContainer: Container;
+
+  public menu = new MenuWindow(this);
 
   public draggedWindow: ProcessWindow;
 

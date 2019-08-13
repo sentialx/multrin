@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components';
 
 import { transparency } from '~/renderer/constants';
 import { icons, TABS_PADDING } from '~/renderer/views/app/constants';
-import { centerImage, body2 } from '~/shared/mixins';
+import { centerIcon, body2 } from '~/shared/mixins';
 
 interface CloseProps {
   visible: boolean;
@@ -17,7 +17,7 @@ export const StyledClose = styled.div`
   transition: 0.1s opacity, 0.2s filter;
   filter: ${(props: any) => (props.theme.dark ? 'invert(100%)' : 'none')};
   z-index: 10;
-  ${centerImage('16px', '16px')};
+  ${centerIcon(16)};
   opacity: ${({ visible }: CloseProps) =>
     visible ? transparency.icons.inactive : 0};
 
@@ -102,7 +102,7 @@ export const StyledIcon = styled.div`
   height: 16px;
   min-width: 16px;
   transition: 0.2s opacity, 0.2s min-width;
-  ${centerImage('16px', '16px')};
+  ${centerIcon()}
   ${({ isIconSet }: { isIconSet: boolean }) => css`
     min-width: ${isIconSet ? 0 : 16},
     opacity: ${isIconSet ? 0 : 1};

@@ -24,7 +24,9 @@ Multrin is a cross-platform, that lets you to organize apps in tabs, by just dro
 
 # Screenshots
 
-![](screenshots/screen1.gif)
+![gif](https://user-images.githubusercontent.com/11065386/62975420-96351880-be1a-11e9-9b95-fa63b970620a.gif)
+
+![image](https://user-images.githubusercontent.com/11065386/62975121-ff685c00-be19-11e9-81cb-073c97bf61d9.png)
 
 # [Roadmap](https://github.com/sentialx/multrin/projects)
 

@@ -34,6 +34,8 @@ export class AppWindow extends BrowserWindow {
 
   private _selectedTab = false;
 
+  private _autoFocus = true;
+
   public constructor() {
     super({
       frame: false,
@@ -94,7 +96,15 @@ export class AppWindow extends BrowserWindow {
     this.on('resize', updateBounds);
 
     ipcMain.on('focus', () => {
-      this.focusWindows();
+      if (this._autoFocus) {
+        this.focusWindows();
+      }
+    });
+
+    ipcMain.on('autofocus', (e, f) => {
+      this._autoFocus = f;
+      this.focus();
+      e.returnValue = f;
     });
 
     this.on('close', () => {

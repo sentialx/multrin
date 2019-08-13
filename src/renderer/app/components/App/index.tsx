@@ -15,23 +15,25 @@ window.onmouseup = () => {
   ipcRenderer.send('focus');
 };
 
-export const App = hot(observer(() => {
-  return (
-    <ThemeProvider
-      theme={{
-        dark: store.isDark,
-        background: store.background,
-        foreground: store.foreground,
-      }}
-    >
-      <React.Fragment>
-        <GlobalStyle />
-        <Handle />
-        <Toolbar />
-        <Info visible={store.tabsStore.tabs.length === 0}>
-          <Icon /> Drop windows here
-        </Info>
-      </React.Fragment>
-    </ThemeProvider>
-  );
-}));
+export const App = hot(
+  observer(() => {
+    return (
+      <ThemeProvider
+        theme={{
+          dark: store.isDark,
+          background: store.background,
+          foreground: store.foreground,
+        }}
+      >
+        <React.Fragment>
+          <GlobalStyle />
+          <Handle />
+          <Toolbar />
+          <Info visible={store.tabsStore.tabs.length === 0}>
+            <Icon /> Drop windows here
+          </Info>
+        </React.Fragment>
+      </ThemeProvider>
+    );
+  }),
+);

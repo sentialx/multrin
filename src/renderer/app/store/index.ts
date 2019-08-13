@@ -1,4 +1,4 @@
-import { observable, computed } from 'mobx';
+import { observable, computed, observe } from 'mobx';
 import { TabsStore } from './tabs';
 
 import { ipcRenderer } from 'electron';
@@ -61,6 +61,10 @@ export class Store {
 
   public saveSettings() {
     writeFileSync(settingsPath, JSON.stringify(this.settings), 'utf8');
+  }
+
+  public setAutoFocus(toggle: boolean) {
+    ipcRenderer.sendSync('autofocus', toggle);
   }
 }
 

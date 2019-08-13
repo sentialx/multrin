@@ -11,14 +11,63 @@ import {
   StyledClose,
   StyledBorder,
   StyledOverlay,
+  StyledInput,
 } from './style';
 import { shadeBlendConvert } from '../../utils';
-import { transparency } from '~/renderer/constants';
-import { ipcRenderer } from 'electron';
-import Ripple from '~/renderer/components/Ripple';
+import { remote } from 'electron';
 
 const removeTab = (tab: Tab) => () => {
   tab.close();
+};
+
+const onContextMenu = (tab: Tab) => () => {
+  const { tabs } = store.tabsStore;
+
+  const menu = remote.Menu.buildFromTemplate([
+    {
+      label: 'Edit title',
+      click: () => {
+        tab.inputVisible = true;
+      },
+    },
+    {
+      type: 'separator',
+    },
+    {
+      label: 'Close tab',
+      click: () => {
+        tab.close();
+      },
+    },
+    {
+      label: 'Close other tabs',
+      click: () => {
+        for (const t of tabs) {
+          if (t !== tab) {
+            t.close();
+          }
+        }
+      },
+    },
+    {
+      label: 'Close tabs from left',
+      click: () => {
+        for (let i = tabs.indexOf(tab) - 1; i >= 0; i--) {
+          tabs[i].close();
+        }
+      },
+    },
+    {
+      label: 'Close tabs from right',
+      click: () => {
+        for (let i = tabs.length - 1; i > tabs.indexOf(tab); i--) {
+          tabs[i].close();
+        }
+      },
+    },
+  ]);
+
+  menu.popup();
 };
 
 const onCloseMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -49,6 +98,21 @@ const onMouseLeave = () => {
   store.tabsStore.hoveredTabId = -1;
 };
 
+const applyEdit = (tab: Tab) => {
+  tab.title = tab.inputRef.current.value;
+  tab.inputVisible = false;
+};
+
+const onInputBlur = (tab: Tab) => () => {
+  applyEdit(tab);
+};
+
+const onKeyPress = (tab: Tab) => (e: React.KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === 'Enter') {
+    applyEdit(tab);
+  }
+};
+
 const Content = observer(({ tab }: { tab: Tab }) => {
   return (
     <StyledContent collapsed={tab.isExpanded}>
@@ -58,6 +122,12 @@ const Content = observer(({ tab }: { tab: Tab }) => {
           style={{ backgroundImage: `url(${tab.favicon})` }}
         />
       )}
+      <StyledInput
+        onBlur={onInputBlur(tab)}
+        onKeyPress={onKeyPress(tab)}
+        ref={tab.inputRef}
+        style={{ display: tab.inputVisible ? 'block' : 'none' }}
+      ></StyledInput>
       <StyledTitle
         isIcon={tab.isIconSet}
         style={{
@@ -108,6 +178,7 @@ export default observer(({ tab }: { tab: Tab }) => {
     <StyledTab
       selected={tab.isSelected}
       hovered={tab.isHovered}
+      onContextMenu={onContextMenu(tab)}
       onMouseDown={onMouseDown(tab)}
       onMouseEnter={onMouseEnter(tab)}
       onMouseLeave={onMouseLeave}

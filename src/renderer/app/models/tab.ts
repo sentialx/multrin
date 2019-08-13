@@ -32,11 +32,33 @@ export class Tab {
   @observable
   public background: string = colors.teal['500'];
 
+  @observable
+  public _inputVisible = false;
+
   public left = 0;
   public tempPosition = pos++;
   public isClosing = false;
   public ref = React.createRef<HTMLDivElement>();
+  public inputRef = React.createRef<HTMLInputElement>();
   public removeTimeout: any;
+
+  @computed
+  public get inputVisible() {
+    return this._inputVisible;
+  }
+
+  public set inputVisible(toggle: boolean) {
+    store.setAutoFocus(!toggle);
+    this._inputVisible = toggle;
+
+    if (toggle) {
+      requestAnimationFrame(() => {
+        this.inputRef.current.value = this.title;
+        this.inputRef.current.focus();
+        this.inputRef.current.select();
+      });
+    }
+  }
 
   @computed
   public get isSelected() {

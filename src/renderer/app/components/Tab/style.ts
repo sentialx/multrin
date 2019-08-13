@@ -118,6 +118,7 @@ export const StyledContent = styled.div`
   overflow: hidden;
   z-index: 2;
   display: flex;
+  align-items: center;
   margin-left: 12px;
   ${({ collapsed }: ContentProps) => css`
     max-width: calc(100% - ${24 + (collapsed ? 24 : 0)}px);
@@ -138,4 +139,14 @@ export const StyledBorder = styled.div`
   ${({ visible }: { visible: boolean }) => css`
     visibility: ${visible ? 'visible' : 'hidden'};
   `};
+`;
+
+export const StyledInput = styled.input`
+  border: none;
+  outline: none;
+  background: rgba(0, 0, 0, 0.06);
+  flex: 1;
+  margin-left: 8px;
+  padding: 4px;
+  color: white;
 `;

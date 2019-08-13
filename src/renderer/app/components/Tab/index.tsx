@@ -113,6 +113,10 @@ const onKeyPress = (tab: Tab) => (e: React.KeyboardEvent<HTMLInputElement>) => {
   }
 };
 
+const onDragOver = (tab: Tab) => () => {
+  tab.select();
+};
+
 const Content = observer(({ tab }: { tab: Tab }) => {
   return (
     <StyledContent collapsed={tab.isExpanded}>
@@ -176,6 +180,7 @@ const Overlay = observer(({ tab }: { tab: Tab }) => {
 export default observer(({ tab }: { tab: Tab }) => {
   return (
     <StyledTab
+      onDragOver={onDragOver(tab)}
       selected={tab.isSelected}
       hovered={tab.isHovered}
       onContextMenu={onContextMenu(tab)}

@@ -7,6 +7,7 @@ import { StyledApp } from './style';
 import { Textfield } from '~/renderer/components/Textfield';
 import { ipcRenderer } from 'electron';
 import store from '../../store';
+import { QuickMenu } from '../QuickMenu';
 
 const GlobalStyle = createGlobalStyle`${Style}`;
 
@@ -26,6 +27,7 @@ export const App = observer(() => {
           onInput={onInput}
           label="Window title"
         />
+        <QuickMenu />
       </StyledApp>
     </ThemeProvider>
   );

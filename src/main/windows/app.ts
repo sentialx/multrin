@@ -1,4 +1,12 @@
-import { BrowserWindow, app, screen, globalShortcut, ipcMain } from 'electron';
+import {
+  BrowserWindow,
+  app,
+  screen,
+  globalShortcut,
+  ipcMain,
+  dialog,
+  nativeImage,
+} from 'electron';
 import { resolve, join } from 'path';
 import { platform } from 'os';
 import { windowManager, Window } from 'node-window-manager';
@@ -131,6 +139,14 @@ export class AppWindow extends BrowserWindow {
 
     ipcMain.on(`set-title-${this.id}`, (e, title) => {
       this.setTitle(title);
+    });
+
+    ipcMain.on(`change-icon-${this.id}`, async () => {
+      const dialogRes = await dialog.showOpenDialog(this, {
+        filters: [{ name: 'All Files', extensions: ['*'] }],
+      });
+
+      this.setIcon(nativeImage.createFromPath(dialogRes.filePaths[0]));
     });
 
     if (platform() !== 'darwin') {

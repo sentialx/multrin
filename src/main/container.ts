@@ -1,4 +1,4 @@
-import { AppWindow } from './app-window';
+import { AppWindow } from './windows/app';
 import { ProcessWindow } from './process-window';
 import { platform } from 'os';
 import { iohook } from '.';

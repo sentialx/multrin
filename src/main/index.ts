@@ -1,7 +1,7 @@
 import { ipcMain, app, Menu } from 'electron';
 import { resolve } from 'path';
 import { platform, homedir } from 'os';
-import { AppWindow } from './app-window';
+import { AppWindow } from './windows/app';
 import { autoUpdater } from 'electron-updater';
 
 ipcMain.setMaxListeners(0);
@@ -24,9 +24,9 @@ if (!gotTheLock) {
 
 export const iohook = require('iohook');
 
-iohook.start();
-
 app.on('ready', () => {
+  iohook.start();
+
   // Create our menu entries so that we can use macOS shortcuts
   Menu.setApplicationMenu(
     Menu.buildFromTemplate([

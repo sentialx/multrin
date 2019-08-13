@@ -18,9 +18,11 @@ export const MenuItem = styled.div`
   padding: 0 16px;
   font-size: 12px;
   letter-spacing: ${getLetterSpacing(12, 0.1)}rem;
+  cursor: default;
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.03);
+    background-color: ${(props: any) =>
+      props.theme.dark ? `rgba(255, 255, 255, 0.03)` : `rgba(0, 0, 0, 0.03)`};
   }
 `;
 
@@ -31,7 +33,6 @@ export const MenuItemTitle = styled.div`
 export const MenuItems = styled.div`
   flex: 1;
   overflow: hidden;
-  background-color: white;
   padding-top: 8px;
   padding-bottom: 8px;
 `;
@@ -48,8 +49,9 @@ export const Icon = styled.div`
   height: 20px;
   ${centerIcon()};
   opacity: 0.8;
-  ${({ icon }: { icon?: string }) => css`
+  ${({ icon, theme }: { icon?: string; theme?: any }) => css`
     background-image: url(${icon});
+    filter: ${theme.dark ? 'invert(100%)' : 'none'};
   `};
 `;
 

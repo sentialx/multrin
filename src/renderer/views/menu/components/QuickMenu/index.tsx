@@ -13,6 +13,7 @@ import {
 import { icons } from '~/renderer/views/app/constants/icons';
 import { ipcRenderer } from 'electron';
 import store from '../../store';
+import { Switch } from '~/renderer/components/Switch';
 
 const onChangeIconClick = () => {
   ipcRenderer.send(`change-icon-${store.id}`);
@@ -40,6 +41,7 @@ export const QuickMenu = observer(() => {
           <MenuItem onClick={onDarkClick}>
             <Icon icon={icons.theme}></Icon>
             <MenuItemTitle>Dark theme</MenuItemTitle>
+            <Switch value={store.settings.dark} />
           </MenuItem>
         </MenuItems>
       </Content>

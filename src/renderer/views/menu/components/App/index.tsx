@@ -17,10 +17,11 @@ const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 export const App = observer(() => {
   return (
-    <ThemeProvider theme={{}}>
+    <ThemeProvider theme={{ dark: store.settings.dark }}>
       <StyledApp>
         <GlobalStyle />
         <Textfield
+          dark={store.settings.dark}
           ref={store.inputRef}
           value={ipcRenderer.sendSync(`get-title-${store.id}`)}
           style={{ width: '100%' }}

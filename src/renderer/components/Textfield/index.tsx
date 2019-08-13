@@ -16,6 +16,7 @@ interface Props {
   test?: TestFunction;
   value?: string;
   onInput?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  dark?: boolean;
 }
 
 interface State {
@@ -117,7 +118,15 @@ export class Textfield extends React.PureComponent<Props, State> {
   }
 
   public render() {
-    const { color, label, placeholder, icon, inputType, style } = this.props;
+    const {
+      color,
+      label,
+      placeholder,
+      icon,
+      inputType,
+      style,
+      dark,
+    } = this.props;
     const { activated, focused, error } = this.state;
 
     const hasLabel = label != null && label !== '';
@@ -129,9 +138,13 @@ export class Textfield extends React.PureComponent<Props, State> {
       <StyledTextfield
         className="textfield"
         onClick={this.onClick}
-        style={style}
+        style={{
+          ...style,
+          backgroundColor: dark ? 'rgba(255, 255, 255, 0.06)' : '#f5f5f5',
+        }}
       >
         <Input
+          dark={dark}
           ref={this.inputRef}
           type={inputType}
           color={primaryColor}
@@ -144,7 +157,12 @@ export class Textfield extends React.PureComponent<Props, State> {
           spellCheck={false}
         />
         {hasLabel && (
-          <Label activated={activated} focused={focused} color={primaryColor}>
+          <Label
+            dark={dark}
+            activated={activated}
+            focused={focused}
+            color={primaryColor}
+          >
             {label}
           </Label>
         )}

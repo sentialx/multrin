@@ -23,13 +23,13 @@ interface InputProps {
   color: string;
   hasLabel: boolean;
   hasIcon: boolean;
+  dark: boolean;
 }
 
 export const Input = styled.input`
   width: 100%;
   height: 48px;
-  font-size: 16px;
-  color: #000;
+  font-size: 14px;
   padding-left: 12px;
   border: none;
   outline: none;
@@ -38,9 +38,10 @@ export const Input = styled.input`
   user-select: auto;
   ${robotoRegular()};
 
-  ${({ color, hasLabel, hasIcon }: InputProps) => css`
+  ${({ color, hasLabel, hasIcon, dark }: InputProps) => css`
     padding-top: ${hasLabel ? 12 : 0}px;
     padding-right: ${hasIcon ? 48 : 12}px;
+    color: ${dark ? '#fff' : '#000'};
   `}
 
   &::placeholder {
@@ -56,6 +57,7 @@ interface LabelProps {
   activated: boolean;
   focused: boolean;
   color: string;
+  dark: boolean;
 }
 
 export const Label = styled.div`
@@ -65,10 +67,14 @@ export const Label = styled.div`
   -webkit-font-smoothing: antialiased;
   ${centerVertical()};
 
-  ${({ activated, focused, color }: LabelProps) => css`
+  ${({ activated, focused, color, dark }: LabelProps) => css`
     font-size: ${activated ? 12 : 16}px;
     margin-top: ${activated ? -12 : 0}px;
-    color: ${focused ? color : `rgba(0, 0, 0, ${transparency.text.medium})`};
+    color: ${focused
+      ? color
+      : dark
+      ? `rgba(255, 255, 255, ${transparency.text.medium})`
+      : `rgba(0, 0, 0, ${transparency.text.medium})`};
     ${activated ? robotoMedium() : robotoRegular()};
   `}
 `;

@@ -88,6 +88,8 @@ export class AppWindow extends BrowserWindow {
     const updateBounds = () => {
       this.isMoving = true;
 
+      this.menu.rearrange();
+
       if (platform() === 'darwin') {
         for (const c of this.containers) {
           if (

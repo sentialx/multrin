@@ -13,6 +13,7 @@ export class Store {
     `get-window-id-${remote.getCurrentWindow().id}`,
   );
 
+  @observable
   public settings: any;
 
   public constructor() {

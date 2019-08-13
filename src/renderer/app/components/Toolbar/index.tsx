@@ -5,7 +5,7 @@ import { platform } from 'os';
 import store from '~/renderer/app/store';
 import { StyledToolbar } from './style';
 import { Tabbar } from '../Tabbar';
-import ToolbarButton from '../ToolbarButton';
+import { ToolbarButton } from '../ToolbarButton';
 import { icons } from '../../constants';
 import { ipcRenderer } from 'electron';
 import { WindowsControls } from 'react-windows-controls';

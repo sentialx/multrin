@@ -1,7 +1,7 @@
 import { ipcMain, app, Menu } from 'electron';
 import { resolve } from 'path';
 import { platform, homedir } from 'os';
-import { AppWindow } from './app-window';
+import { AppWindow } from './windows/app';
 import { autoUpdater } from 'electron-updater';
 
 ipcMain.setMaxListeners(0);

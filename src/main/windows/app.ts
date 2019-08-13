@@ -3,10 +3,10 @@ import { resolve, join } from 'path';
 import { platform } from 'os';
 import { windowManager, Window } from 'node-window-manager';
 import { TOOLBAR_HEIGHT } from '~/renderer/app/constants/design';
-import { ProcessWindow } from './process-window';
-import { Container } from './container';
+import { ProcessWindow } from '../process-window';
+import { Container } from '../container';
 import * as fileIcon from 'extract-file-icon';
-import { iohook } from '.';
+import { iohook } from '..';
 
 const containsPoint = (bounds: any, point: any) => {
   return (

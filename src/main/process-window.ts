@@ -1,6 +1,5 @@
 import { Window } from 'node-window-manager';
-import { AppWindow } from './app-window';
-import { platform } from 'os';
+import { AppWindow } from './windows/app';
 
 export class ProcessWindow extends Window {
   public resizable = false;

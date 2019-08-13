@@ -48,7 +48,6 @@ export class Tab {
   }
 
   public set inputVisible(toggle: boolean) {
-    store.setAutoFocus(!toggle);
     this._inputVisible = toggle;
 
     if (toggle) {

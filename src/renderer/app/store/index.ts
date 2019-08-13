@@ -62,10 +62,6 @@ export class Store {
   public saveSettings() {
     writeFileSync(settingsPath, JSON.stringify(this.settings), 'utf8');
   }
-
-  public setAutoFocus(toggle: boolean) {
-    ipcRenderer.sendSync('autofocus', toggle);
-  }
 }
 
 export default new Store();

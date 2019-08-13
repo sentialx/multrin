@@ -11,10 +11,6 @@ import store from '../../store';
 
 const GlobalStyle = createGlobalStyle`${Style}`;
 
-window.onmouseup = () => {
-  ipcRenderer.send('focus');
-};
-
 export const App = hot(
   observer(() => {
     return (

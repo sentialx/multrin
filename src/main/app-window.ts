@@ -36,8 +36,6 @@ export class AppWindow extends BrowserWindow {
 
   private height = 700;
 
-  private _autoFocus = true;
-
   public constructor() {
     super({
       frame: false,
@@ -99,12 +97,6 @@ export class AppWindow extends BrowserWindow {
 
     this.on('move', updateBounds);
     this.on('resize', updateBounds);
-
-    ipcMain.on('autofocus', (e, f) => {
-      this._autoFocus = f;
-      this.focus();
-      e.returnValue = f;
-    });
 
     this.on('close', () => {
       clearInterval(this.interval);

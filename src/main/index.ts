@@ -24,9 +24,9 @@ if (!gotTheLock) {
 
 export const iohook = require('iohook');
 
-iohook.start();
-
 app.on('ready', () => {
+  iohook.start();
+
   // Create our menu entries so that we can use macOS shortcuts
   Menu.setApplicationMenu(
     Menu.buildFromTemplate([

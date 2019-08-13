@@ -200,7 +200,10 @@ export class AppWindow extends BrowserWindow {
 
               this.setContentBounds({
                 width: cBounds.width + (winBounds.width - lastBounds.width),
-                height: platform() !== 'darwin' ? cBounds.height + winBounds.height - lastBounds.height : TOOLBAR_HEIGHT,
+                height:
+                  platform() !== 'darwin'
+                    ? cBounds.height + winBounds.height - lastBounds.height
+                    : TOOLBAR_HEIGHT,
                 x: cBounds.x + winBounds.x - lastBounds.x,
                 y: cBounds.y + winBounds.y - lastBounds.y,
               } as any);
@@ -289,7 +292,7 @@ export class AppWindow extends BrowserWindow {
           }
 
           if (platform() === 'darwin' && this.containers.length === 0) {
-            this.setBounds({height: TOOLBAR_HEIGHT} as any);
+            this.setBounds({ height: TOOLBAR_HEIGHT } as any);
             this.setMaximumSize(0, TOOLBAR_HEIGHT);
           }
 
@@ -376,7 +379,7 @@ export class AppWindow extends BrowserWindow {
     this.containers = this.containers.filter(x => x.id !== container.id);
 
     if (platform() === 'darwin' && this.containers.length === 0) {
-      this.setBounds({height: this.height} as any);
+      this.setBounds({ height: this.height } as any);
       this.setMaximumSize(0, 0);
     }
   }

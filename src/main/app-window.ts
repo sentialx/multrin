@@ -40,8 +40,7 @@ export class AppWindow extends BrowserWindow {
     super({
       frame: false,
       width: 900,
-      maxHeight: platform() === 'darwin' ? TOOLBAR_HEIGHT : null,
-      height: platform() === 'darwin' ? TOOLBAR_HEIGHT : 700,
+      height: 700,
       minimizable: platform() !== 'darwin',
       maximizable: platform() !== 'darwin',
       show: true,
@@ -289,6 +288,11 @@ export class AppWindow extends BrowserWindow {
             win.setOwner(handle);
           }
 
+          if (platform() === 'darwin' && this.containers.length === 0) {
+            this.setBounds({height: TOOLBAR_HEIGHT} as any);
+            this.setMaximumSize(0, TOOLBAR_HEIGHT);
+          }
+
           this.containers.push(draggedContainer);
           this.willAttachWindow = false;
 
@@ -370,5 +374,10 @@ export class AppWindow extends BrowserWindow {
 
     this.webContents.send('remove-tab', container.id);
     this.containers = this.containers.filter(x => x.id !== container.id);
+
+    if (platform() === 'darwin' && this.containers.length === 0) {
+      this.setBounds({height: this.height} as any);
+      this.setMaximumSize(0, 0);
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import { Tab } from '~/renderer/app/models';

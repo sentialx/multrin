@@ -1,7 +1,6 @@
-import { observer } from 'mobx-react';
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import Ripple from '~/renderer/components/Ripple';
 import { transparency } from '~/renderer/constants/transparency';
 import { Button, Icon, Circle } from './style';
 
@@ -16,81 +15,54 @@ interface Props {
   className?: string;
   children?: any;
   opacity?: number;
+  autoInvert?: boolean;
 }
 
-@observer
-export default class ToolbarButton extends React.Component<Props, {}> {
-  public static defaultProps = {
-    size: 20,
-    opacity: transparency.icons.inactive,
-  };
-
-  private ripple = React.createRef<Ripple>();
-
-  private ref: HTMLDivElement;
-
-  public onMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
-    const { onMouseDown } = this.props;
-
-    if (typeof onMouseDown === 'function') {
-      onMouseDown(e);
-    }
-  };
-
-  public getSize = () => {
-    if (this.ref) {
-      return {
-        height: this.ref.offsetHeight,
-        width: this.ref.offsetWidth,
-      };
-    }
-    return {
-      height: 0,
-      width: 0,
-    };
-  };
-
-  public render() {
-    const {
-      icon,
-      onClick,
-      size,
-      disabled,
-      className,
-      divRef,
-      children,
-      opacity,
-    } = this.props;
-
-    let { style } = this.props;
-
+export const ToolbarButton = observer(
+  ({
+    icon,
+    onClick,
+    onMouseDown,
+    size,
+    disabled,
+    className,
+    divRef,
+    children,
+    opacity,
+    autoInvert,
+    style,
+  }: Props) => {
     style = { ...style };
 
     return (
       <Button
-        onMouseDown={this.onMouseDown}
         onClick={onClick}
+        onMouseDown={onMouseDown}
         className={className}
         style={style}
         ref={(r: HTMLDivElement) => {
-          this.ref = r;
           if (typeof divRef === 'function') {
             divRef(r);
           }
         }}
         disabled={disabled}
       >
-        <Icon icon={icon} size={size} disabled={disabled} opacity={opacity} />
-        <Circle>
-          <Ripple
-            ref={this.ripple}
-            color="#000"
-            rippleTime={0.8}
-            opacity={0.1}
-          />
-        </Circle>
+        <Icon
+          style={{ backgroundImage: `url(${icon})` }}
+          size={size}
+          disabled={disabled}
+          opacity={opacity}
+          autoInvert={autoInvert}
+        />
+        <Circle></Circle>
         {children}
       </Button>
     );
-  }
-}
+  },
+);
+
+(ToolbarButton as any).defaultProps = {
+  size: 20,
+  opacity: transparency.icons.inactive,
+  autoInvert: true,
+};

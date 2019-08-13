@@ -74,16 +74,12 @@ const onCloseMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
   e.stopPropagation();
 };
 
-const onMouseUp = (tab: Tab) => (e: React.MouseEvent<HTMLDivElement>) => {
-  if (e.button !== 0) return;
-
-  tab.select();
-};
-
 const onMouseDown = (tab: Tab) => (e: React.MouseEvent<HTMLDivElement>) => {
   const { pageX } = e;
 
   if (e.button !== 0) return;
+
+  tab.select();
 
   store.tabsStore.lastMouseX = 0;
   store.tabsStore.isDragging = true;
@@ -191,7 +187,6 @@ export default observer(({ tab }: { tab: Tab }) => {
       selected={tab.isSelected}
       hovered={tab.isHovered}
       onContextMenu={onContextMenu(tab)}
-      onMouseUp={onMouseUp(tab)}
       onMouseDown={onMouseDown(tab)}
       onMouseEnter={onMouseEnter(tab)}
       onMouseLeave={onMouseLeave}

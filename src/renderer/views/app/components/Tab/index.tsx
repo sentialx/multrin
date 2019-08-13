@@ -1,8 +1,8 @@
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
-import { Tab } from '~/renderer/app/models';
-import store from '~/renderer/app/store';
+import { Tab } from '~/renderer/views/app/models';
+import store from '~/renderer/views/app/store';
 import {
   StyledTab,
   StyledContent,

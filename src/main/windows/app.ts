@@ -2,7 +2,7 @@ import { BrowserWindow, app, screen, globalShortcut, ipcMain } from 'electron';
 import { resolve, join } from 'path';
 import { platform } from 'os';
 import { windowManager, Window } from 'node-window-manager';
-import { TOOLBAR_HEIGHT } from '~/renderer/app/constants/design';
+import { TOOLBAR_HEIGHT } from '~/renderer/views/app/constants/design';
 import { ProcessWindow } from '../process-window';
 import { Container } from '../container';
 import * as fileIcon from 'extract-file-icon';
@@ -31,8 +31,6 @@ export class AppWindow extends BrowserWindow {
   public isUpdatingContentBounds = false;
 
   public interval: any;
-
-  private _selectedTab = false;
 
   private height = 700;
 
@@ -145,10 +143,6 @@ export class AppWindow extends BrowserWindow {
 
     iohook.on('mousedown', () => {
       if (this.isMinimized()) return;
-
-      if (this.isFocused()) {
-        this._selectedTab = true;
-      }
 
       setTimeout(() => {
         if (this.isFocused()) {

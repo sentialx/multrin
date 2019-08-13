@@ -3,8 +3,11 @@ import * as React from 'react';
 import { ipcRenderer } from 'electron';
 import Vibrant = require('node-vibrant');
 
-import store from '~/renderer/app/store';
-import { TABS_PADDING, TAB_ANIMATION_DURATION } from '~/renderer/app/constants';
+import store from '~/renderer/views/app/store';
+import {
+  TABS_PADDING,
+  TAB_ANIMATION_DURATION,
+} from '~/renderer/views/app/constants';
 import { getColorBrightness } from '../utils';
 import { colors } from '~/renderer/constants';
 

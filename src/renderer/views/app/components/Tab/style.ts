@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 
-import { transparency, colors } from '~/renderer/constants';
-import { icons, TABS_PADDING } from '~/renderer/app/constants';
+import { transparency } from '~/renderer/constants';
+import { icons, TABS_PADDING } from '~/renderer/views/app/constants';
 import { centerImage, body2 } from '~/shared/mixins';
 
 interface CloseProps {

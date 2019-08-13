@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { TOOLBAR_HEIGHT } from '~/renderer/app/constants/design';
+import { TOOLBAR_HEIGHT } from '~/renderer/views/app/constants/design';
 import { platform } from 'os';
 
 export const StyledToolbar = styled.div`

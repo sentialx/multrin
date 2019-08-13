@@ -2,16 +2,16 @@ import { observable } from 'mobx';
 import * as React from 'react';
 import { TweenLite } from 'gsap';
 
-import { Tab } from '~/renderer/app/models';
+import { Tab } from '~/renderer/views/app/models';
 
 import {
   TAB_ANIMATION_DURATION,
   TABS_PADDING,
   TAB_ANIMATION_EASING,
-} from '~/renderer/app/constants';
+} from '~/renderer/views/app/constants';
 
-import HorizontalScrollbar from '~/renderer/app/components/HorizontalScrollbar';
-import store from '.';
+import HorizontalScrollbar from '~/renderer/views/app/components/HorizontalScrollbar';
+import store from '../store';
 import { ipcRenderer } from 'electron';
 
 export class TabsStore {

@@ -1,4 +1,4 @@
-import { ipcMain, app, Menu } from 'electron';
+import { ipcMain, app, Menu, BrowserWindow, webContents } from 'electron';
 import { resolve } from 'path';
 import { platform, homedir } from 'os';
 import { AppWindow } from './windows/app';
@@ -32,6 +32,19 @@ app.on('ready', () => {
     Menu.buildFromTemplate([
       {
         role: 'editMenu',
+      },
+      {
+        label: 'Other',
+        submenu: [
+          {
+            accelerator: 'CmdOrCtrl+Shift+F12',
+            label: 'Toggle developer tools (window)',
+            visible: false,
+            click() {
+              webContents.getFocusedWebContents().openDevTools();
+            },
+          },
+        ],
       },
     ]),
   );

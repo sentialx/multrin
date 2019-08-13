@@ -125,6 +125,14 @@ export class AppWindow extends BrowserWindow {
       this.menu.toggle();
     });
 
+    ipcMain.on(`get-title-${this.id}`, e => {
+      e.returnValue = this.getTitle();
+    });
+
+    ipcMain.on(`set-title-${this.id}`, (e, title) => {
+      this.setTitle(title);
+    });
+
     if (platform() !== 'darwin') {
       globalShortcut.register('Ctrl+Tab', () => {
         const { id } = windowManager.getActiveWindow();

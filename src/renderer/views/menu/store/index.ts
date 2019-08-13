@@ -1,19 +1,17 @@
-import { ipcRenderer, remote } from 'electron';
+import { remote, ipcRenderer } from 'electron';
 import { observable } from 'mobx';
+import * as React from 'react';
+import { Textfield } from '~/renderer/components/Textfield';
 
 export class Store {
   @observable
   public visible = true;
 
-  public id = remote.getCurrentWindow().id;
+  public inputRef = React.createRef<Textfield>();
 
-  public constructor() {
-    window.addEventListener('blur', () => {
-      setTimeout(() => {
-        ipcRenderer.send(`hide-${this.id}`);
-      });
-    });
-  }
+  public id = ipcRenderer.sendSync(
+    `get-window-id-${remote.getCurrentWindow().id}`,
+  );
 }
 
 export default new Store();

@@ -3,8 +3,8 @@ import { TOOLBAR_HEIGHT } from '~/renderer/views/app/constants/design';
 import { PopupWindow } from './popup';
 import { ipcMain } from 'electron';
 
-const WIDTH = 400;
-const HEIGHT = 500;
+const WIDTH = 300;
+const HEIGHT = 64;
 
 export class MenuWindow extends PopupWindow {
   public visible: boolean = false;
@@ -18,6 +18,10 @@ export class MenuWindow extends PopupWindow {
     } as any);
 
     ipcMain.on(`hide-${this.id}`, () => {
+      this.hide();
+    });
+
+    this.on('blur', () => {
       this.hide();
     });
   }
@@ -41,7 +45,7 @@ export class MenuWindow extends PopupWindow {
   public rearrange() {
     const cBounds = this.appWindow.getContentBounds();
     this.setBounds({
-      x: Math.round(cBounds.x + cBounds.width - WIDTH),
+      x: Math.round(cBounds.x + cBounds.width - WIDTH - 8),
       y: cBounds.y + TOOLBAR_HEIGHT,
     } as any);
   }

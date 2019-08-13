@@ -1,17 +1,12 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 export const StyledApp = styled.div`
-  margin: 8px;
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
   overflow: hidden;
   position: relative;
-  background-color: #f5f5f5;
-  transition: 0.2s opacity, 0.2s margin-top;
-  ${({ visible }: { visible: boolean }) => css`
-    opacity: ${visible ? 1 : 0};
-    margin-top: ${visible ? 0 : 5}px;
-  `}
+  background-color: white;
+  height: 100vh;
+  padding: 8px;
 `;
 
 export const Title = styled.div`

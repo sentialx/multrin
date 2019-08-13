@@ -20,7 +20,7 @@ export const QuickMenu = observer(() => {
       }}
     >
       <Content>
-        <MenuItems></MenuItems>
+        <MenuItems>aha</MenuItems>
       </Content>
     </div>
   );

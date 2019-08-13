@@ -32,6 +32,7 @@ export const Toolbar = observer(() => {
       )}
       <ToolbarButton
         icon={icons.more}
+        size={18}
         style={{ marginRight: 16 }}
         onClick={onMenuClick}
       />

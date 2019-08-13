@@ -4,7 +4,7 @@ export const StyledApp = styled.div`
   border: 1px solid rgba(0, 0, 0, 0.12);
   overflow: hidden;
   position: relative;
-  background-color: ${(props: any) => (props.theme.dark ? '#252525' : 'white')};
+  background-color: ${(props: any) => (props.theme.dark ? '#2b2b2b' : 'white')};
   color: ${(props: any) => (props.theme.dark ? '#fff' : '#000')};
   height: 100vh;
   padding: 8px;

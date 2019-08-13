@@ -92,7 +92,7 @@ export class Container {
           x => x.rowId === row.id && x.columnId === col.id,
         );
 
-        if (window && !window.dragged) {
+        if (window && !window.dragged && !window.resizing) {
           const bounds: any = {
             x: col.x,
             y: row.y,

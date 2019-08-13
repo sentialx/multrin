@@ -34,13 +34,18 @@ export class AppWindow extends BrowserWindow {
 
   private _selectedTab = false;
 
+  private height = 700;
+
   private _autoFocus = true;
 
   public constructor() {
     super({
       frame: false,
       width: 900,
-      height: 700,
+      maxHeight: platform() === 'darwin' ? TOOLBAR_HEIGHT : null,
+      height: platform() === 'darwin' ? TOOLBAR_HEIGHT : 700,
+      minimizable: platform() !== 'darwin',
+      maximizable: platform() !== 'darwin',
       show: true,
       fullscreenable: false,
       titleBarStyle: 'hiddenInset',
@@ -95,12 +100,6 @@ export class AppWindow extends BrowserWindow {
     this.on('move', updateBounds);
     this.on('resize', updateBounds);
 
-    ipcMain.on('focus', () => {
-      if (this._autoFocus && platform() === 'darwin') {
-        this.focusWindows();
-      }
-    });
-
     ipcMain.on('autofocus', (e, f) => {
       this._autoFocus = f;
       this.focus();
@@ -122,10 +121,6 @@ export class AppWindow extends BrowserWindow {
 
     ipcMain.on('select-window', (e: any, id: number) => {
       this.selectContainer(this.containers.find(x => x.id === id));
-
-      if (platform() !== 'darwin') {
-        this.focusWindows();
-      }
     });
 
     ipcMain.on('detach-window', (e: any, id: number) => {
@@ -134,27 +129,27 @@ export class AppWindow extends BrowserWindow {
       }
     });
 
-    globalShortcut.register('CmdOrCtrl+Tab', () => {
-      const { id } = windowManager.getActiveWindow();
-      if (
-        this.isFocused() ||
-        this.containers.find(x => x.windows.find(y => y.id === id))
-      ) {
-        this.webContents.send('next-tab');
-
-        ipcMain.once('select-window', () => {
-          this.focusWindows();
-        });
-      }
-    });
+    if (platform() !== 'darwin') {
+      globalShortcut.register('Ctrl+Tab', () => {
+        const { id } = windowManager.getActiveWindow();
+        if (
+          this.isFocused() ||
+          this.containers.find(x => x.windows.find(y => y.id === id))
+        ) {
+          this.webContents.send('next-tab');
+        }
+      });
+    }
 
     windowManager.on('window-activated', (window: Window) => {
-      if (!this._selectedTab) {
-        for (const container of this.containers) {
-          if (container.windows.find(x => x.id === window.id)) {
-            this.webContents.send('select-tab', container.id);
-            break;
-          }
+      if (this.isFocused()) return;
+
+      if (this._selectedTab) return;
+
+      for (const container of this.containers) {
+        if (container.windows.find(x => x.id === window.id)) {
+          this.webContents.send('select-tab', container.id);
+          break;
         }
       }
 
@@ -218,10 +213,12 @@ export class AppWindow extends BrowserWindow {
 
               this.setContentBounds({
                 width: cBounds.width + (winBounds.width - lastBounds.width),
-                height: cBounds.height + winBounds.height - lastBounds.height,
+                height: platform() !== 'darwin' ? cBounds.height + winBounds.height - lastBounds.height : TOOLBAR_HEIGHT,
                 x: cBounds.x + winBounds.x - lastBounds.x,
                 y: cBounds.y + winBounds.y - lastBounds.y,
               } as any);
+
+              this.height = this.height + winBounds.height - lastBounds.height;
 
               this.draggedWindow.lastBounds = winBounds;
             });
@@ -273,10 +270,6 @@ export class AppWindow extends BrowserWindow {
 
     iohook.on('mouseup', async () => {
       this.isMoving = false;
-
-      if (platform() === 'darwin') {
-        this.focusWindows();
-      }
 
       if (this.isUpdatingContentBounds) {
         setTimeout(() => {
@@ -357,6 +350,10 @@ export class AppWindow extends BrowserWindow {
   public getContentArea() {
     const bounds = this.getContentBounds();
 
+    if (platform() === 'darwin') {
+      bounds.height = this.height;
+    }
+
     bounds.y += TOOLBAR_HEIGHT;
     bounds.height -= TOOLBAR_HEIGHT;
 
@@ -385,13 +382,5 @@ export class AppWindow extends BrowserWindow {
 
     this.webContents.send('remove-tab', container.id);
     this.containers = this.containers.filter(x => x.id !== container.id);
-  }
-
-  public focusWindows() {
-    if (this.selectedContainer && !this.isMoving) {
-      for (const window of this.selectedContainer.windows) {
-        window.bringToTop();
-      }
-    }
   }
 }

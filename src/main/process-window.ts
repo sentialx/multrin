@@ -42,6 +42,8 @@ export class ProcessWindow extends Window {
   public show() {
     this.setOpacity(1);
     this.toggleTransparency(false);
+
+    this.bringToTop();
   }
 
   public hide() {

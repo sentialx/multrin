@@ -1,7 +1,7 @@
-import { observable, computed, observe } from 'mobx';
+import { observable, computed } from 'mobx';
 import { TabsStore } from './tabs';
 
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, remote } from 'electron';
 import { readFileSync, existsSync, writeFileSync } from 'fs';
 import { getPath } from '~/shared/utils/paths';
 
@@ -32,6 +32,8 @@ export class Store {
     return this.isDark ? '#fff' : '#000';
   }
 
+  public windowId = remote.getCurrentWindow().id;
+
   public settings: any = {};
 
   public mouse = {
@@ -51,11 +53,12 @@ export class Store {
 
     ipcRenderer.send('update-check');
 
+    this.isDark = remote.systemPreferences.isDarkMode();
+
     if (!existsSync(settingsPath)) {
       this.saveSettings();
     } else {
       this.settings = JSON.parse(readFileSync(settingsPath, 'utf8'));
-      this.isDark = this.settings.dark;
     }
   }
 

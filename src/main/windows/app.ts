@@ -111,14 +111,18 @@ export class AppWindow extends BrowserWindow {
 
     this.interval = setInterval(this.intervalCallback, 100);
 
-    ipcMain.on('select-window', (e: any, id: number) => {
+    ipcMain.on('select-window', (e, id: number) => {
       this.selectContainer(this.containers.find(x => x.id === id));
     });
 
-    ipcMain.on('detach-window', (e: any, id: number) => {
+    ipcMain.on('detach-window', (e, id: number) => {
       for (const container of this.containers) {
         container.removeWindow(id);
       }
+    });
+
+    ipcMain.on(`menu-toggle-${this.id}`, () => {
+      this.menu.toggle();
     });
 
     if (platform() !== 'darwin') {

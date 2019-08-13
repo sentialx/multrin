@@ -15,10 +15,8 @@ const onUpdateClick = () => {
   ipcRenderer.send('update-install');
 };
 
-const onThemeClick = () => {
-  store.isDark = !store.isDark;
-  store.settings.dark = store.isDark;
-  store.saveSettings();
+const onMenuClick = () => {
+  ipcRenderer.send(`menu-toggle-${store.windowId}`);
 };
 
 export const Toolbar = observer(() => {
@@ -33,9 +31,9 @@ export const Toolbar = observer(() => {
         />
       )}
       <ToolbarButton
-        icon={icons.theme}
+        icon={icons.more}
         style={{ marginRight: 16 }}
-        onClick={onThemeClick}
+        onClick={onMenuClick}
       />
       {platform() !== 'darwin' && (
         <WindowsControls

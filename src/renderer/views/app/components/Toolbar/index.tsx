@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import { platform } from 'os';
 
-import store from '~/renderer/app/store';
+import store from '~/renderer/views/app/store';
 import { StyledToolbar } from './style';
 import { Tabbar } from '../Tabbar';
 import { ToolbarButton } from '../ToolbarButton';

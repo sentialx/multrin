@@ -5,7 +5,7 @@ import { createGlobalStyle, ThemeProvider } from 'styled-components';
 
 import { Toolbar } from '../Toolbar';
 import { Info, Icon, Handle } from './style';
-import { Style } from '~/renderer/app/style';
+import { Style } from '~/renderer/views/app/style';
 import store from '../../store';
 
 const GlobalStyle = createGlobalStyle`${Style}`;

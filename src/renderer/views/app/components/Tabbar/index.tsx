@@ -2,7 +2,7 @@ import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 
 import HorizontalScrollbar from '../HorizontalScrollbar';
-import store from '~/renderer/app/store';
+import store from '~/renderer/views/app/store';
 import { StyledTabbar, TabsContainer } from './style';
 import { Tabs } from '../Tabs';
 

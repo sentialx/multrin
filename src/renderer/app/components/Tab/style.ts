@@ -148,5 +148,5 @@ export const StyledInput = styled.input`
   flex: 1;
   margin-left: 8px;
   padding: 4px;
-  color: white;
+  color: ${(props: any) => (props.theme.dark ? `white` : `black`)};
 `;

@@ -107,8 +107,8 @@ const onInputBlur = (tab: Tab) => () => {
   applyEdit(tab);
 };
 
-const onKeyPress = (tab: Tab) => (e: React.KeyboardEvent<HTMLInputElement>) => {
-  if (e.key === 'Enter') {
+const onKeyDown = (tab: Tab) => (e: React.KeyboardEvent<HTMLInputElement>) => {
+  if (e.key === 'Enter' || e.key === 'Escape') {
     applyEdit(tab);
   }
 };
@@ -128,7 +128,7 @@ const Content = observer(({ tab }: { tab: Tab }) => {
       )}
       <StyledInput
         onBlur={onInputBlur(tab)}
-        onKeyPress={onKeyPress(tab)}
+        onKeyDown={onKeyDown(tab)}
         ref={tab.inputRef}
         style={{ display: tab.inputVisible ? 'block' : 'none' }}
       ></StyledInput>

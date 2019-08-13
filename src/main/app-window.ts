@@ -120,8 +120,8 @@ export class AppWindow extends BrowserWindow {
 
     this.interval = setInterval(this.intervalCallback, 100);
 
-    ipcMain.on('select-window', (e: any, id: number, focus: boolean) => {
-      this.selectContainer(this.containers.find(x => x.id === id), focus);
+    ipcMain.on('select-window', (e: any, id: number) => {
+      this.selectContainer(this.containers.find(x => x.id === id));
     });
 
     ipcMain.on('detach-window', (e: any, id: number) => {
@@ -267,13 +267,6 @@ export class AppWindow extends BrowserWindow {
     iohook.on('mouseup', async () => {
       this.isMoving = false;
 
-      for (const container of this.containers) {
-        for (const window of container.windows) {
-          window.dragged = false;
-          window.resizing = false;
-        }
-      }
-
       if (this.isUpdatingContentBounds) {
         setTimeout(() => {
           if (this.selectedContainer) {
@@ -284,7 +277,17 @@ export class AppWindow extends BrowserWindow {
 
       this.isUpdatingContentBounds = false;
 
+      for (const container of this.containers) {
+        for (const window of container.windows) {
+          window.dragged = false;
+          window.resizing = false;
+        }
+      }
+
       if (this.draggedWindow) {
+        this.draggedWindow.dragged = false;
+        this.draggedWindow.resizing = false;
+
         if (this.willAttachWindow) {
           const win = this.draggedWindow;
           const container = draggedContainer;
@@ -349,7 +352,7 @@ export class AppWindow extends BrowserWindow {
     return bounds;
   }
 
-  public selectContainer(container: Container, focus: boolean = false) {
+  public selectContainer(container: Container) {
     if (!container) return;
 
     if (this.selectedContainer) {
@@ -360,7 +363,7 @@ export class AppWindow extends BrowserWindow {
       this.selectedContainer.hideWindows();
     }
 
-    container.showWindows(focus);
+    container.showWindows();
     this.selectedContainer = container;
   }
 

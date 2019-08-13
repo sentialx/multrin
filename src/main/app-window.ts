@@ -225,7 +225,10 @@ export class AppWindow extends BrowserWindow {
 
               this.draggedWindow.lastBounds = winBounds;
             });
-          } else if (!this.draggedWindow.resizing) {
+          } else if (
+            (!this.draggedWindow.resizing && winBounds.x !== lastBounds.x) ||
+            winBounds.y !== lastBounds.y
+          ) {
             this.selectedContainer.dragWindow(this.draggedWindow, e);
             this.willSplitWindow = true;
           }
@@ -270,6 +273,10 @@ export class AppWindow extends BrowserWindow {
 
     iohook.on('mouseup', async () => {
       this.isMoving = false;
+
+      if (platform() === 'darwin') {
+        this.focusWindows();
+      }
 
       if (this.isUpdatingContentBounds) {
         setTimeout(() => {

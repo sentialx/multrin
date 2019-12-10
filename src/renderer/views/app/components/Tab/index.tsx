@@ -104,6 +104,7 @@ const onMouseLeave = () => {
 const applyEdit = (tab: Tab) => {
   tab.title = tab.inputRef.current.value;
   tab.inputVisible = false;
+  tab.customTitle = true;
 };
 
 const onInputBlur = (tab: Tab) => () => {

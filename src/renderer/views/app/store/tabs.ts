@@ -16,10 +16,10 @@ import { ipcRenderer } from 'electron';
 
 export class TabsStore {
   @observable
-  public isDragging: boolean = false;
+  public isDragging = false;
 
   @observable
-  public scrollbarVisible: boolean = false;
+  public scrollbarVisible = false;
 
   @observable
   public selectedTabId: number;
@@ -33,10 +33,10 @@ export class TabsStore {
   @observable
   public scrollable = false;
 
-  public lastScrollLeft: number = 0;
-  public lastMouseX: number = 0;
-  public mouseStartX: number = 0;
-  public tabStartX: number = 0;
+  public lastScrollLeft = 0;
+  public lastMouseX = 0;
+  public mouseStartX = 0;
+  public tabStartX = 0;
   public draggedTab: Tab;
 
   public scrollbarRef = React.createRef<HorizontalScrollbar>();
@@ -90,7 +90,7 @@ export class TabsStore {
 
     ipcRenderer.on('update-tab-title', (e: any, data: any) => {
       const tab = this.getTabById(data.id);
-      if (tab) {
+      if (tab && !tab.customTitle) {
         tab.title = data.title;
       }
     });

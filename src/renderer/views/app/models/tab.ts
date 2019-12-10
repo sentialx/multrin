@@ -18,16 +18,16 @@ export class Tab {
   public id: number;
 
   @observable
-  public isDragging: boolean = false;
+  public isDragging = false;
 
   @observable
-  public title: string = 'New tab';
+  public title = 'New tab';
 
   @observable
-  public favicon: string = '';
+  public favicon = '';
 
   @observable
-  public width: number = 0;
+  public width = 0;
 
   @observable
   public position = pos++;
@@ -44,6 +44,7 @@ export class Tab {
   public ref = React.createRef<HTMLDivElement>();
   public inputRef = React.createRef<HTMLInputElement>();
   public removeTimeout: any;
+  public customTitle = false;
 
   @computed
   public get inputVisible() {
@@ -162,7 +163,7 @@ export class Tab {
     return width;
   }
 
-  public getLeft(reordering: boolean = false, calcNewLeft: boolean = false) {
+  public getLeft(reordering = false, calcNewLeft = false) {
     const tabs = store.tabsStore.tabs.slice();
 
     if (reordering) {

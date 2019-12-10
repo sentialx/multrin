@@ -7,7 +7,7 @@ const WIDTH = 300;
 const HEIGHT = 146;
 
 export class MenuWindow extends PopupWindow {
-  public visible: boolean = false;
+  public visible = false;
 
   public constructor(appWindow: AppWindow) {
     super(appWindow, 'menu');

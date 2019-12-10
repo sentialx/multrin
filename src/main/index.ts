@@ -1,4 +1,4 @@
-import { ipcMain, app, Menu, BrowserWindow, webContents } from 'electron';
+import { ipcMain, app, Menu, webContents } from 'electron';
 import { resolve } from 'path';
 import { platform, homedir } from 'os';
 import { AppWindow } from './windows/app';
@@ -9,7 +9,7 @@ ipcMain.setMaxListeners(0);
 
 app.setPath('userData', resolve(homedir(), '.multrin'));
 
-export let appWindows: AppWindow[] = [];
+export const appWindows: AppWindow[] = [];
 
 const gotTheLock = app.requestSingleInstanceLock();
 

@@ -35,8 +35,8 @@ export class Container {
   public constructor(appWindow: AppWindow, window: ProcessWindow) {
     this.appWindow = appWindow;
 
-    let colId = spaceId++;
-    let rowId = spaceId++;
+    const colId = spaceId++;
+    const rowId = spaceId++;
 
     this.columns.push({
       id: colId,
@@ -190,7 +190,7 @@ export class Container {
         x < col.x ||
         y < area.y ||
         y > area.y + area.height ||
-        ((row && y > row.y + row.height) || y < row.y)
+        (row && y > row.y + row.height) || y < row.y
       ) {
         this.removeWindow(win.id);
       }

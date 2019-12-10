@@ -151,19 +151,9 @@ export class AppWindow extends BrowserWindow {
       this.setIcon(nativeImage.createFromPath(dialogRes.filePaths[0]));
     });
 
-    if (platform() !== 'darwin') {
-      globalShortcut.register('Ctrl+Tab', () => {
-        const { id } = windowManager.getActiveWindow();
-        if (
-          this.isFocused() ||
-          this.containers.find(x => x.windows.find(y => y.id === id))
-        ) {
-          this.webContents.send('next-tab');
-        }
-      });
-    }
-
     windowManager.on('window-activated', (window: Window) => {
+      this.registerShortcut(window.id);
+
       if (!this.isFocused()) return;
 
       for (const container of this.containers) {
@@ -331,6 +321,8 @@ export class AppWindow extends BrowserWindow {
           setTimeout(() => {
             this.selectContainer(container);
           }, 50);
+
+          this.registerShortcut(win.id);
         } else if (this.willSplitWindow) {
           this.willSplitWindow = false;
 
@@ -343,6 +335,21 @@ export class AppWindow extends BrowserWindow {
       this.detached = false;
       this.draggedIn = false;
     });
+  }
+
+  private registerShortcut(id: number) {
+    if (
+      this.containers.find(x => x.windows.find(y => y.id === id)) ||
+      this.isFocused()
+    ) {
+      if (!globalShortcut.isRegistered('CmdOrCtrl+Tab')) {
+        globalShortcut.register('CmdOrCtrl+Tab', () => {
+          this.webContents.send('next-tab');
+        });
+      }
+    } else if (globalShortcut.isRegistered('CmdOrCtrl+Tab')) {
+      globalShortcut.unregister('CmdOrCtrl+Tab');
+    }
   }
 
   private intervalCallback = () => {

@@ -59,7 +59,6 @@
     "gsap": "3.0.2",
     "hard-source-webpack-plugin": "^0.13.1",
     "html-webpack-plugin": "^3.2.0",
-    "iohook": "^0.6.2",
     "mobx": "5.15.0",
     "mobx-react-lite": "^1.5.1",
     "node-window-manager": "1.2.0",
@@ -78,7 +77,8 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "node-vibrant": "3.2.0-alpha"
+    "node-vibrant": "3.2.0-alpha",
+    "iohook": "^0.6.2"
   },
   "cmake-js": {
     "runtime": "electron",

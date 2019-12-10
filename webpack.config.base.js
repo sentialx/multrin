@@ -1,21 +1,38 @@
 /* eslint-disable */
 const { resolve } = require('path');
 const merge = require('webpack-merge');
+const createStyledComponentsTransformer = require('typescript-plugin-styled-components').default;
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 /* eslint-enable */
 
 const INCLUDE = resolve(__dirname, 'src');
 
 const dev = process.env.ENV === 'dev';
 
+const styledComponentsTransformer = createStyledComponentsTransformer({
+  minify: true,
+  displayName: dev,
+});
+
+function getExternals(externals) {
+  const res = {};
+  for (const e of externals) {
+    res[e] = `require('${e}')`;
+  }
+  return res;
+}
+
 const config = {
   mode: dev ? 'development' : 'production',
 
-  devtool: dev ? 'eval-source-map' : 'source-map',
+  devtool: dev ? 'eval-source-map' : 'none',
+
+  plugins: [],
 
   output: {
     path: resolve(__dirname, 'build'),
     filename: '[name].bundle.js',
-    libraryTarget: 'commonjs2',
+    libraryTarget: 'var',
   },
 
   module: {
@@ -29,11 +46,21 @@ const config = {
             options: {
               experimentalWatchApi: true,
               transpileOnly: true,
+              getCustomTransformers: () => ({
+                before: [styledComponentsTransformer],
+              }),
             },
           },
         ],
 
         include: INCLUDE,
+      },
+      {
+        test: /\.node$/,
+        loader: 'awesome-node-loader',
+        options: {
+          name: '[contenthash].[ext]',
+        },
       },
     ],
   },
@@ -51,14 +78,15 @@ const config = {
     },
   },
 
-  externals: [
-    'extract-file-icon',
+  externals: getExternals([
     'iohook',
-    'mouse-hooks',
-    'node-window-manager',
     'node-vibrant',
-  ],
+  ]),
 };
+
+if (dev) {
+  config.plugins.push(new ForkTsCheckerWebpackPlugin());
+}
 
 function getConfig(...cfg) {
   return merge(config, ...cfg);

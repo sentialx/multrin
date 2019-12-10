@@ -30,7 +30,7 @@ const applyEntries = (scope, config, entries) => {
 
 const getBaseConfig = name => {
   const config = {
-    plugins: [new HardSourceWebpackPlugin()],
+    plugins: [],
 
     output: {},
     entry: {},
@@ -40,7 +40,14 @@ const getBaseConfig = name => {
         {
           test: /\.(png|gif|jpg|woff2|ttf|svg)$/,
           include: INCLUDE,
-          use: ['file-loader'],
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                esModule: false,
+              },
+            },
+          ],
         },
       ],
     },
@@ -51,21 +58,16 @@ const getBaseConfig = name => {
           vendor: {
             chunks: 'initial',
             name: `vendor.${name}`,
-            test: `vendor.${name}`,
-            enforce: true,
+            minChunks: 2,
           },
         },
       },
     },
   };
 
-  config.entry[`vendor.${name}`] = [
-    'react',
-    'react-dom',
-    'mobx',
-    'mobx-react-lite',
-    'styled-components',
-  ];
+  if (dev) {
+    config.plugins.push(new HardSourceWebpackPlugin());
+  }
 
   return config;
 };

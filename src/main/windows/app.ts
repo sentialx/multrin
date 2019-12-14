@@ -85,6 +85,8 @@ export class AppWindow extends BrowserWindow {
   }
 
   public activateWindowCapturing() {
+    windowManager.requestAccessibility();
+
     const updateBounds = () => {
       this.isMoving = true;
 
@@ -252,7 +254,10 @@ export class AppWindow extends BrowserWindow {
 
             const container = new Container(this, win);
 
-            const title = this.draggedWindow.getTitle();
+            const title =
+              process.platform === 'darwin'
+                ? ''
+                : this.draggedWindow.getTitle();
 
             draggedContainer = container;
             win.lastTitle = title;
@@ -357,7 +362,7 @@ export class AppWindow extends BrowserWindow {
       for (const container of this.containers) {
         if (container.windows.length === 1) {
           const window = container.windows[0];
-          const title = window.getTitle();
+          const title = process.platform === 'darwin' ? '' : window.getTitle();
           if (window.lastTitle !== title) {
             this.webContents.send('update-tab-title', {
               id: container.id,

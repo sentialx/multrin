@@ -190,7 +190,8 @@ export class Container {
         x < col.x ||
         y < area.y ||
         y > area.y + area.height ||
-        (row && y > row.y + row.height) || y < row.y
+        (row && y > row.y + row.height) ||
+        y < row.y
       ) {
         this.removeWindow(win.id);
       }

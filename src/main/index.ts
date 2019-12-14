@@ -35,6 +35,7 @@ app.on('ready', () => {
     Menu.buildFromTemplate([
       {
         role: 'editMenu',
+        label: 'Edit',
       },
       {
         label: 'Other',

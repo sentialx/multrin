@@ -4,7 +4,7 @@ import { PopupWindow } from './popup';
 import { ipcMain } from 'electron';
 
 const WIDTH = 300;
-const HEIGHT = 146;
+const HEIGHT = 182;
 
 export class MenuWindow extends PopupWindow {
   public visible = false;

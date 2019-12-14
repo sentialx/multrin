@@ -45,6 +45,8 @@ export class AppWindow extends BrowserWindow {
 
   private height = 700;
 
+  private attachingEnabled = true;
+
   public constructor() {
     super({
       frame: false,
@@ -137,6 +139,10 @@ export class AppWindow extends BrowserWindow {
       this.menu.toggle();
     });
 
+    ipcMain.on(`toggle-attaching-${this.id}`, (e, value) => {
+      this.attachingEnabled = value;
+    });
+
     ipcMain.on(`get-title-${this.id}`, e => {
       e.returnValue = this.getTitle();
     });
@@ -191,7 +197,12 @@ export class AppWindow extends BrowserWindow {
     let draggedContainer: Container;
 
     iohook.on('mousedrag', async (e: any) => {
-      if (!this.isMinimized() && this.draggedWindow) {
+      if (!this.isMinimized() && this.draggedWindow && this.attachingEnabled) {
+        if (
+          process.platform === 'win32' &&
+          this.draggedWindow.getTitle() === app.name
+        )
+          return;
         const winBounds = this.draggedWindow.getBounds();
         const { lastBounds } = this.draggedWindow;
         const contentBounds = this.getContentArea();

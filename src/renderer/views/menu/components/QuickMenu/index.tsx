@@ -1,15 +1,7 @@
 import * as React from 'react';
 import { observer } from 'mobx-react-lite';
 
-import {
-  Line,
-  MenuItem,
-  MenuItems,
-  Content,
-  Icon,
-  MenuItemTitle,
-  Shortcut,
-} from './style';
+import { MenuItem, MenuItems, Content, Icon, MenuItemTitle } from './style';
 import { icons } from '~/renderer/views/app/constants/icons';
 import { ipcRenderer } from 'electron';
 import store from '../../store';
@@ -22,6 +14,11 @@ const onChangeIconClick = () => {
 const onDarkClick = () => {
   store.settings.dark = !store.settings.dark;
   store.saveSettings();
+};
+
+const onAttachClick = () => {
+  store.attachingEnabled = !store.attachingEnabled;
+  ipcRenderer.send(`toggle-attaching-${store.id}`, store.attachingEnabled);
 };
 
 export const QuickMenu = observer(() => {
@@ -42,6 +39,11 @@ export const QuickMenu = observer(() => {
             <Icon icon={icons.theme}></Icon>
             <MenuItemTitle>Dark theme</MenuItemTitle>
             <Switch value={store.settings.dark} />
+          </MenuItem>
+          <MenuItem onClick={onAttachClick}>
+            <Icon icon={icons.dropWindow}></Icon>
+            <MenuItemTitle>Dragging windows</MenuItemTitle>
+            <Switch value={store.attachingEnabled} />
           </MenuItem>
         </MenuItems>
       </Content>

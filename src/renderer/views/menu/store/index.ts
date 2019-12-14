@@ -16,6 +16,9 @@ export class Store {
   @observable
   public settings: any;
 
+  @observable
+  public attachingEnabled = true;
+
   public constructor() {
     this.settings = ipcRenderer.sendSync('get-settings');
 

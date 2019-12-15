@@ -74,15 +74,15 @@
     "webpack": "4.41.2",
     "webpack-cli": "3.3.10",
     "webpack-dev-server": "^3.9.0",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^4.2.2",
+    "node-vibrant": "^3.1.5"
   },
   "dependencies": {
-    "iohook": "^0.6.2",
-    "node-vibrant": "^3.1.5"
+    "iohook": "^0.6.2"
   },
   "cmake-js": {
     "runtime": "electron",
-    "runtimeVersion": "7.1.4"
+    "runtimeVersion": "7.1.5"
   },
   "iohook": {
     "targets": [

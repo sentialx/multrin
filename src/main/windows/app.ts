@@ -206,7 +206,9 @@ export class AppWindow extends BrowserWindow {
         const contentBounds = this.getContentArea();
 
         e.y = winBounds.y;
-        e.x /= Math.floor(this.draggedWindow.getMonitor().getScaleFactor());
+        e.x = Math.floor(
+          e.x / this.draggedWindow.getMonitor().getScaleFactor(),
+        );
 
         contentBounds.y -= TOOLBAR_HEIGHT;
 

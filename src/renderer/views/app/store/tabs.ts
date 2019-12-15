@@ -105,6 +105,10 @@ export class TabsStore {
     ipcRenderer.on('next-tab', () => {
       this.selectNextTab();
     });
+
+    ipcRenderer.on('previous-tab', () => {
+      this.selectPreviousTab();
+    });
   }
 
   public get firstTab() {
@@ -113,6 +117,16 @@ export class TabsStore {
       .sort((a, b) => a.position - b.position);
 
     const tab = tabs[0];
+
+    return tab;
+  }
+
+  public get lastTab() {
+    const tabs = store.tabsStore.tabs
+      .slice()
+      .sort((a, b) => a.position - b.position);
+
+    const tab = tabs[tabs.length - 1];
 
     return tab;
   }
@@ -331,6 +345,19 @@ export class TabsStore {
         nextTab.select();
       } else {
         this.firstTab.select();
+      }
+    }
+  }
+
+  public selectPreviousTab() {
+    const { selectedTab } = this;
+    if (selectedTab) {
+      const { previousTab } = selectedTab;
+
+      if (previousTab) {
+        previousTab.select();
+      } else {
+        this.lastTab.select();
       }
     }
   }

@@ -165,7 +165,7 @@ export class AppWindow extends BrowserWindow {
     });
 
     windowManager.on('window-activated', (window: Window) => {
-      this.registerShortcut(window.id);
+      this.controlShortcuts(window.id);
 
       if (!this.isFocused()) return;
 
@@ -250,7 +250,7 @@ export class AppWindow extends BrowserWindow {
             this.selectContainer(container);
           }, 50);
 
-          this.registerShortcut(win.id);
+          this.controlShortcuts(win.id);
         } else if (this.willSplitWindow && !this.detached) {
           this.willSplitWindow = false;
 
@@ -271,18 +271,32 @@ export class AppWindow extends BrowserWindow {
     });
   }
 
-  private registerShortcut(id: number) {
+  private controlShortcuts(id: number) {
+    this.controlShortcut(id, 'CmdOrCtrl+Tab', () => {
+      this.webContents.send('next-tab');
+    });
+
+    this.controlShortcut(id, 'CmdOrCtrl+Shift+Tab', () => {
+      this.webContents.send('previous-tab');
+    });
+  }
+
+  private controlShortcut(
+    id: number,
+    accelerator: string,
+    callback: () => void,
+  ) {
     if (
       this.containers.find(x => x.windows.find(y => y.id === id)) ||
       this.isFocused()
     ) {
-      if (!globalShortcut.isRegistered('CmdOrCtrl+Tab')) {
-        globalShortcut.register('CmdOrCtrl+Tab', () => {
-          this.webContents.send('next-tab');
+      if (!globalShortcut.isRegistered(accelerator)) {
+        globalShortcut.register(accelerator, () => {
+          callback();
         });
       }
-    } else if (globalShortcut.isRegistered('CmdOrCtrl+Tab')) {
-      globalShortcut.unregister('CmdOrCtrl+Tab');
+    } else if (globalShortcut.isRegistered(accelerator)) {
+      globalShortcut.unregister(accelerator);
     }
   }
 

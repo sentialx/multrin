@@ -222,7 +222,6 @@ export class AppWindow extends BrowserWindow {
             (winBounds.width !== lastBounds.width ||
               winBounds.height !== lastBounds.height)
           ) {
-            console.log(winBounds, lastBounds);
             this.selectedContainer.resizeWindow(this.draggedWindow, () => {
               this.isUpdatingContentBounds = true;
 

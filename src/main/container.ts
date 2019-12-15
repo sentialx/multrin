@@ -93,7 +93,6 @@ export class Container {
         );
 
         if (window && !window.dragged && !window.resizing) {
-          console.log(col.width, row.height);
           const bounds: any = {
             x: col.x,
             y: row.y,
@@ -102,7 +101,7 @@ export class Container {
           };
 
           window.setBounds(bounds);
-          window.lastBounds = bounds;
+          window.lastBounds = window.getBounds();
         }
       }
     }

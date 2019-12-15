@@ -261,7 +261,6 @@ export class AppWindow extends BrowserWindow {
       }, 50);
 
       this.draggedContainer = null;
-      this.detached = false;
       this.draggedIn = false;
     });
   }

@@ -48,6 +48,8 @@ export class AppWindow extends BrowserWindow {
   private attachingEnabled = true;
   private draggedContainer: Container;
 
+  public window: Window;
+
   public constructor() {
     super({
       frame: false,
@@ -89,6 +91,10 @@ export class AppWindow extends BrowserWindow {
 
   public activateWindowCapturing() {
     windowManager.requestAccessibility();
+
+    if (process.platform === 'win32') {
+      this.window = new Window(this.getHandle());
+    }
 
     const updateBounds = () => {
       this.isMoving = true;
@@ -458,4 +464,6 @@ export class AppWindow extends BrowserWindow {
       this.setMaximumSize(0, 0);
     }
   }
+
+  public getHandle = () => this.getNativeWindowHandle().readInt32LE(0);
 }

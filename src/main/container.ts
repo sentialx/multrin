@@ -246,9 +246,7 @@ export class Container {
           this.appWindow.detached = false;
 
           if (process.platform === 'win32') {
-            const handle = this.appWindow
-              .getNativeWindowHandle()
-              .readInt32LE(0);
+            const handle = this.appWindow.getHandle();
             window.setOwner(handle);
           }
 

@@ -32,12 +32,6 @@ export class ProcessWindow extends Window {
   }
 
   public detach(mouseup = false) {
-    this.setOwner(null);
-
-    setTimeout(() => {
-      this.bringToTop();
-    }, 50);
-
     const handler = () => {
       setTimeout(() => {
         const b = this.getBounds();
@@ -53,6 +47,12 @@ export class ProcessWindow extends Window {
             width: this.initialBounds.width,
             height: this.initialBounds.height,
           });
+        }
+
+        if (process.platform === 'win32') {
+          this.parentWindow.window.bringToTop();
+          this.setOwner(null);
+          this.bringToTop();
         }
       }, 50);
     };

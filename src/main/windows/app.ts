@@ -308,7 +308,12 @@ export class AppWindow extends BrowserWindow {
   };
 
   public mouseDragWindow(e: any) {
-    if (!this.isMinimized() && this.draggedWindow && this.attachingEnabled) {
+    if (
+      !this.isMinimized() &&
+      this.draggedWindow &&
+      this.attachingEnabled &&
+      !this.isFocused()
+    ) {
       if (
         process.platform === 'win32' &&
         this.draggedWindow.getTitle() === app.name
@@ -319,6 +324,7 @@ export class AppWindow extends BrowserWindow {
       const contentBounds = this.getContentArea();
       const scaleFactor = this.draggedWindow.getMonitor().getScaleFactor();
 
+      const realY =  Math.floor(e.y / scaleFactor);
       e.y = winBounds.y;
       e.x = Math.floor(e.x / scaleFactor);
 
@@ -363,7 +369,8 @@ export class AppWindow extends BrowserWindow {
           !this.draggedWindow.resizing &&
           (winBounds.x !== lastBounds.x || winBounds.y !== lastBounds.y) &&
           winBounds.width === lastBounds.width &&
-          winBounds.height === lastBounds.height
+          winBounds.height === lastBounds.height &&
+          realY - winBounds.y <= 42
         ) {
           this.selectedContainer.dragWindow(this.draggedWindow, e);
           if (!this.detached) {
@@ -373,7 +380,12 @@ export class AppWindow extends BrowserWindow {
       }
 
       if (containsPoint(contentBounds, e) && !this.draggedWindow.resizing) {
-        if (!this.draggedIn && !windowAttached && !this.detached) {
+        if (
+          !this.draggedIn &&
+          !windowAttached &&
+          !this.detached &&
+          realY - winBounds.y <= 42
+        ) {
           const win = this.draggedWindow;
 
           if (this.selectedContainer) {

@@ -30,7 +30,6 @@ export class Container {
   public windows: ProcessWindow[] = [];
 
   private appWindow: AppWindow;
-  private _handler: any;
 
   public constructor(appWindow: AppWindow, window: ProcessWindow) {
     this.appWindow = appWindow;

@@ -135,6 +135,8 @@ export class Container {
       }
     }
 
+    this.appWindow.detached = true;
+
     this.rearrangeWindows();
   }
 
@@ -264,7 +266,7 @@ export class Container {
             iohook.off('mouseup', this._handler);
           }
 
-          if (platform() === 'win32') {
+          if (process.platform === 'win32') {
             const handle = this.appWindow
               .getNativeWindowHandle()
               .readInt32LE(0);

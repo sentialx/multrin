@@ -46,6 +46,7 @@ export class AppWindow extends BrowserWindow {
   private height = 700;
 
   private attachingEnabled = true;
+  private draggedContainer: Container;
 
   public constructor() {
     super({
@@ -192,107 +193,11 @@ export class AppWindow extends BrowserWindow {
       }, 50);
     });
 
-    let draggedContainer: Container;
-
     iohook.on('mousedrag', async (e: any) => {
-      if (!this.isMinimized() && this.draggedWindow && this.attachingEnabled) {
-        if (
-          process.platform === 'win32' &&
-          this.draggedWindow.getTitle() === app.name
-        )
-          return;
-        const winBounds = this.draggedWindow.getBounds();
-        const { lastBounds } = this.draggedWindow;
-        const contentBounds = this.getContentArea();
-
-        e.y = winBounds.y;
-        e.x = Math.floor(
-          e.x / this.draggedWindow.getMonitor().getScaleFactor(),
-        );
-
-        contentBounds.y -= TOOLBAR_HEIGHT;
-
-        if (this.containers.length > 0) {
-          contentBounds.height = TOOLBAR_HEIGHT;
-        }
-
-        if (this.selectedContainer) {
-          if (
-            this.selectedContainer.windows.find(
-              x => x.id === this.draggedWindow.id,
-            ) &&
-            (winBounds.width !== lastBounds.width ||
-              winBounds.height !== lastBounds.height)
-          ) {
-            this.selectedContainer.resizeWindow(this.draggedWindow, () => {
-              this.isUpdatingContentBounds = true;
-
-              const cBounds = this.getContentBounds();
-
-              this.setContentBounds({
-                width: cBounds.width + (winBounds.width - lastBounds.width),
-                height:
-                  platform() !== 'darwin'
-                    ? cBounds.height + winBounds.height - lastBounds.height
-                    : TOOLBAR_HEIGHT,
-                x: cBounds.x + winBounds.x - lastBounds.x,
-                y: cBounds.y + winBounds.y - lastBounds.y,
-              } as any);
-
-              this.height = this.height + winBounds.height - lastBounds.height;
-
-              this.draggedWindow.lastBounds = winBounds;
-            });
-          } else if (
-            (!this.draggedWindow.resizing && winBounds.x !== lastBounds.x) ||
-            winBounds.y !== lastBounds.y
-          ) {
-            this.selectedContainer.dragWindow(this.draggedWindow, e);
-            this.willSplitWindow = true;
-          }
-        }
-
-        if (
-          containsPoint(contentBounds, e) &&
-          (winBounds.x !== lastBounds.x || winBounds.y !== lastBounds.y) &&
-          !this.draggedWindow.resizing
-        ) {
-          if (!this.draggedIn) {
-            const win = this.draggedWindow;
-
-            if (this.selectedContainer) {
-              this.selectedContainer.removeWindow(win.id);
-            }
-
-            const container = new Container(this, win);
-
-            const title =
-              process.platform === 'darwin'
-                ? ''
-                : this.draggedWindow.getTitle();
-
-            draggedContainer = container;
-            win.lastTitle = title;
-
-            this.webContents.send('add-tab', {
-              id: container.id,
-              title,
-              icon: fileIcon(win.path, 16),
-            });
-
-            this.draggedIn = true;
-            this.willAttachWindow = true;
-          }
-        } else if (this.draggedIn && draggedContainer) {
-          this.webContents.send('remove-tab', draggedContainer.id);
-
-          this.draggedIn = false;
-          this.willAttachWindow = false;
-        }
-      }
+      this.mouseDragWindow(e);
     });
 
-    iohook.on('mouseup', async () => {
+    iohook.on('mouseup', async (e: any) => {
       this.isMoving = false;
 
       if (this.isUpdatingContentBounds) {
@@ -318,7 +223,7 @@ export class AppWindow extends BrowserWindow {
 
         if (this.willAttachWindow) {
           const win = this.draggedWindow;
-          const container = draggedContainer;
+          const container = this.draggedContainer;
 
           if (platform() === 'win32') {
             const handle = this.getNativeWindowHandle().readInt32LE(0);
@@ -330,10 +235,10 @@ export class AppWindow extends BrowserWindow {
             this.setMaximumSize(0, TOOLBAR_HEIGHT);
           }
 
-          this.containers.push(draggedContainer);
+          this.containers.push(this.draggedContainer);
           this.willAttachWindow = false;
 
-          draggedContainer.rearrangeWindows();
+          this.draggedContainer.rearrangeWindows();
 
           setTimeout(() => {
             this.selectContainer(container);
@@ -347,10 +252,14 @@ export class AppWindow extends BrowserWindow {
         }
       }
 
-      draggedContainer = null;
-      this.draggedWindow = null;
+      this.draggedContainer = null;
       this.detached = false;
       this.draggedIn = false;
+
+      setTimeout(() => {
+        this.mouseDragWindow(e);
+        this.draggedWindow = null;
+      }, 50);
     });
   }
 
@@ -392,6 +301,103 @@ export class AppWindow extends BrowserWindow {
       }
     }
   };
+
+  public mouseDragWindow(e: any) {
+    if (!this.isMinimized() && this.draggedWindow && this.attachingEnabled) {
+      if (
+        process.platform === 'win32' &&
+        this.draggedWindow.getTitle() === app.name
+      )
+        return;
+      const winBounds = this.draggedWindow.getBounds();
+      const { lastBounds } = this.draggedWindow;
+      const contentBounds = this.getContentArea();
+      const scaleFactor = this.draggedWindow.getMonitor().getScaleFactor();
+
+      e.y = winBounds.y;
+      e.x = Math.floor(e.x / scaleFactor);
+
+      contentBounds.y -= TOOLBAR_HEIGHT;
+
+      if (this.containers.length > 0) {
+        contentBounds.height = TOOLBAR_HEIGHT;
+      }
+
+      const windowAttached =
+        this.selectedContainer &&
+        this.selectedContainer.windows.find(
+          x => x.id === this.draggedWindow.id,
+        );
+
+      if (this.selectedContainer) {
+        if (
+          windowAttached &&
+          (winBounds.width !== lastBounds.width ||
+            winBounds.height !== lastBounds.height)
+        ) {
+          this.selectedContainer.resizeWindow(this.draggedWindow, () => {
+            this.isUpdatingContentBounds = true;
+
+            const cBounds = this.getContentBounds();
+
+            this.setContentBounds({
+              width: cBounds.width + (winBounds.width - lastBounds.width),
+              height:
+                platform() !== 'darwin'
+                  ? cBounds.height + (winBounds.height - lastBounds.height)
+                  : TOOLBAR_HEIGHT,
+              x: cBounds.x + winBounds.x - lastBounds.x,
+              y: cBounds.y + winBounds.y - lastBounds.y,
+            } as any);
+
+            this.height = this.height + winBounds.height - lastBounds.height;
+
+            this.draggedWindow.lastBounds = winBounds;
+          });
+        } else if (
+          !this.draggedWindow.resizing &&
+          (winBounds.x !== lastBounds.x || winBounds.y !== lastBounds.y) &&
+          winBounds.width === lastBounds.width &&
+          winBounds.height === lastBounds.height
+        ) {
+          this.selectedContainer.dragWindow(this.draggedWindow, e);
+          this.willSplitWindow = true;
+        }
+      }
+
+      if (containsPoint(contentBounds, e) && !this.draggedWindow.resizing) {
+        if (!this.draggedIn && !windowAttached && !this.detached) {
+          const win = this.draggedWindow;
+
+          if (this.selectedContainer) {
+            this.selectedContainer.removeWindow(win.id);
+          }
+
+          const container = new Container(this, win);
+
+          const title =
+            process.platform === 'darwin' ? '' : this.draggedWindow.getTitle();
+
+          this.draggedContainer = container;
+          win.lastTitle = title;
+
+          this.webContents.send('add-tab', {
+            id: container.id,
+            title,
+            icon: fileIcon(win.path, 16),
+          });
+
+          this.draggedIn = true;
+          this.willAttachWindow = true;
+        }
+      } else if (this.draggedIn && this.draggedContainer) {
+        this.webContents.send('remove-tab', this.draggedContainer.id);
+
+        this.draggedIn = false;
+        this.willAttachWindow = false;
+      }
+    }
+  }
 
   public getContentArea() {
     const bounds = this.getContentBounds();

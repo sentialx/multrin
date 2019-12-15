@@ -11,7 +11,7 @@
 [![PayPal](https://img.shields.io/badge/PayPal-Donate-brightgreen?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VCPPFUAL4R6M6&source=url)
 [![Discord](https://discordapp.com/api/guilds/307605794680209409/widget.png?style=shield)](https://discord.gg/P7Vn4VX)
 
-Multrin is a cross-platform, that lets you to organize apps in tabs, by just dropping them onto Multrin. It aims to greatly improve your productivity and organization.
+Multrin is a cross-platform app built on Electron that lets you to organize apps in tabs by simply dropping them onto Multrin. It aims to greatly improve your productivity and organization.
 
 </div>
 

@@ -92,8 +92,6 @@ export class AppWindow extends BrowserWindow {
     const updateBounds = () => {
       this.isMoving = true;
 
-      this.menu.rearrange();
-
       if (platform() === 'darwin') {
         for (const c of this.containers) {
           if (
@@ -208,6 +206,7 @@ export class AppWindow extends BrowserWindow {
         const contentBounds = this.getContentArea();
 
         e.y = winBounds.y;
+        e.x /= Math.floor(this.draggedWindow.getMonitor().getScaleFactor());
 
         contentBounds.y -= TOOLBAR_HEIGHT;
 
@@ -223,6 +222,7 @@ export class AppWindow extends BrowserWindow {
             (winBounds.width !== lastBounds.width ||
               winBounds.height !== lastBounds.height)
           ) {
+            console.log(winBounds, lastBounds);
             this.selectedContainer.resizeWindow(this.draggedWindow, () => {
               this.isUpdatingContentBounds = true;
 

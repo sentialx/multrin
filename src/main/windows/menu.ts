@@ -27,8 +27,8 @@ export class MenuWindow extends PopupWindow {
   }
 
   public show() {
-    super.show();
     this.rearrange();
+    super.show();
     this.visible = true;
   }
 
@@ -45,8 +45,10 @@ export class MenuWindow extends PopupWindow {
   public rearrange() {
     const cBounds = this.appWindow.getContentBounds();
     this.setBounds({
-      x: Math.round(cBounds.x + cBounds.width - WIDTH - 8),
+      x: Math.floor(cBounds.x + cBounds.width - WIDTH - 8),
       y: cBounds.y + TOOLBAR_HEIGHT,
+      width: WIDTH,
+      height: HEIGHT,
     } as any);
   }
 }

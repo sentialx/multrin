@@ -65,7 +65,7 @@ export class Container {
     const colWidth = area.width / this.columns.length;
 
     for (const col of this.columns) {
-      col.width = Math.round(colWidth * col.weight);
+      col.width = Math.floor(colWidth * col.weight);
       col.lastWidth = col.width;
     }
 
@@ -82,7 +82,7 @@ export class Container {
       for (let j = 0; j < col.rows.length; j++) {
         const row = col.rows[j];
 
-        row.height = Math.round(rowHeight * row.weight);
+        row.height = Math.floor(rowHeight * row.weight);
         row.lastHeight = row.height;
 
         row.y = area.y + top;
@@ -93,6 +93,7 @@ export class Container {
         );
 
         if (window && !window.dragged && !window.resizing) {
+          console.log(col.width, row.height);
           const bounds: any = {
             x: col.x,
             y: row.y,

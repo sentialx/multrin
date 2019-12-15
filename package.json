@@ -1,6 +1,6 @@
 {
   "name": "multrin",
-  "version": "1.1.0",
+  "version": "1.0.1",
   "description": "Tabbed window organizer",
   "keywords": [
     "organizer",
@@ -46,7 +46,7 @@
     "concurrently": "^5.0.1",
     "cross-env": "6.0.3",
     "electron": "7.1.5",
-    "electron-builder": "21.2.0",
+    "electron-builder": "^21.2.0",
     "electron-rebuild": "^1.8.8",
     "electron-updater": "4.2.0",
     "eslint": "^6.7.2",

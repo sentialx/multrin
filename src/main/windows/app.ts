@@ -324,7 +324,7 @@ export class AppWindow extends BrowserWindow {
       const contentBounds = this.getContentArea();
       const scaleFactor = this.draggedWindow.getMonitor().getScaleFactor();
 
-      const realY =  Math.floor(e.y / scaleFactor);
+      const realY = Math.floor(e.y / scaleFactor);
       e.y = winBounds.y;
       e.x = Math.floor(e.x / scaleFactor);
 

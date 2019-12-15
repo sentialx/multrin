@@ -206,6 +206,14 @@ export class AppWindow extends BrowserWindow {
     iohook.on('mouseup', async (e: any) => {
       this.isMoving = false;
 
+      if (process.platform === 'win32' && this.isFocused()) {
+        if (this.selectedContainer) {
+          for (const w of this.selectedContainer.windows) {
+            w.bringToTop();
+          }
+        }
+      }
+
       if (this.isUpdatingContentBounds) {
         setTimeout(() => {
           if (this.selectedContainer) {

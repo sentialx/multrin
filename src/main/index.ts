@@ -5,6 +5,8 @@ import { AppWindow } from './windows/app';
 import { autoUpdater } from 'electron-updater';
 import { Settings } from './settings';
 
+app.name = 'Multrin';
+
 ipcMain.setMaxListeners(0);
 
 app.setPath('userData', resolve(homedir(), '.multrin'));

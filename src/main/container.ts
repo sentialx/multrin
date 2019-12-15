@@ -107,16 +107,19 @@ export class Container {
     }
   }
 
-  public removeWindow(id: number) {
+  public removeWindow(id: number, mouseup = true) {
     const win = this.windows.find(x => x.id === id);
     if (!win) return;
 
     const col = this.columns.find(x => x.id === win.columnId);
     if (!col) return;
 
+    let winDetached = false;
+
     if (col.rows.length === 1) {
       this.columns = this.columns.filter(x => x.id !== win.columnId);
-      this.detachWindow(win);
+      this.detachWindow(win, mouseup);
+      winDetached = true;
     }
 
     if (!col) return;
@@ -125,7 +128,9 @@ export class Container {
     if (!row) return;
 
     col.rows = col.rows.filter(x => x.id !== win.rowId);
-    this.detachWindow(win);
+    if (!winDetached) {
+      this.detachWindow(win, mouseup);
+    }
 
     for (const c of this.columns) {
       c.weight = 1;
@@ -135,45 +140,22 @@ export class Container {
       }
     }
 
-    this.appWindow.detached = true;
-
     this.rearrangeWindows();
   }
 
-  public detachWindow(window: ProcessWindow) {
-    window.detach();
+  public detachWindow(window: ProcessWindow, mouseup = true) {
+    this.appWindow.detached = true;
 
-    const handler = () => {
-      setTimeout(() => {
-        if (this.windows.length === 0) {
-          this.appWindow.removeContainer(this);
-        }
-
-        const b = window.getBounds();
-        const a = this.appWindow.getBounds();
-
-        if (
-          b.x < a.x ||
-          b.x > a.x + a.width ||
-          b.y < a.y ||
-          b.y > a.y + a.height
-        ) {
-          window.setBounds({
-            width: window.initialBounds.width,
-            height: window.initialBounds.height,
-          });
-        }
-      }, 50);
-    };
-
-    this._handler = handler;
-
-    iohook.once('mouseup', handler);
+    window.detach(mouseup);
 
     this.windows = this.windows.filter(x => x.id !== window.id);
+
+    if (this.windows.length === 0) {
+      this.appWindow.removeContainer(this);
+    }
   }
 
-  public dragWindow(window: ProcessWindow, { x, y }: any) {
+  public dragWindow(window: ProcessWindow, { x, y, type }: any) {
     const area = this.appWindow.getContentArea();
     const win = this.windows.find(x => x.id === window.id);
 
@@ -195,7 +177,7 @@ export class Container {
         (row && y > row.y + row.height) ||
         y < row.y
       ) {
-        this.removeWindow(win.id);
+        this.removeWindow(win.id, type === 'mouseup');
       }
     } else {
       for (const col of this.columns) {
@@ -262,9 +244,7 @@ export class Container {
           window.rowId = rowId;
           window.columnId = colId;
           window.dragged = true;
-          if (this._handler) {
-            iohook.off('mouseup', this._handler);
-          }
+          this.appWindow.detached = false;
 
           if (process.platform === 'win32') {
             const handle = this.appWindow

@@ -245,21 +245,24 @@ export class AppWindow extends BrowserWindow {
           }, 50);
 
           this.registerShortcut(win.id);
-        } else if (this.willSplitWindow) {
+        } else if (this.willSplitWindow && !this.detached) {
           this.willSplitWindow = false;
 
           if (this.selectedContainer) this.selectedContainer.rearrangeWindows();
         }
       }
 
+      setTimeout(() => {
+        this.mouseDragWindow(e);
+        this.detached = false;
+        this.draggedWindow = null;
+        this.draggedContainer = null;
+        this.draggedIn = false;
+      }, 50);
+
       this.draggedContainer = null;
       this.detached = false;
       this.draggedIn = false;
-
-      setTimeout(() => {
-        this.mouseDragWindow(e);
-        this.draggedWindow = null;
-      }, 50);
     });
   }
 
@@ -281,6 +284,8 @@ export class AppWindow extends BrowserWindow {
   private intervalCallback = () => {
     if (!this.isMinimized()) {
       for (const container of this.containers) {
+        if (!container) return;
+
         if (container.windows.length === 1) {
           const window = container.windows[0];
           const title = process.platform === 'darwin' ? '' : window.getTitle();
@@ -361,7 +366,9 @@ export class AppWindow extends BrowserWindow {
           winBounds.height === lastBounds.height
         ) {
           this.selectedContainer.dragWindow(this.draggedWindow, e);
-          this.willSplitWindow = true;
+          if (!this.detached) {
+            this.willSplitWindow = true;
+          }
         }
       }
 
@@ -370,7 +377,7 @@ export class AppWindow extends BrowserWindow {
           const win = this.draggedWindow;
 
           if (this.selectedContainer) {
-            this.selectedContainer.removeWindow(win.id);
+            this.selectedContainer.removeWindow(win.id, e.type === 'mouseup');
           }
 
           const container = new Container(this, win);

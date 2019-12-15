@@ -1,5 +1,6 @@
 import { Window } from 'node-window-manager';
 import { AppWindow } from './windows/app';
+import { iohook } from '.';
 
 export class ProcessWindow extends Window {
   public resizable = false;
@@ -30,12 +31,37 @@ export class ProcessWindow extends Window {
     this.parentWindow = appWindow;
   }
 
-  public detach() {
+  public detach(mouseup = false) {
     this.setOwner(null);
 
     setTimeout(() => {
       this.bringToTop();
     }, 50);
+
+    const handler = () => {
+      setTimeout(() => {
+        const b = this.getBounds();
+        const a = this.parentWindow.getBounds();
+
+        if (
+          b.x < a.x ||
+          b.x > a.x + a.width ||
+          b.y < a.y ||
+          b.y > a.y + a.height
+        ) {
+          this.setBounds({
+            width: this.initialBounds.width,
+            height: this.initialBounds.height,
+          });
+        }
+      }, 50);
+    };
+
+    if (mouseup) {
+      handler();
+    } else {
+      iohook.once('mouseup', handler);
+    }
   }
 
   public show() {

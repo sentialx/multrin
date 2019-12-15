@@ -78,7 +78,7 @@ const config = {
     },
   },
 
-  externals: getExternals(['iohook', 'node-vibrant']),
+  externals: getExternals(['iohook']),
 };
 
 if (dev) {

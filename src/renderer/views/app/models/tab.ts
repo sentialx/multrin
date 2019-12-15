@@ -103,14 +103,6 @@ export class Tab {
     this.title = title;
     this.favicon = URL.createObjectURL(new Blob([icon]));
 
-    Vibrant.from(icon)
-      .getPalette()
-      .then(palette => {
-        if (getColorBrightness(palette.Vibrant.hex) < 170) {
-          this.background = palette.Vibrant.hex;
-        }
-      });
-
     this.select();
   }
 

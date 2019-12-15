@@ -16,6 +16,7 @@ import { Container } from '../container';
 import * as fileIcon from 'extract-file-icon';
 import { iohook } from '..';
 import { MenuWindow } from './menu';
+import Vibrant = require('node-vibrant');
 
 const containsPoint = (bounds: any, point: any) => {
   return (
@@ -427,11 +428,27 @@ export class AppWindow extends BrowserWindow {
           this.draggedContainer = container;
           win.lastTitle = title;
 
+          const icon = fileIcon(win.path, 16);
+
           this.webContents.send('add-tab', {
             id: container.id,
             title,
-            icon: fileIcon(win.path, 16),
+            icon,
           });
+
+          try {
+            Vibrant.from(icon)
+              .getPalette()
+              .then(palette => {
+                this.webContents.send(
+                  'tab-background',
+                  container.id,
+                  palette.Vibrant.hex,
+                );
+              });
+          } catch (e) {
+            console.error(e);
+          }
 
           this.draggedIn = true;
           this.willAttachWindow = true;

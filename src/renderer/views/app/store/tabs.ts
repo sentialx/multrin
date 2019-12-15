@@ -13,6 +13,7 @@ import {
 import HorizontalScrollbar from '~/renderer/views/app/components/HorizontalScrollbar';
 import store from '../store';
 import { ipcRenderer } from 'electron';
+import { getColorBrightness } from '../utils';
 
 export class TabsStore {
   @observable
@@ -108,6 +109,15 @@ export class TabsStore {
 
     ipcRenderer.on('previous-tab', () => {
       this.selectPreviousTab();
+    });
+
+    ipcRenderer.on('tab-background', (e, id: number, bg) => {
+      const tab = this.getTabById(id);
+      if (tab) {
+        if (getColorBrightness(bg) < 170) {
+          tab.background = bg;
+        }
+      }
     });
   }
 

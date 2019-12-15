@@ -23,6 +23,7 @@ assignees: ''
  - Operating System: 
  - Multrin version: 
  - Last known working Multrin version: 
+ - Scaling (in percentage, if present):
 
 **Additional context**
 <!-- Add any other context about the problem here. -->

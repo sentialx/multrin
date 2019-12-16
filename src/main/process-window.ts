@@ -1,6 +1,11 @@
 import { Window } from 'node-window-manager';
 import { AppWindow } from './windows/app';
 import { iohook } from '.';
+import { release } from 'os';
+
+const CAN_USE_GETTITLE =
+  process.platform !== 'darwin' ||
+  (process.platform === 'darwin' && !release().startsWith('19'));
 
 export class ProcessWindow extends Window {
   public resizable = false;
@@ -74,5 +79,10 @@ export class ProcessWindow extends Window {
   public hide() {
     this.toggleTransparency(true);
     this.setOpacity(0);
+  }
+
+  public getTitle() {
+    if (CAN_USE_GETTITLE) return super.getTitle();
+    return '';
   }
 }

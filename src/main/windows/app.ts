@@ -316,7 +316,7 @@ export class AppWindow extends BrowserWindow {
 
         if (container.windows.length === 1) {
           const window = container.windows[0];
-          const title = process.platform === 'darwin' ? '' : window.getTitle();
+          const title = window.getTitle();
           if (window.lastTitle !== title) {
             this.webContents.send('update-tab-title', {
               id: container.id,
@@ -342,11 +342,7 @@ export class AppWindow extends BrowserWindow {
       this.attachingEnabled &&
       !this.isFocused()
     ) {
-      if (
-        process.platform === 'win32' &&
-        this.draggedWindow.getTitle() === app.name
-      )
-        return;
+      if (this.draggedWindow.getTitle() === app.name) return;
       const winBounds = this.draggedWindow.getBounds();
       const { lastBounds } = this.draggedWindow;
       const contentBounds = this.getContentArea();
@@ -422,8 +418,7 @@ export class AppWindow extends BrowserWindow {
 
           const container = new Container(this, win);
 
-          const title =
-            process.platform === 'darwin' ? '' : this.draggedWindow.getTitle();
+          const title = this.draggedWindow.getTitle();
 
           this.draggedContainer = container;
           win.lastTitle = title;

@@ -45,8 +45,8 @@
     "cache-loader": "^4.1.0",
     "concurrently": "^5.0.1",
     "cross-env": "6.0.3",
-    "electron": "7.1.5",
-    "electron-builder": "^22.1.0",
+    "electron": "^6.1.6",
+    "electron-builder": "^21.2.0",
     "electron-rebuild": "^1.8.8",
     "electron-updater": "^4.2.0",
     "eslint": "^6.7.2",
@@ -87,7 +87,7 @@
   "iohook": {
     "targets": [
       "node-72",
-      "electron-75"
+      "electron-73"
     ],
     "platforms": [
       "win32",

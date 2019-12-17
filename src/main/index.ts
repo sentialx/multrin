@@ -74,9 +74,7 @@ app.on('ready', () => {
   });
 
   ipcMain.on('update-check', () => {
-    if (process.env.ENV !== 'dev') {
-      autoUpdater.checkForUpdates();
-    }
+    autoUpdater.checkForUpdates();
   });
 });
 

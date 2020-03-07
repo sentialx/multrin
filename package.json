@@ -31,7 +31,7 @@
     "compile": "node scripts/compile.js",
     "lint": "eslint \"src/**/*.ts*\" \"src/**/*.tsx*\"",
     "lint-fix": "npm run lint -- --fix",
-    "postinstall": "electron-rebuild -f -o node-window-manager,extract-file-icon,iohook"
+    "rebuild": "electron-builder install-app-deps"
   },
   "devDependencies": {
     "@types/gsap": "1.20.2",
@@ -41,19 +41,16 @@
     "@types/styled-components": "4.4.1",
     "@typescript-eslint/eslint-plugin": "^2.11.0",
     "@typescript-eslint/parser": "^2.11.0",
-    "awesome-node-loader": "^1.1.1",
     "cache-loader": "^4.1.0",
     "concurrently": "^5.0.1",
     "cross-env": "6.0.3",
     "electron": "^6.1.6",
     "electron-builder": "^21.2.0",
-    "electron-rebuild": "^1.8.8",
     "electron-updater": "^4.2.0",
     "eslint": "^6.7.2",
     "eslint-config-prettier": "^6.7.0",
     "eslint-plugin-prettier": "^3.1.1",
     "eslint-plugin-react": "^7.17.0",
-    "extract-file-icon": "0.3.2",
     "file-loader": "^5.0.2",
     "fork-ts-checker-webpack-plugin": "^3.1.1",
     "gsap": "3.0.4",
@@ -62,7 +59,6 @@
     "mobx": "5.15.0",
     "mobx-react-lite": "^1.5.1",
     "node-vibrant": "^3.1.5",
-    "node-window-manager": "^2.0.1",
     "prettier": "1.19.1",
     "react": "16.12.0",
     "react-dom": "16.12.0",
@@ -78,7 +74,9 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
-    "iohook": "^0.6.2"
+    "iohook": "^0.6.2",
+    "node-window-manager": "^2.0.1",
+    "extract-file-icon": "0.3.2"
   },
   "cmake-js": {
     "runtime": "electron",

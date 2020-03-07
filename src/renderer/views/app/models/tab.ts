@@ -1,7 +1,6 @@
 import { observable, computed } from 'mobx';
 import * as React from 'react';
 import { ipcRenderer } from 'electron';
-import Vibrant = require('node-vibrant');
 
 import store from '~/renderer/views/app/store';
 import {

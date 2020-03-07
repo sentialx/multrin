@@ -55,13 +55,6 @@ const config = {
 
         include: INCLUDE,
       },
-      {
-        test: /\.node$/,
-        loader: 'awesome-node-loader',
-        options: {
-          name: '[contenthash].[ext]',
-        },
-      },
     ],
   },
 
@@ -78,7 +71,7 @@ const config = {
     },
   },
 
-  externals: getExternals(['iohook']),
+  externals: getExternals(['iohook', 'node-window-manager', 'extract-file-icon']),
 };
 
 if (dev) {

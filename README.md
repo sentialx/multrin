@@ -57,6 +57,12 @@ Firstly, run this command to install all needed dependencies. If you have encoun
 $ npm i
 ```
 
+Now the native modules need to be rebuilt with Electron's headers. To do that, please run:
+
+```bash
+$ npm run rebuild
+```
+
 The given command below will run Multrin in the development mode.
 
 ```bash
@@ -82,4 +88,5 @@ $ npm start
 </a>
 
 ## License
+
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fsentialx%2Fmultrin.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fsentialx%2Fmultrin?ref=badge_large)

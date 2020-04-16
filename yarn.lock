@@ -4823,10 +4823,10 @@ node-vibrant@^3.1.5:
     lodash "^4.17.4"
     url "^0.11.0"
 
-node-window-manager@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/node-window-manager/-/node-window-manager-2.2.0.tgz#7156136f210f278a019dd1fdae0a9699a744d733"
-  integrity sha512-97uoqdc5toF8QAQFoibrBbxriHpOd2WnEaUbdF9rpqGRJfo6Bs5Qu4F8xg49vWEFONsx0WTkuvvdPOhvIroB7Q==
+node-window-manager@^2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/node-window-manager/-/node-window-manager-2.2.1.tgz#88140743badc15700e47e501a33a55ef98d3bfe1"
+  integrity sha512-RSA9WJTLCWV3yxPUyihW/bzUelifGdfTwBTGtCSgz1KdOw4uAGIx51Pk5IISFgS6TRlB7vvIUCzdNBn49f621g==
   dependencies:
     extract-file-icon "^0.3.2"
     node-addon-api "2.0.0"

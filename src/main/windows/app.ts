@@ -135,6 +135,10 @@ export class AppWindow extends BrowserWindow {
       this.selectContainer(this.containers.find((x) => x.id === id));
     });
 
+    ipcMain.on('new-tab', () => {
+      this.newTab();
+    });
+
     ipcMain.on('detach-window', (e, id: number) => {
       for (const container of this.containers) {
         container.removeWindow(id, true);
@@ -241,29 +245,7 @@ export class AppWindow extends BrowserWindow {
         this.draggedWindow.resizing = false;
 
         if (this.willAttachWindow) {
-          const win = this.draggedWindow;
-          const container = this.draggedContainer;
-
-          if (platform() === 'win32') {
-            const handle = this.getNativeWindowHandle().readInt32LE(0);
-            win.setOwner(handle);
-          }
-
-          if (platform() === 'darwin' && this.containers.length === 0) {
-            this.setBounds({ height: TOOLBAR_HEIGHT } as any);
-            this.setMaximumSize(0, TOOLBAR_HEIGHT);
-          }
-
-          this.containers.push(this.draggedContainer);
-          this.willAttachWindow = false;
-
-          this.draggedContainer.rearrangeWindows();
-
-          setTimeout(() => {
-            this.selectContainer(container);
-          }, 50);
-
-          this.controlShortcuts(win.id);
+          this.attachNewContainer(this.draggedContainer, this.draggedWindow);
         } else if (this.willSplitWindow && !this.detached) {
           this.willSplitWindow = false;
 
@@ -420,34 +402,9 @@ export class AppWindow extends BrowserWindow {
             this.selectedContainer.removeWindow(win.id, e.type === 'mouseup');
           }
 
-          const container = new Container(this, win);
-
-          const title = this.draggedWindow.getTitle();
+          const container = this.prepareContainer(this.draggedWindow);
 
           this.draggedContainer = container;
-          win.lastTitle = title;
-
-          const icon = fileIcon(win.path, 16);
-
-          this.webContents.send('add-tab', {
-            id: container.id,
-            title,
-            icon,
-          });
-
-          try {
-            Vibrant.from(icon)
-              .getPalette()
-              .then((palette) => {
-                this.webContents.send(
-                  'tab-background',
-                  container.id,
-                  palette.Vibrant.hex,
-                );
-              });
-          } catch (e) {
-            console.error(e);
-          }
 
           this.draggedIn = true;
           this.willAttachWindow = true;
@@ -459,6 +416,92 @@ export class AppWindow extends BrowserWindow {
         this.willAttachWindow = false;
       }
     }
+  }
+
+  public prepareContainer(window: ProcessWindow, dragged = true) {
+    const container = new Container(this, window, dragged);
+
+    const title = window.getTitle();
+    const icon = fileIcon(window.path, 16);
+
+    window.lastTitle = title;
+
+    this.webContents.send('add-tab', {
+      id: container.id,
+      title,
+      icon,
+    });
+
+    try {
+      Vibrant.from(icon)
+        .getPalette()
+        .then((palette) => {
+          this.webContents.send(
+            'tab-background',
+            container.id,
+            palette.Vibrant.hex,
+          );
+        });
+    } catch (e) {
+      console.error(e);
+    }
+
+    return container;
+  }
+
+  public attachNewContainer(container: Container, win: ProcessWindow) {
+    if (platform() === 'win32') {
+      const handle = this.getNativeWindowHandle().readInt32LE(0);
+      win.setOwner(handle);
+    }
+
+    if (platform() === 'darwin' && this.containers.length === 0) {
+      this.setBounds({ height: TOOLBAR_HEIGHT } as any);
+      this.setMaximumSize(0, TOOLBAR_HEIGHT);
+    }
+
+    this.containers.push(container);
+    this.willAttachWindow = false;
+
+    container.rearrangeWindows();
+
+    setTimeout(() => {
+      this.selectContainer(container);
+    }, 50);
+
+    this.controlShortcuts(win.id);
+  }
+
+  public async newTab() {
+    if (this.selectedContainer?.windows?.length === 1) {
+      const window = await this.createNewWindow(
+        this.selectedContainer.windows[0].path,
+      );
+
+      this.addTabWithWindow(window);
+    }
+  }
+
+  public createNewWindow(path: string): Promise<ProcessWindow> {
+    return new Promise((resolve, reject) => {
+      windowManager.createProcess(path);
+
+      const timeout = setTimeout(() => {
+        reject(new Error('Creating new window timed out'));
+      }, 5000);
+
+      windowManager.once('window-activated', (win: ProcessWindow) => {
+        if (win.path === path) {
+          clearTimeout(timeout);
+          resolve(new ProcessWindow(win.id, this));
+        }
+      });
+    });
+  }
+
+  public addTabWithWindow(win: ProcessWindow) {
+    const container = this.prepareContainer(win, false);
+    this.attachNewContainer(container, win);
   }
 
   public getContentArea() {

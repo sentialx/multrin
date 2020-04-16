@@ -73,7 +73,7 @@ export class AppWindow extends BrowserWindow {
     this.setPosition(currentDisplay.workArea.x, currentDisplay.workArea.y);
     this.center();
 
-    process.on('uncaughtException', error => {
+    process.on('uncaughtException', (error) => {
       console.error(error);
     });
 
@@ -132,13 +132,14 @@ export class AppWindow extends BrowserWindow {
     this.interval = setInterval(this.intervalCallback, 100);
 
     ipcMain.on('select-window', (e, id: number) => {
-      this.selectContainer(this.containers.find(x => x.id === id));
+      this.selectContainer(this.containers.find((x) => x.id === id));
     });
 
     ipcMain.on('detach-window', (e, id: number) => {
       for (const container of this.containers) {
-        container.removeWindow(id);
+        container.removeWindow(id, true);
       }
+      this.draggedWindow = null;
     });
 
     ipcMain.on(`menu-toggle-${this.id}`, () => {
@@ -149,7 +150,7 @@ export class AppWindow extends BrowserWindow {
       this.attachingEnabled = value;
     });
 
-    ipcMain.on(`get-title-${this.id}`, e => {
+    ipcMain.on(`get-title-${this.id}`, (e) => {
       e.returnValue = this.getTitle();
     });
 
@@ -171,18 +172,21 @@ export class AppWindow extends BrowserWindow {
       if (!this.isFocused()) return;
 
       for (const container of this.containers) {
-        if (container.windows.find(x => x.id === window.id)) {
+        if (container.windows.find((x) => x.id === window.id)) {
           this.webContents.send('select-tab', container.id);
           break;
         }
       }
     });
 
-    iohook.on('mousedown', () => {
+    iohook.on('mousedown', ({ x, y }: any) => {
       if (this.isMinimized()) return;
 
       setTimeout(() => {
-        if (this.isFocused()) {
+        if (
+          y >= this.getBounds().y &&
+          y <= this.getBounds().y + TOOLBAR_HEIGHT
+        ) {
           this.draggedWindow = null;
           return;
         }
@@ -190,7 +194,7 @@ export class AppWindow extends BrowserWindow {
         const id = windowManager.getActiveWindow().id;
 
         if (this.selectedContainer) {
-          const win = this.selectedContainer.windows.find(x => x.id === id);
+          const win = this.selectedContainer.windows.find((x) => x.id === id);
           this.draggedWindow = win;
         }
 
@@ -296,7 +300,7 @@ export class AppWindow extends BrowserWindow {
     callback: () => void,
   ) {
     if (
-      this.containers.find(x => x.windows.find(y => y.id === id)) ||
+      this.containers.find((x) => x.windows.find((y) => y.id === id)) ||
       this.isFocused()
     ) {
       if (!globalShortcut.isRegistered(accelerator)) {
@@ -361,7 +365,7 @@ export class AppWindow extends BrowserWindow {
       const windowAttached =
         this.selectedContainer &&
         this.selectedContainer.windows.find(
-          x => x.id === this.draggedWindow.id,
+          (x) => x.id === this.draggedWindow.id,
         );
 
       if (this.selectedContainer) {
@@ -434,7 +438,7 @@ export class AppWindow extends BrowserWindow {
           try {
             Vibrant.from(icon)
               .getPalette()
-              .then(palette => {
+              .then((palette) => {
                 this.webContents.send(
                   'tab-background',
                   container.id,
@@ -491,7 +495,7 @@ export class AppWindow extends BrowserWindow {
     }
 
     this.webContents.send('remove-tab', container.id);
-    this.containers = this.containers.filter(x => x.id !== container.id);
+    this.containers = this.containers.filter((x) => x.id !== container.id);
 
     if (platform() === 'darwin' && this.containers.length === 0) {
       this.setBounds({ height: this.height } as any);

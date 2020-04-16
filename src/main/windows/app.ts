@@ -141,8 +141,9 @@ export class AppWindow extends BrowserWindow {
 
     ipcMain.on('detach-window', (e, id: number) => {
       for (const container of this.containers) {
-        container.removeWindow(id);
+        container.removeWindow(id, true);
       }
+      this.draggedWindow = null;
     });
 
     ipcMain.on(`menu-toggle-${this.id}`, () => {
@@ -182,11 +183,14 @@ export class AppWindow extends BrowserWindow {
       }
     });
 
-    iohook.on('mousedown', () => {
+    iohook.on('mousedown', ({ x, y }: any) => {
       if (this.isMinimized()) return;
 
       setTimeout(() => {
-        if (this.isFocused()) {
+        if (
+          y >= this.getBounds().y &&
+          y <= this.getBounds().y + TOOLBAR_HEIGHT
+        ) {
           this.draggedWindow = null;
           return;
         }

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { ToolbarButton } from '../ToolbarButton';
 
 export const StyledTabbar = styled.div`
   height: 100%;
@@ -18,4 +19,9 @@ export const TabsContainer = styled.div`
   white-space: nowrap;
   display: flex;
   align-items: center;
+`;
+
+export const AddTab = styled(ToolbarButton)`
+  position: absolute;
+  left: 0;
 `;

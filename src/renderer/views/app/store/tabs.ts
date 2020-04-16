@@ -67,7 +67,7 @@ export class TabsStore {
     }, 1000);
 
     ipcRenderer.on('add-tab', (e: any, options: any) => {
-      const tab = this.tabs.find(x => x.id === options.id);
+      const tab = this.tabs.find((x) => x.id === options.id);
 
       if (tab) {
         tab.isClosing = false;
@@ -168,7 +168,7 @@ export class TabsStore {
   }
 
   public getTabById(id: number) {
-    return this.tabs.find(x => x.id === id && !x.isClosing);
+    return this.tabs.find((x) => x.id === id && !x.isClosing);
   }
 
   public addTab(id: number, title: string, icon: Buffer) {
@@ -195,7 +195,7 @@ export class TabsStore {
   }
 
   public setTabsWidths(animation: boolean) {
-    const tabs = this.tabs.filter(x => !x.isClosing);
+    const tabs = this.tabs.filter((x) => !x.isClosing);
 
     const containerWidth = this.containerWidth;
 
@@ -209,9 +209,11 @@ export class TabsStore {
 
   public setTabsLefts(animation: boolean) {
     const tabs = this.tabs
-      .filter(x => !x.isClosing)
+      .filter((x) => !x.isClosing)
       .slice()
       .sort((a, b) => a.position - b.position);
+
+    const containerWidth = this.containerWidth;
 
     let left = 0;
 
@@ -220,6 +222,11 @@ export class TabsStore {
 
       left += tab.width + TABS_PADDING;
     }
+
+    store.addTab.setLeft(
+      Math.min(left, containerWidth + TABS_PADDING),
+      animation,
+    );
   }
 
   public replaceTab(firstTab: Tab, secondTab: Tab) {
@@ -370,5 +377,9 @@ export class TabsStore {
         this.lastTab.select();
       }
     }
+  }
+
+  public newTab() {
+    ipcRenderer.send('new-tab');
   }
 }

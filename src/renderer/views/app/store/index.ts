@@ -2,12 +2,11 @@ import { observable, computed } from 'mobx';
 import { TabsStore } from './tabs';
 
 import { ipcRenderer, remote } from 'electron';
-import { readFileSync, existsSync, writeFileSync } from 'fs';
 import { getPath } from '~/shared/utils/paths';
-
-const settingsPath = getPath('settings.json');
+import { AddTabStore } from './add-tab';
 
 export class Store {
+  public addTab = new AddTabStore();
   public tabsStore = new TabsStore();
 
   @observable

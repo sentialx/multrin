@@ -197,7 +197,7 @@ export class Tab {
 
     const selected = store.tabsStore.selectedTabId === this.id;
 
-    const notClosingTabs = tabs.filter(x => !x.isClosing);
+    const notClosingTabs = tabs.filter((x) => !x.isClosing);
     let index = notClosingTabs.indexOf(this);
 
     store.tabsStore.resetRearrangeTabsTimer();

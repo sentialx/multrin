@@ -31,7 +31,11 @@ export class Container {
 
   private appWindow: AppWindow;
 
-  public constructor(appWindow: AppWindow, window: ProcessWindow) {
+  public constructor(
+    appWindow: AppWindow,
+    window: ProcessWindow,
+    dragged = true,
+  ) {
     this.appWindow = appWindow;
 
     const colId = spaceId++;
@@ -50,7 +54,7 @@ export class Container {
 
     window.rowId = rowId;
     window.columnId = colId;
-    window.dragged = true;
+    window.dragged = dragged;
 
     this.windows.push(window);
 
@@ -88,7 +92,7 @@ export class Container {
         top += row.height;
 
         const window = this.windows.find(
-          x => x.rowId === row.id && x.columnId === col.id,
+          (x) => x.rowId === row.id && x.columnId === col.id,
         );
 
         if (window && !window.dragged && !window.resizing) {
@@ -107,26 +111,26 @@ export class Container {
   }
 
   public removeWindow(id: number, mouseup = true) {
-    const win = this.windows.find(x => x.id === id);
+    const win = this.windows.find((x) => x.id === id);
     if (!win) return;
 
-    const col = this.columns.find(x => x.id === win.columnId);
+    const col = this.columns.find((x) => x.id === win.columnId);
     if (!col) return;
 
     let winDetached = false;
 
     if (col.rows.length === 1) {
-      this.columns = this.columns.filter(x => x.id !== win.columnId);
+      this.columns = this.columns.filter((x) => x.id !== win.columnId);
       this.detachWindow(win, mouseup);
       winDetached = true;
     }
 
     if (!col) return;
 
-    const row = col.rows.find(x => x.id === win.rowId);
+    const row = col.rows.find((x) => x.id === win.rowId);
     if (!row) return;
 
-    col.rows = col.rows.filter(x => x.id !== win.rowId);
+    col.rows = col.rows.filter((x) => x.id !== win.rowId);
     if (!winDetached) {
       this.detachWindow(win, mouseup);
     }
@@ -147,7 +151,7 @@ export class Container {
 
     window.detach(mouseup);
 
-    this.windows = this.windows.filter(x => x.id !== window.id);
+    this.windows = this.windows.filter((x) => x.id !== window.id);
 
     if (this.windows.length === 0) {
       this.appWindow.removeContainer(this);
@@ -156,15 +160,15 @@ export class Container {
 
   public dragWindow(window: ProcessWindow, { x, y, type }: any) {
     const area = this.appWindow.getContentArea();
-    const win = this.windows.find(x => x.id === window.id);
+    const win = this.windows.find((x) => x.id === window.id);
 
     if (win) {
       if (win.resizing) return;
 
-      const col = this.columns.find(x => x.id === win.columnId);
+      const col = this.columns.find((x) => x.id === win.columnId);
       if (!col) return;
 
-      const row = col.rows.find(x => x.id === win.rowId);
+      const row = col.rows.find((x) => x.id === win.rowId);
 
       win.dragged = true;
 
@@ -261,10 +265,10 @@ export class Container {
   }
 
   public resizeWindow(window: ProcessWindow, resizeWinCb: () => void) {
-    const win = this.windows.find(x => x.id === window.id);
+    const win = this.windows.find((x) => x.id === window.id);
     if (!win) return;
 
-    const col = this.columns.find(x => x.id === win.columnId);
+    const col = this.columns.find((x) => x.id === win.columnId);
     if (!col) return;
 
     const winBounds = win.getBounds();
@@ -290,7 +294,7 @@ export class Container {
         c.weight = c.width / baseWidth;
       }
     } else if (winBounds.height !== win.lastBounds.height) {
-      const row = col.rows.find(x => x.id === win.rowId);
+      const row = col.rows.find((x) => x.id === win.rowId);
       if (!row) return;
 
       const index = winBounds.y !== win.lastBounds.y ? -1 : 1;
